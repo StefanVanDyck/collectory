@@ -14,12 +14,14 @@
  */
 package au.org.ala.collectory
 
+import groovy.util.logging.Slf4j
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
+@Slf4j
 class ExternalIdentifierService {
 
     static transactional = true
@@ -37,6 +39,8 @@ class ExternalIdentifierService {
         ExternalIdentifier.withTransaction {
             ext.save(flush: true)
         }
+
+        log.info("Find: ${uid}")
 
         if (uid[0..1] == 'co') {
             Collection c = Collection.findByUid(uid)
