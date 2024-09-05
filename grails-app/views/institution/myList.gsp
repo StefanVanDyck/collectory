@@ -18,7 +18,6 @@
             </ul>
         </div>
         <div class="body">
-            <h1><g:message code="institution.myList.label" default="My institutions" /></h1>
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
