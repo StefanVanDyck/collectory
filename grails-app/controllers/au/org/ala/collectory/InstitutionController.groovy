@@ -23,6 +23,28 @@ class InstitutionController extends ProviderGroupController {
                 institutionInstanceTotal: Institution.count()]
     }
 
+    def myList = {
+        // do not paginate this list - unlikely to be large
+        // get user's contact id
+        def userContact = null
+        def user = username()
+        if (user) {
+            userContact = Contact.findByEmail(user)
+            def institutionList = []
+            if (userContact) {
+                ContactFor.findAllByContact(userContact).each {
+                    ProviderGroup pg = providerGroupService._get(it.entityUid)
+                    if (pg?.entityType() == Institution.ENTITY_TYPE) {
+                        institutionList << pg
+                    }
+                }
+            }
+            activityLogService.log username(), isAdmin(), Action.MYLIST
+            log.info ">>${user} listing my institutions"
+            render(view: 'myList', model: [institutions: institutionList])
+        }
+    }
+
     def show = {
         def institutionInstance = get(params.id)
         if (!institutionInstance) {
