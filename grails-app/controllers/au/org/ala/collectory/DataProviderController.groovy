@@ -97,7 +97,7 @@ class DataProviderController extends ProviderGroupController {
     def iptScan = {
         def create = params.create != null && params.create.equalsIgnoreCase("true")
         def check = params.check == null || !params.check.equalsIgnoreCase("false")
-        def keyName = params.key ?: 'catalogNumber'
+        def keyName = params.key ?: 'occurrenceID'
         def isShareableWithGBIF = params.isShareableWithGBIF ? params.isShareableWithGBIF.toBoolean(): true
         def provider = providerGroupService._get(params.uid)
 
