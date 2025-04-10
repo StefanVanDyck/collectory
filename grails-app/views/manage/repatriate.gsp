@@ -49,7 +49,7 @@
                 <g:select name="dataProviderUid"
                           class="form-control"
                           from="${dataProviders}"
-                          optionKey="uid"
+                          optionKey="gbifRegistryKey"
                           optionValue="name"
                           value="${configuration.dataProviderUid}"
                           noSelection="${['':'Optionally select a provider...']}"
