@@ -31,6 +31,7 @@ class DataProvider implements ProviderGroup, Serializable {
         taxonomyHints type: "text"
         notes type: "text"
         networkMembership type: "text"
+        gbifRegistryKey type: "text"
 
         consumerInstitutions joinTable:[name:"data_provider_institution", key:'data_provider_id' ]
         consumerCollections joinTable:[name:"data_provider_collection", key:'data_provider_id' ]

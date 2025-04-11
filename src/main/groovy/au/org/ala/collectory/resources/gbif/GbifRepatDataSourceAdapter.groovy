@@ -17,7 +17,8 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
     static final SOURCE = "GBIF_REPATRIATION"
     GbifService gbifService
 
-    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&country={0}&type={1}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
+    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&publishingCountry={0}&type={1}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
+    static final String OCCURRENCE_REPAT_SEARCH_PUBLISHING_ORG = "occurrence/search?repatriated=true&publishingCountry={0}&type={1}&publishingOrg={2}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
 
     GbifRepatDataSourceAdapter(DataSourceConfiguration configuration) {
         super(configuration)
@@ -29,7 +30,9 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
         def datasets = []
 
         LOGGER.info("Requesting dataset lists configuration.country: ${configuration.country}")
-        String url = MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country, configuration.recordType)
+        String url = configuration.dataProviderUid ?
+                MessageFormat.format(OCCURRENCE_REPAT_SEARCH_PUBLISHING_ORG, configuration.country, configuration.recordType, configuration.dataProviderUid) :
+                MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country, configuration.recordType)
         JSONObject json = getJSONWS(url, false)
         if (json?.facets) {
             json.facets[0].counts.each {
