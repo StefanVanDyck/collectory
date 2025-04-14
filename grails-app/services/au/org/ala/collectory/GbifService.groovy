@@ -572,6 +572,17 @@ class GbifService {
         return pubMap.sort { it.value }
     }
 
+    def getRegionMap() {
+        def gadmMap = [:]
+        this.class.classLoader.getResourceAsStream("belgiumRegionCodes.csv").readLines().each{
+            def codeAndName = it.split("\t")
+            gadmMap.put(codeAndName[0], codeAndName[1])
+        }
+
+
+        return gadmMap
+    }
+
     def Date getGbifDatasetLastUpdated(String guid){
 
         try {

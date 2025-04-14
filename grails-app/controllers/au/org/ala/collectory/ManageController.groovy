@@ -38,7 +38,8 @@ class ManageController {
                 endpoint: new URL(grailsApplication.config.gbifApiUrl),
                 username: '',
                 password: '',
-                country: Locale.default.getCountry(),
+                country: 'BE',
+                region: '',
                 recordType: 'OCCURRENCE',
                 defaultDatasetValues: [:],
                 keyTerms: [],
@@ -51,6 +52,7 @@ class ManageController {
                         repatriate: true,
                         configuration: configuration,
                         countryMap: gbifService.getCountryMap(),
+                        regionMap: gbifService.getRegionMap(),
                         datasetTypeMap: adaptor.datasetTypeMap,
                         adaptors: externalDataService.REPAT_ADAPTORMAP,
                         dataProviders: DataProvider.all.sort { it.name }

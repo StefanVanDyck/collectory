@@ -18,7 +18,6 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
     GbifService gbifService
 
     static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&country={0}&type={1}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
-    static final String OCCURRENCE_REPAT_SEARCH_PUBLISHING_ORG = "occurrence/search?repatriated=true&country={0}&type={1}&publishingOrg={2}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
 
     GbifRepatDataSourceAdapter(DataSourceConfiguration configuration) {
         super(configuration)
@@ -30,9 +29,7 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
         def datasets = []
 
         LOGGER.info("Requesting dataset lists configuration.country: ${configuration.country}")
-        String url = configuration.dataProviderUid ?
-                MessageFormat.format(OCCURRENCE_REPAT_SEARCH_PUBLISHING_ORG, configuration.country, configuration.recordType, configuration.dataProviderUid) :
-                MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country, configuration.recordType)
+        String url = buildSearchUrl()
         JSONObject json = getJSONWS(url, false)
         if (json?.facets) {
             json.facets[0].counts.each {
@@ -52,6 +49,18 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
 
         LOGGER.info("Total datasets retrieved: " + datasets.size())
         return datasets
+    }
+
+    String buildSearchUrl() {
+        StringBuilder sb = new StringBuilder()
+        sb.append(MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country, configuration.recordType))
+        if (configuration.region) {
+            sb.append("&gadmLevel1Gid=" + configuration.region)
+        }
+        if (configuration.dataProviderUid) {
+            sb.append("&publishingOrg=" + configuration.dataProviderUid)
+        }
+        return sb.toString()
     }
 
     @Override

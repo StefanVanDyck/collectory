@@ -27,6 +27,7 @@ class DataSourceConfiguration {
     String username
     String password
     String country
+    String region
     String recordType
     String dataProviderUid
     Map<String, String> defaultDatasetValues
