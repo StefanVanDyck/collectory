@@ -28,9 +28,13 @@
                 <label for="endpoint"><g:message code="manage.extload.label05" /><cl:helpText code="manage.extload.label05.help"/></label>
                 <g:field name="endpoint" class="form-control" type="url" value="${configuration.endpoint}"/>
             </div>
-            <div class="form-group">
+            <div class="form-group hide">
                 <label for="country"><g:message code="manage.repatriationCountry.label06" /><cl:helpText code="manage.extload.label06.help"/></label>
-                <g:select name="country" class="form-control" from="${countryMap.entrySet()}" optionKey="key" optionValue="value" values="${configuration.country}" value="${params.country}"/>
+                <g:field name="country" class="form-control" type="string" value="${configuration.country}"/>
+            </div>
+            <div class="form-group">
+                <label for="region"><g:message code="manage.repatriationCountry.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
+                <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" values="${configuration.region}" value="${params.region}"/>
             </div>
             <div class="form-group hide">
                 <label for="recordType"><g:message code="manage.extload.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
