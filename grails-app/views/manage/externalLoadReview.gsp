@@ -58,12 +58,23 @@
                     <g:each in="${configuration.resources}" var="res" status="rs">
                     <tr class="resource-scan-${res.status}">
                         <td>
-                            <g:hiddenField id="resources-${rs}-uid" name="resources[${rs}].uid" value="${res.uid}"/>
-                            <g:hiddenField name="resources[${rs}].guid" value="${res.guid}"/>
-                            <g:hiddenField name="resources[${rs}].source" value="${res.source}"/>
-                            <g:textField class="resource-name col-xs-4" name="resources[${rs}].name" value="${res.name}" />
-                            <br/>
-                            <small><a href="https://dx.doi.org/${res.source}" target="_blank"><g:fieldValue field="guid" bean="${res}"/></a></small>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <g:hiddenField id="resources-${rs}-uid" name="resources[${rs}].uid" value="${res.uid}"/>
+                                        <g:hiddenField name="resources[${rs}].guid" value="${res.guid}"/>
+                                        <g:hiddenField name="resources[${rs}].source" value="${res.source}"/>
+                                        <g:textField class="resource-name col-xs-4" name="resources[${rs}].name" value="${res.name}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <br/>
+                                        <span><g:message code="manage.extload.label14"/></span>
+                                        <small><a href="https://dx.doi.org/${res.source}" target="_blank"><g:fieldValue field="guid" bean="${res}"/></a></small>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                         <td><span title="<g:message code="manage.extstatus.${res.status}.detail"/>"><g:message code="manage.extstatus.${res.status}"/></span></td>
                         <td class="resource-mapping"><span id="existing-${rs}"><g:if test="${res.uid}">
