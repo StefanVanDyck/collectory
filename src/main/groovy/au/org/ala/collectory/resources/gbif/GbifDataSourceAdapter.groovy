@@ -112,15 +112,8 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
 
         while (!atEnd) {
             getLOGGER().info("Requesting dataset lists configuration.country: ${configuration.country} offset: ${offset}, pageSize: ${pageSizeToUse}, dataProvider: ${configuration.dataProviderUid}")
-            def optionalProvider
-            if (configuration.dataProviderUid){
-                optionalProvider = DataProvider.findByUid(configuration.dataProviderUid)
-            }
-            JSONObject json = getJSONWS(
-                    optionalProvider == null ?
-                    DATASET_SEARCH.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString()].toArray()):
-                    DATASET_SEARCH_PROV.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
-            )
+
+            JSONObject json = getJSONWS(buildSearchUrl(offset, pageSizeToUse))
 
             if (json?.results) {
                 json.results.each {
@@ -138,6 +131,23 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
 
         getLOGGER().info("Total datasets retrieved: " + datasets.size())
         return datasets
+    }
+
+    private String buildSearchUrl(int offset, int pageSizeToUse) {
+        StringBuilder sb = new StringBuilder()
+
+        def optionalProvider
+        if (configuration.dataProviderUid) {
+            optionalProvider = DataProvider.findByUid(configuration.dataProviderUid)
+        }
+        String url = optionalProvider == null ?
+                DATASET_SEARCH.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString()].toArray()) :
+                DATASET_SEARCH_PROV.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
+        sb.append(url)
+        if (configuration.name) {
+            sb.append("&q=title:*${configuration.name}*")
+        }
+        sb.toString()
     }
 
     @Override
