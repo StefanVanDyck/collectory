@@ -47,6 +47,7 @@ class ManageController {
                 countries: gbifService.getCountryMap().keySet()
         )
         def adaptor = configuration.createAdaptor()
+        def dataProviders = DataProvider.all.collect { if (it.gbifRegistryKey == null) { it.setGbifRegistryKey("")}; return it }.sort { it.name }
         render(view: "repatriate",
                 model: [
                         repatriate: true,
@@ -55,7 +56,7 @@ class ManageController {
                         regionMap: gbifService.getRegionMap(),
                         datasetTypeMap: adaptor.datasetTypeMap,
                         adaptors: externalDataService.REPAT_ADAPTORMAP,
-                        dataProviders: DataProvider.all.sort { it.name }
+                        dataProviders: dataProviders
                 ]
         )
     }
