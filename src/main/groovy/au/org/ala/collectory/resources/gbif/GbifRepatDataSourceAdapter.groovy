@@ -17,7 +17,7 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
     static final SOURCE = "GBIF_REPATRIATION"
     GbifService gbifService
 
-    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&country={0}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
+    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
 
     GbifRepatDataSourceAdapter(DataSourceConfiguration configuration) {
         super(configuration)
