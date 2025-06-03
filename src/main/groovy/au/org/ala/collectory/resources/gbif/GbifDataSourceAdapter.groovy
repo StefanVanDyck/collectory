@@ -28,8 +28,8 @@ import java.text.SimpleDateFormat
 class GbifDataSourceAdapter extends DataSourceAdapter {
     static final LOGGER = LoggerFactory.getLogger(GbifDataSourceAdapter.class)
     static final SOURCE = "GBIF"
-    static final MessageFormat DATASET_SEARCH = new MessageFormat("dataset/search?publishingCountry={0}&type={1}&offset={2}&limit={3}")
-    static final MessageFormat DATASET_SEARCH_PROV = new MessageFormat("dataset/search?publishingCountry={0}&type={1}&offset={2}&limit={3}&publishingOrg={4}")
+    static final MessageFormat DATASET_SEARCH = new MessageFormat("dataset/search?publishingCountry={0}&offset={1}&limit={2}")
+    static final MessageFormat DATASET_SEARCH_PROV = new MessageFormat("dataset/search?publishingCountry={0}&offset={1}&limit={2}&publishingOrg={3}")
     static final MessageFormat DATASET_GET = new MessageFormat("dataset/{0}")
     static final MessageFormat DATASET_RECORD_COUNT = new MessageFormat("occurrence/count?datasetKey={0}")
     static final MessageFormat DOWNLOAD_STATUS = new MessageFormat("occurrence/download/{0}")
@@ -139,10 +139,10 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
         def optionalProvider
         if (configuration.dataProviderUid) {
             optionalProvider = DataProvider.findByUid(configuration.dataProviderUid)
-        }
+        }   
         String url = optionalProvider == null ?
-                DATASET_SEARCH.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString()].toArray()) :
-                DATASET_SEARCH_PROV.format([configuration.country, configuration.recordType, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
+                DATASET_SEARCH.format([configuration.country, offset.toString(), pageSizeToUse.toString()].toArray()) :
+                DATASET_SEARCH_PROV.format([configuration.country, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
         sb.append(url)
         if (configuration.name) {
             sb.append("&q=title:*${configuration.name}*")
