@@ -12,10 +12,13 @@
     <asset:stylesheet src="application.css" />
 </head>
 <body>
+<%
+    // Pre-encode your map to JSON in Groovy
+    def regionPolygonJson = regionPolygonMap.collectEntries { [(it.key): it.value] } as JSON
+%>
 <h1>
 <g:message code="manage.repatriate.title01" />
 </h1>
-
 <div class="row">
     <div id="baseForm" class="col-md-8">
         <g:form action="searchForRepatResources" controller="manage">
@@ -34,7 +37,15 @@
             </div>
             <div class="form-group">
                 <label for="region"><g:message code="manage.repatriationCountry.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
-                <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" values="${configuration.region}" value="${params.region}"/>
+                <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" values="${configuration.region}" value="${params.region}" onchange="loadPolygon()"/>
+            </div>
+            <div class="form-group">
+                <label for="useGeometry">Use geometry parameter instead of administrative region code?<cl:helpText code="manage.extload.label08.help"/></label>
+                <g:checkBox name="useGeometry" value="${configuration.useGeometry}" onchange="useGeometryChanged();"/>
+            </div>
+            <div class="form-group">
+                <label for="geometry">Polygon WKT (editable)<cl:helpText code="manage.extload.label09.help"/></label>
+                <g:textArea name="geometry" cols="50" rows="5" value="${configuration.geometry}" onLoad="loadPolygon()" disabled="true"/>
             </div>
             <div class="form-group hide">
                 <label for="recordType"><g:message code="manage.extload.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
@@ -48,7 +59,7 @@
                 <label for="description"><g:message code="manage.extload.label02" /><cl:helpText code="manage.extload.label02.help"/></label>
                 <g:field name="description" class="form-control" type="text" size="64" value="${configuration.description}"/>
             </div>
-            <div class="form-group">
+            <div class="form-group hide">
                 <label for="dataProviderUid"><g:message code="manage.extload.label03" /><cl:helpText code="manage.extload.label03.help"/></label>
                 <g:select name="dataProviderUid"
                           class="form-control"
@@ -88,5 +99,27 @@
         </p>
     </div>
 </div>
+<script type="text/javascript">
+  function loadPolygon() {
+    var region = document.getElementById("region").value;
+    var regionPolygonMap = ${raw(regionPolygonJson.toString())};
+    var polygon = regionPolygonMap[region];
+    var useGeometry = document.getElementById("useGeometry").checked;
+    if (polygon && useGeometry) {
+      document.getElementById("geometry").value = polygon;
+    } else {
+      document.getElementById("geometry").value = "";
+    }
+  }
+  function useGeometryChanged() {
+    var useGeometry = document.getElementById("useGeometry").checked;
+    if (useGeometry) {
+      document.getElementById("geometry").disabled = false;
+      loadPolygon();
+    } else {
+      document.getElementById("geometry").disabled = true;
+    }
+  }
+</script>
 </body>
 </html>

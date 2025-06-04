@@ -44,7 +44,9 @@ class ManageController {
                 defaultDatasetValues: [:],
                 keyTerms: [],
                 resources: [],
-                countries: gbifService.getCountryMap().keySet()
+                countries: gbifService.getCountryMap().keySet(),
+                useGeometry: false,
+                geometry: ''
         )
         def adaptor = configuration.createAdaptor()
         def dataProviders = DataProvider.all.collect { if (it.gbifRegistryKey == null) { it.setGbifRegistryKey("")}; return it }.sort { it.name }
@@ -54,6 +56,7 @@ class ManageController {
                         configuration: configuration,
                         countryMap: gbifService.getCountryMap(),
                         regionMap: gbifService.getRegionMap(),
+                        regionPolygonMap: gbifService.getRegionPolygonMap(),
                         datasetTypeMap: adaptor.datasetTypeMap,
                         adaptors: externalDataService.REPAT_ADAPTORMAP,
                         dataProviders: dataProviders
