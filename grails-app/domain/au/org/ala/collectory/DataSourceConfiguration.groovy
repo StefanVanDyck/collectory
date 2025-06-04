@@ -36,6 +36,8 @@ class DataSourceConfiguration {
     Integer maxNoOfDatasets
     Integer maxRecordCount
     Integer minRecordCount
+    boolean useGeometry
+    String geometry
 
     /**
      * Create an adaptor source from this configuration

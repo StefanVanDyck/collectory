@@ -583,6 +583,17 @@ class GbifService {
         return gadmMap
     }
 
+    def getRegionPolygonMap() {
+        def polygonMap = [:]
+        this.class.classLoader.getResourceAsStream("belgiumRegionPolygonWKT.csv").readLines().each{
+            def codeAndPolygon = it.split("\t")
+            polygonMap.put(codeAndPolygon[0], codeAndPolygon[1])
+        }
+
+
+        return polygonMap
+    }
+
     def Date getGbifDatasetLastUpdated(String guid){
 
         try {
