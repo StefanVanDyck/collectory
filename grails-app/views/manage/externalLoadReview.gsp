@@ -57,7 +57,7 @@
                     <g:if test="${configuration.resources}">
                     <g:each in="${configuration.resources}" var="res" status="rs">
                     <tr class="resource-scan-${res.status}">
-                        <td>
+                        <td data-order="${res.name}">
                             <table>
                                 <tr>
                                     <td>
@@ -131,16 +131,16 @@
         });
         resource_table = $('#resource-table').DataTable({
             "columns": [
+                null,
+                null,
                 {"orderable": false},
-                null,
-                null,
-                null,
                 null,
                 {"orderable": false},
                 {"orderable": false},
                 {"orderable": false}
             ],
-            paging: false
+            paging: false,
+            order: [[0, 'asc']]
         });
     } );
 
