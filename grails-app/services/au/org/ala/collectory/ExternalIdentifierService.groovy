@@ -40,19 +40,19 @@ class ExternalIdentifierService {
 
         if (uid[0..1] == 'co') {
             Collection c = Collection.findByUid(uid)
-            c.externalIdentifiers.add(ext)
+            c.externalIdentifiers?.add(ext)
             Collection.withTransaction { c.save(flush: true) }
         } else if (uid[0..1] == 'in') {
             Institution c = Institution.findByUid(uid)
-            c.externalIdentifiers.add(ext)
+            c.externalIdentifiers?.add(ext)
             Institution.withTransaction { c.save(flush: true) }
         } else if (uid[0..1] == 'dp') {
             DataProvider c = DataProvider.findByUid(uid)
-            c.externalIdentifiers.add(ext)
+            c.externalIdentifiers?.add(ext)
             DataProvider.withTransaction { c.save(flush: true) }
         } else if (uid[0..1] == 'dr') {
             DataResource c = DataResource.findByUid(uid)
-            c.externalIdentifiers.add(ext)
+            c.externalIdentifiers?.add(ext)
             DataResource.withTransaction { c.save(flush: true) }
         }
         return ext
