@@ -43,6 +43,10 @@
         <g:hiddenField name="country" value="${configuration.country}"/>
         <g:hiddenField name="minRecordCount" value="${configuration.minRecordCount}"/>
         <g:hiddenField name="maxRecordCount" value="${configuration.maxRecordCount}"/>
+        <g:hiddenField name="region" value="${configuration.region}"/>
+        <g:hiddenField name="useGeometry" value="${configuration.useGeometry}"/>
+        <g:hiddenField name="geometry" value="${configuration.geometry}"/>
+
         <table id="resource-table" class="resource-table table table-hover table-sm">
             <thead>
                 <tr class="header">
