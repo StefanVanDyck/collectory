@@ -55,9 +55,27 @@
                     <th><g:message code="manage.extloadr.label03"/></th>
                     <th><g:message code="manage.extloadr.label04"/></th>
                     <th><g:message code="manage.extloadr.label05"/></th>
-                    <th><g:message code="manage.extloadr.label06"/> <button type="btn btn-sm" onclick="invertColumn('.addResource'); return false"><span class="glyphicon glyphicon-check"></span></button></th>
-                    <th><g:message code="manage.extloadr.label07"/> <button type="btn btn-sm" onclick="invertColumn('.updateMetadata'); return false"><span class="glyphicon glyphicon-check"></span></button></th>
-                    <th><g:message code="manage.extloadr.label08"/> <button type="btn btn-sm" onclick="invertColumn('.updateConnection'); return false"><span class="glyphicon glyphicon-check"></span></button></th>
+                    <th>
+                        <g:message code="manage.extloadr.label06"/>
+                        <br/>
+                        <g:checkBox name="addResourceHeader" class="addResourceCheckbox" onclick="onHeaderClick('.addResource'); return false"/>
+                        <br/>
+                        <span class="addResourceLabel" style="font-weight: 400">Click for selection</span>
+                    </th>
+                    <th>
+                        <g:message code="manage.extloadr.label07"/>
+                        <br/>
+                        <g:checkBox name="updateMetadataHeader" class="updateMetadataCheckbox" onclick="onHeaderClick('.updateMetadata'); return false"/>
+                        <br/>
+                        <span class="updateMetadataLabel" style="font-weight: 400">Click for selection</span>
+                    </th>
+                    <th>
+                        <g:message code="manage.extloadr.label08"/>
+                        <br/>
+                        <g:checkBox name="updateConnectionHeader" class="updateConnectionCheckbox" onclick="onHeaderClick('.updateConnection'); return false"/>
+                        <br/>
+                        <span class="updateConnectionLabel" style="font-weight: 400">Click for selection</span>
+                    </th>
                     <th><g:message code="manage.extloadr.label09"/></th>
                 </tr>
             </thead>
@@ -75,15 +93,15 @@
                     <g:hiddenField name="resources[${rs}].country" value="${configuration.country}"/>
                     <g:textField class="resource-name col-xs-4" name="resources[${rs}].name" value="${res.name}" />
                 </td>
-                <td><span title="<g:message code="manage.extstatus.${res.status}.detail"/>"><g:message code="manage.extstatus.${res.status}"/></span></td>
+                <td><span class="status${res.status}" title="<g:message code="manage.extstatus.${res.status}.detail"/>"><g:message code="manage.extstatus.${res.status}"/></span></td>
                 <td class="resource-mapping"><span id="existing-${rs}"><g:if test="${res.uid}">
-                    <g:link controller="dataResource" action="show" id="${res.uid}" target="_new"> <g:fieldValue field="uid" bean="${res}"/></g:link>
+                    <g:link class="existingDr" controller="dataResource" action="show" id="${res.uid}" target="_new"> <g:fieldValue field="uid" bean="${res}"/></g:link>
                     </g:if></span>
                     &nbsp; &nbsp; <span class="btn btn-default btn-xs" onclick="existingDialog('#existing-${rs}', '#resources-${rs}-uid'); return false"><g:message code="manage.extloadr.button01" default="..."/></span> </td>
                 <td><g:formatDate type="datetime" date="${res.sourceUpdated}"/><g:if test="${res.existingChecked}">&nbsp;(<g:formatDate type="datetime" date="${res.existingChecked}"/>)</g:if></td>
-                <td><g:checkBox name="resources[${rs}].addResource" value="${res.addResource}"/></td>
-                <td><g:checkBox name="resources[${rs}].updateMetadata" value="${res.updateMetadata}"/></td>
-                <td><g:checkBox name="resources[${rs}].updateConnection" value="${res.updateConnection}"/></td>
+                <td><g:checkBox name="resources[${rs}].addResource" value="${res.addResource}" onclick="onRowClick('.addResource')"/></td>
+                <td><g:checkBox name="resources[${rs}].updateMetadata" value="${res.updateMetadata}" onclick="onRowClick('.updateMetadata')"/></td>
+                <td><g:checkBox name="resources[${rs}].updateConnection" value="${res.updateConnection}" onclick="onRowClick('.updateConnection')"/></td>
                 <td>${res.recordCount}</td>
             </tr>
             </g:each>
@@ -176,12 +194,126 @@
         }
     }
 
-    function invertColumn(suffix) {
-        $('input:checkbox').each( function(index, element) {
-            if (element.name.endsWith(suffix)) {
-                element.checked = !element.checked;
-            }
+    // Utility: compute current state
+    function getState(suffix) {
+
+      const boxes = $('input:checkbox[name$=\'' + suffix + '\']')
+      const checkedBoxes = $('input:checkbox').filter(function() {
+        return this.name.endsWith(suffix) && this.checked;
+      });// TODO replace with more efficient selector (if possible)
+      const allChecked = boxes.length === checkedBoxes.length;
+      const noneChecked = checkedBoxes.length === 0;
+
+      if (allChecked) return 1; // all
+      if (noneChecked) return 0; // none
+
+      const allNewChecked = getStatusChecks('NEW', suffix, true);
+      const noneNewChecked = getStatusChecks('NEW', suffix, false);
+
+      const allChangedChecked = getStatusChecks('CHANGED', suffix, true);
+      const noneChangedChecked = getStatusChecks('CHANGED', suffix, false);
+
+      if (allNewChecked && noneChangedChecked) return 2; // new
+      if (allChangedChecked && noneNewChecked) return 3; // changed
+
+      return 4; // manual input (mixed)
+    }
+
+    function getStatusChecks(status, suffix, checked){
+      const allStatusRows = $rows.filter(function (){
+        return $(this).find('span.status' + status).length;
+      });
+      const checkedStatusRows = $rows.filter(function() {
+        return $(this).find('span.status' + status).length && $(this).find('input:checkbox[name$=\'' + suffix + '\']').prop("checked") === checked;
+      });
+      return allStatusRows.length === checkedStatusRows.length;
+    }
+
+    const $rows = $('#resource-table tbody tr');
+
+    // Update header checkbox UI
+    function updateHeader(suffix) {
+      const state = getState(suffix);
+      const $header = $(suffix + 'Checkbox');
+      const $label =  $(suffix + 'Label');
+      switch (state) {
+        case 0:
+          $label.text('All off');
+          $header.prop('checked', false);
+          $header.prop('indeterminate', false);
+          break;
+        case 1:
+          $label.text('All on');
+          $header.prop('checked', true);
+          $header.prop('indeterminate', false);
+          break;
+        case 2:
+          $label.text('New only');
+          $header.prop('checked', false);
+          $header.prop('indeterminate', true);
+          break;
+        case 3:
+          $label.text('Changed only');
+          $header.prop('checked', false);
+          $header.prop('indeterminate', true);
+          break;
+        case 4:
+          $label.text('Manual selection');
+          $header.prop('checked', false)
+          $header.prop('indeterminate', true);
+          break;
+      }
+    }
+
+    // Click header checkbox cycles states 0 → 1 → 2 → 3 → 0
+
+    let clickStatesMap = {};
+
+    function getClickState(suffix){
+        if (!(suffix in clickStatesMap)) {
+            clickStatesMap[suffix] = 0; // initial state
+        }
+        return clickStatesMap[suffix];
+    }
+
+    function setClickState(suffix, state) {
+        clickStatesMap[suffix] = state;
+    }
+
+    function onHeaderClick(suffix) {
+      this.event.preventDefault();
+      let clickState = getClickState(suffix)
+      clickState = (clickState + 1) % 4; // cycles 0-3
+      setClickState(suffix, clickState);
+      $rows.each(function () {
+        const $row = $(this);
+        const $cb = $row.find('input:checkbox').filter(function () {
+          return this.name.endsWith(suffix);
         });
+        switch (clickState) {
+          case 0: // none
+            $cb.prop('checked', false);
+            break;
+          case 1: // all
+            $cb.prop('checked', true);
+            break;
+          case 2: // new
+            $cb.prop('checked', $row.find('span.statusNEW').length > 0);
+            break;
+          case 3: // changed
+            $cb.prop('checked', $row.find('span.statusCHANGED').length > 0);
+            break;
+        }
+      });
+      updateHeader(suffix);
+    }
+
+    // If user clicks manually any row checkbox → set to state 4
+    function onRowClick(suffix) {
+      const state = getState(suffix);
+      let clickState = state < 4 ? state : 4; // keep in sync, but don't go back to 0-3
+      setClickState(suffix, clickState)
+      updateHeader(suffix);
     }
 
     /* Fix for curCSS bug */
