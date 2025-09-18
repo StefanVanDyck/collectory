@@ -38,6 +38,7 @@ class DataSourceConfiguration {
     Integer minRecordCount
     boolean useGeometry
     String geometry
+    boolean useGadm1Code
 
     /**
      * Create an adaptor source from this configuration

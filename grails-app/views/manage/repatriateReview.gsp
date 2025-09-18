@@ -46,6 +46,7 @@
         <g:hiddenField name="region" value="${configuration.region}"/>
         <g:hiddenField name="useGeometry" value="${configuration.useGeometry}"/>
         <g:hiddenField name="geometry" value="${configuration.geometry}"/>
+        <g:hiddenField name="useGadm1Code" value="${configuration.useGadm1Code}"/>
 
         <table id="resource-table" class="resource-table table table-hover table-sm">
             <thead>

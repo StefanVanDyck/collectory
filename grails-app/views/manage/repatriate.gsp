@@ -23,6 +23,8 @@
     <div id="baseForm" class="col-md-8">
         <g:form action="searchForRepatResources" controller="manage">
             <g:hiddenField name="configuration.guid" value="${configuration.guid}"/>
+            <g:hiddenField name="useGeometry" value="${configuration.useGeometry}"/>
+            <g:hiddenField name="useGadm1Code" value="${configuration.useGadm1Code}"/>
             <div class="form-group hide">
                 <label for="adaptorString"><g:message code="manage.extload.label04" /><cl:helpText code="manage.extload.label04.help"/></label>
                 <g:select name="adaptorString" class="form-control" from="${adaptors}" optionKey="adaptorString" optionValue="name" value="${configuration.adaptorString}"/>
@@ -36,14 +38,18 @@
                 <g:field name="country" class="form-control" type="string" value="${configuration.country}"/>
             </div>
             <div class="form-group">
+                <label for="repatriationArea"><g:message code="manage.repatriationCountry.label06" /><cl:helpText code="manage.extload.label06.help"/></label>
+                <g:select id="repatriationArea" name="repatriationArea" class="form-control" from="${repatriationAreas}" value="${repatriationAreas[0]}" onchange="repatriationAreaUpdated()"/>
+            </div>
+            <div class="form-group hide">
                 <label for="region"><g:message code="manage.repatriationCountry.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
                 <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" values="${configuration.region}" value="${params.region}" onchange="loadPolygon()"/>
             </div>
             <div class="form-group">
-                <label for="useGeometry">Use geometry parameter instead of administrative region code?<cl:helpText code="manage.extload.label08.help"/></label>
-                <g:checkBox name="useGeometry" value="${configuration.useGeometry}" onchange="useGeometryChanged();"/>
+                <label for="spatialCriteria"><g:message code="manage.repatriationCountry.label08" /><cl:helpText code="manage.extload.label08.help"/></label>
+                <g:select id="spatialCriteria" name="spatialCriteria" class="form-control" from="${['Administrative code', 'WKT polygon']}" value="'select criteria'" onchange="spatialCriteriaUpdated()"/>
             </div>
-            <div class="form-group">
+            <div class="form-group hide">
                 <label for="geometry">Polygon WKT (editable)<cl:helpText code="manage.extload.label09.help"/></label>
                 <g:textArea name="geometry" cols="50" rows="5" value="${configuration.geometry}" onLoad="loadPolygon()" disabled="true"/>
             </div>
@@ -104,20 +110,37 @@
     var region = document.getElementById("region").value;
     var regionPolygonMap = ${raw(regionPolygonJson.toString())};
     var polygon = regionPolygonMap[region];
-    var useGeometry = document.getElementById("useGeometry").checked;
+    var spatialCriteria = document.getElementById("spatialCriteria").value;
+    var useGeometry = spatialCriteria === 'WKT polygon';
     if (polygon && useGeometry) {
       document.getElementById("geometry").value = polygon;
     } else {
       document.getElementById("geometry").value = "";
     }
+    $("input[name='useGeometry']").val(useGeometry);
   }
-  function useGeometryChanged() {
-    var useGeometry = document.getElementById("useGeometry").checked;
-    if (useGeometry) {
-      document.getElementById("geometry").disabled = false;
+
+  function repatriationAreaUpdated() {
+    var repatriationArea = document.getElementById("repatriationArea").value;
+    var useGadm1Code = false;
+    var $regionsDiv = $("div.form-group").has("select[name='region']");
+    if(repatriationArea === 'Belgium'){
+        $regionsDiv.addClass("hide");
+    }else{
+        $regionsDiv.removeClass("hide");
+        useGadm1Code = true;
+    }
+    $("input[name='useGadm1Code']").val(useGadm1Code);
+  }
+
+  function spatialCriteriaUpdated() {
+    var spatialCriteria = document.getElementById("spatialCriteria").value;
+    var $geometryDiv = $("div.form-group").has("textArea[name='geometry']");
+    if(spatialCriteria === 'Administrative code'){
+      $geometryDiv.addClass("hide");
+    }else if(spatialCriteria === 'WKT polygon'){
+      $geometryDiv.removeClass("hide");
       loadPolygon();
-    } else {
-      document.getElementById("geometry").disabled = true;
     }
   }
 </script>
