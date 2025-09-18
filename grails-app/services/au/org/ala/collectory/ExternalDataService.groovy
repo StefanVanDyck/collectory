@@ -215,12 +215,14 @@ class ExternalDataService {
 
             if (adaptor.isGeneratable()) {
                 resource.phase = TaskPhase.GENERATING
-                resource.occurrenceId = adaptor.generateData(resource.guid, resource.country)
+                resource.downloadId = load.configuration.getUseGadm1Code() ?
+                        adaptor.generateDataForRegion(resource.guid, load.configuration.region) :
+                        adaptor.generateData(resource.guid, resource.country)
                 if (resource.phase.terminal) return // Cancelled externally
 
                 TaskPhase status = TaskPhase.GENERATING
                 while (!status.terminal && !resource.phase.terminal) {
-                    status = adaptor.generateStatus(resource.occurrenceId)
+                    status = adaptor.generateStatus(resource.downloadId)
                     if (!status.terminal) {
                         Thread.sleep(POLL_INTERVAL)
                     }
@@ -235,10 +237,10 @@ class ExternalDataService {
             if (adaptor.isDownloadable()) {
                 resource.phase = TaskPhase.DOWNLOADING
                 File uploadDir = new File(grailsApplication.config.uploadFilePath as String)
-                File uploadTmpDir = new File(new File(uploadDir, "tmp"), resource.occurrenceId);
+                File uploadTmpDir = new File(new File(uploadDir, "tmp"), resource.downloadId);
                 FileUtils.forceMkdir(uploadTmpDir)
-                File tmpFileName = new File(uploadTmpDir, resource.occurrenceId);
-                adaptor.downloadData(resource.occurrenceId, tmpFileName)
+                File tmpFileName = new File(uploadTmpDir, resource.downloadId);
+                adaptor.downloadData(resource.downloadId, tmpFileName)
                 if (resource.phase.terminal) return // Cancelled externally
 
                 resource.phase = TaskPhase.PROCESSING

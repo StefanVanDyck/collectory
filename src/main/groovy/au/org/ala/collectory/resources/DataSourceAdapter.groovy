@@ -140,6 +140,15 @@ abstract class DataSourceAdapter {
     abstract String generateData(String guid, String country) throws ExternalResourceException
 
     /**
+     * Generate data for download
+     * @param guid The identifier for the resource
+     * @param region The value of the gadmLevel1Gid key (A GADM geographic identifier at the first level, for example AGO.1_1)
+     * @return An identifier that can be used to monitor when the generation phase has completed (null for an error)
+     * @throws ExternalResourceException
+     */
+    abstract String generateDataForRegion(String guid, String region) throws ExternalResourceException
+
+    /**
      * See if a task has completed.
      * <p>
      * Returns {@link TaskPhase#COMPLETED} for a completed generation task, {@link TaskPhase#GENERATING} for

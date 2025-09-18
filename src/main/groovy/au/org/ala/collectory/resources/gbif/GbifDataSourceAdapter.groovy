@@ -331,6 +331,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
      * but claims that the content type is application/json
      *
      * @param guid The GBIF identifier for the resource
+     * @param country The country code
      * @return The downloadId used to monitor when the download has been completed
      */
     @Override
@@ -339,6 +340,17 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
     }
 
     /**
+     * Starts the GBIF download by calling the API.
+     * @param guid The GBIF identifier for the resource
+     * @param region The gadm.org code of the region (1st level)
+     * @return
+     * @throws ExternalResourceException
+     */
+    @Override
+    String generateDataForRegion(String guid, String region) throws ExternalResourceException {
+        GbifService.startGBIFDownloadForRegion(guid, region, configuration.endpoint, configuration.username, configuration.password)
+    }
+/**
      * Check to see how the download is coming along
      *
      * @param id The download id
@@ -364,7 +376,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
     @Override
     File processData(File downloaded, File workDir, ExternalResourceBean resource) throws ExternalResourceException {
         try {
-            File upload = new File(workDir, resource.occurrenceId + "-dwca.zip")
+            File upload = new File(workDir, resource.downloadId + "-dwca.zip")
             FileUtils.moveFile(downloaded, upload)
             return upload
         } catch (IOException ex) {

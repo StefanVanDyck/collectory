@@ -384,6 +384,63 @@ class GbifService {
         }
     }
 
+
+    /**
+     * Starts the GBIF download by calling the API/
+     *
+     * @param resourceId The GBIF identifier for the resource
+     * @param repatRegion The value of the gadmLevel1Gid key (A GADM geographic identifier at the first level, for example AGO.1_1)
+     * @param username The username of a register GBIF user - a download will only be started when a valid user is supplied
+     * @param password  The password for the GBIF user.
+     * @return The downloadId used to monitor when the download has been completed
+     */
+    static String startGBIFDownloadForRegion(String resourceId, String repatRegion, URL endpointUrl, String username, String password){
+        try {
+            LOGGER.debug("[startGBIFDownload] Initialising download..... ")
+            def params = [:]
+
+            if (repatRegion){
+                params = [
+                        creator: username,
+                        notification_address: [],
+                        format: "DWCA",
+                        predicate: [
+                                type: "and",
+                                predicates: [
+                                        [
+                                                type : "equals",
+                                                key  : "DATASET_KEY",
+                                                value: resourceId
+                                        ],
+                                        [
+                                                type : "equals",
+                                                key: "GADM_LEVEL_1_GID",
+                                                value: repatRegion
+                                        ]
+                                ]
+                        ]
+                ]
+            } else {
+                params = [
+                        creator             : username,
+                        notification_address: [],
+                        format: "DWCA",
+                        predicate           : [
+                                type : "equals",
+                                key  : "DATASET_KEY",
+                                value: resourceId
+                        ]
+                ]
+            }
+
+            String downloadId = downloadFromGBIF(params, endpointUrl, username, password)
+            downloadId
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e)
+            null
+        }
+    }
+
     /**
      * Starts a download from GBIF returning the downloadId for tracking status.
      *

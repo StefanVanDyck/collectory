@@ -40,8 +40,8 @@ class ExternalResourceBean implements Comparable<ExternalResourceBean> {
     TaskPhase phase
     /** Any additional nodes on the resource load */
     List notes = []
-    /** The occcurrence data id, used to track data generation tasks */
-    String occurrenceId
+    /** The download id from gbif download api, used to track data generation tasks */
+    String downloadId
     /** The number of records in this resource */
     Integer recordCount
     /** The number of records in this resource */

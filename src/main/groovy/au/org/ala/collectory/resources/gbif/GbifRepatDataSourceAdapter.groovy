@@ -53,12 +53,14 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
 
     String buildSearchUrl() {
         StringBuilder sb = new StringBuilder()
-        sb.append(MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country))
+        sb.append(OCCURRENCE_REPAT_SEARCH)
         if (configuration.useGeometry && configuration.geometry) {
             sb.append("&geometry=" + URLEncoder.encode(configuration.geometry, "UTF-8"))
         } else {
-            if (configuration.region) {
+            if (configuration.useGadm1Code && configuration.region) {
                 sb.append("&gadmLevel1Gid=" + configuration.region)
+            } else {
+                sb.append("&country=" + configuration.country)
             }
         }
         if (configuration.dataProviderUid) {
