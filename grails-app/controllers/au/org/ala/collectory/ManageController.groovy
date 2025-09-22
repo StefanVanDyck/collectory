@@ -39,6 +39,7 @@ class ManageController {
                 username: '',
                 password: '',
                 country: 'BE',
+                repatriationArea: 'BE',
                 region: '',
                 recordType: 'OCCURRENCE',
                 defaultDatasetValues: [:],
@@ -50,7 +51,7 @@ class ManageController {
         )
         def adaptor = configuration.createAdaptor()
         def dataProviders = DataProvider.all.collect { if (it.gbifRegistryKey == null) { it.setGbifRegistryKey("")}; return it }.sort { it.name }
-        def repatriationAreas = ["Belgium", "Regions"]
+        def repatriationAreasMap = [BE: "Belgium", RE: "Regions"]
         render(view: "repatriate",
                 model: [
                         repatriate: true,
@@ -59,7 +60,7 @@ class ManageController {
                         regionMap: gbifService.getRegionMap(),
                         regionPolygonMap: gbifService.getRegionPolygonMap(),
                         datasetTypeMap: adaptor.datasetTypeMap,
-                        repatriationAreas: repatriationAreas,
+                        repatriationAreasMap: repatriationAreasMap,
                         adaptors: externalDataService.REPAT_ADAPTORMAP,
                         dataProviders: dataProviders
                 ]
