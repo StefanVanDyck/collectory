@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label for="repatriationArea"><g:message code="manage.repatriationCountry.label06" /><cl:helpText code="manage.extload.label06.help"/></label>
-                <g:select id="repatriationArea" name="repatriationArea" class="form-control" from="${repatriationAreas}" value="${repatriationAreas[0]}" onchange="repatriationAreaUpdated()"/>
+                <g:select id="repatriationArea" name="repatriationArea" class="form-control" from="${repatriationAreasMap.entrySet()}" optionKey="key" optionValue="value" value="${params.repatriationArea}" onchange="repatriationAreaUpdated()"/>
             </div>
             <div class="form-group hide">
                 <label for="region"><g:message code="manage.repatriationCountry.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
@@ -107,9 +107,15 @@
 </div>
 <script type="text/javascript">
   function loadPolygon() {
-    var region = document.getElementById("region").value;
+    var polygonKey = null;
+    var repatriationArea = document.getElementById("repatriationArea").value;
+    if (repatriationArea === 'BE') {
+      polygonKey = 'BE';
+    } else {
+      polygonKey = document.getElementById("region").value;
+    }
     var regionPolygonMap = ${raw(regionPolygonJson.toString())};
-    var polygon = regionPolygonMap[region];
+    var polygon = regionPolygonMap[polygonKey];
     var spatialCriteria = document.getElementById("spatialCriteria").value;
     var useGeometry = spatialCriteria === 'WKT polygon';
     if (polygon && useGeometry) {
@@ -124,13 +130,14 @@
     var repatriationArea = document.getElementById("repatriationArea").value;
     var useGadm1Code = false;
     var $regionsDiv = $("div.form-group").has("select[name='region']");
-    if(repatriationArea === 'Belgium'){
+    if(repatriationArea === 'BE'){
         $regionsDiv.addClass("hide");
     }else{
         $regionsDiv.removeClass("hide");
         useGadm1Code = true;
     }
     $("input[name='useGadm1Code']").val(useGadm1Code);
+    loadPolygon();
   }
 
   function spatialCriteriaUpdated() {
