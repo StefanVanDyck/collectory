@@ -139,7 +139,11 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
         def optionalProvider
         if (configuration.dataProviderUid) {
             optionalProvider = DataProvider.findByUid(configuration.dataProviderUid)
-        }   
+        }
+
+        if(optionalProvider && !optionalProvider.gbifRegistryKey){
+            throw new ExternalResourceException("The selected data provider \'${optionalProvider.name}\' does not have a GBIF registry key associated with it. Please add GBIF registry key to the data provider.", "manage.note.note13", optionalProvider.name)
+        }
         String url = optionalProvider == null ?
                 DATASET_SEARCH.format([configuration.country, offset.toString(), pageSizeToUse.toString()].toArray()) :
                 DATASET_SEARCH_PROV.format([configuration.country, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
