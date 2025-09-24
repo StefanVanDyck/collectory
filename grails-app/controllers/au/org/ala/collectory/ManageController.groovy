@@ -47,6 +47,7 @@ class ManageController {
                 resources: [],
                 countries: gbifService.getCountryMap().keySet(),
                 useGeometry: false,
+                useRepatriated: true,
                 geometry: ''
         )
         def adaptor = configuration.createAdaptor()
