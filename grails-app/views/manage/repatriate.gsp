@@ -70,7 +70,7 @@
                 <label for="description"><g:message code="manage.extload.label02" /><cl:helpText code="manage.extload.label02.help"/></label>
                 <g:field name="description" class="form-control" type="text" size="64" value="${configuration.description}"/>
             </div>
-            <div class="form-group hide">
+            <div class="form-group">
                 <label for="dataProviderUid"><g:message code="manage.extload.label03" /><cl:helpText code="manage.extload.label03.help"/></label>
                 <g:select name="dataProviderUid"
                           class="form-control"
