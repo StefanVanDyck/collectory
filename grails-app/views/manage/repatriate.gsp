@@ -25,6 +25,7 @@
             <g:hiddenField name="configuration.guid" value="${configuration.guid}"/>
             <g:hiddenField name="useGeometry" value="${configuration.useGeometry}"/>
             <g:hiddenField name="useGadm1Code" value="${configuration.useGadm1Code}"/>
+            <g:hiddenField name="useRepatriated" value="${configuration.useRepatriated}"/>
             <div class="form-group hide">
                 <label for="adaptorString"><g:message code="manage.extload.label04" /><cl:helpText code="manage.extload.label04.help"/></label>
                 <g:select name="adaptorString" class="form-control" from="${adaptors}" optionKey="adaptorString" optionValue="name" value="${configuration.adaptorString}"/>
@@ -52,6 +53,10 @@
             <div class="form-group hide">
                 <label for="geometry">Polygon WKT (editable)<cl:helpText code="manage.extload.label09.help"/></label>
                 <g:textArea name="geometry" cols="50" rows="5" value="${configuration.geometry}" onLoad="loadPolygon()" disabled="true"/>
+            </div>
+            <div class="form-group">
+                <label for="publishingCountry"><g:message code="manage.repatriationCountry.label09" /><cl:helpText code="manage.repatriationCountry.label09.help"/></label>
+                <g:select id="publishingCountry" name="publishingCountry" class="form-control" from="${['Foreign publishers', 'Belgian publishers']}" value="'select criteria'" onchange="publishingCountryUpdated()"/>
             </div>
             <div class="form-group hide">
                 <label for="recordType"><g:message code="manage.extload.label07" /><cl:helpText code="manage.extload.label07.help"/></label>
@@ -149,6 +154,12 @@
       $geometryDiv.removeClass("hide");
       loadPolygon();
     }
+  }
+
+  function publishingCountryUpdated() {
+    var publishingCountry = document.getElementById("publishingCountry").value;
+    var useRepatriated = publishingCountry === 'Foreign publishers';
+    $("input[name='useRepatriated']").val(useRepatriated);
   }
 </script>
 </body>
