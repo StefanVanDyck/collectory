@@ -168,6 +168,19 @@
         });
     } );
 
+    /**
+     * Clear all checkboxes on page load (thus overwriting the model values, but it is for the sake of better UX and because Dimi requested it :-) )
+     */
+    function uncheckAllBoxes(){
+      console.log('Uncheck all boxes has been called')
+      $('input:checkbox[name$=\'.addResource\']').prop('checked', false);
+      $('input:checkbox[name$=\'.updateMetadata\']').prop('checked', false);
+      $('input:checkbox[name$=\'.updateConnection\']').prop('checked', false);
+      updateHeader('.addResource');
+      updateHeader('.updateMetadata');
+      updateHeader('.updateConnection');
+    }
+
     function existingOk(existingId, uidId) {
         var selected = existing_table.rows({ selected: true});
         var uid = '';
@@ -321,6 +334,8 @@
     jQuery.curCSS = function(element, prop, val) {
         return jQuery(element).css(prop, val);
     };
+
+    uncheckAllBoxes();
 </script>
 </body>
 </html>
