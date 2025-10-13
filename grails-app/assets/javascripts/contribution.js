@@ -119,15 +119,17 @@ $.each(urlInputs, function(i, obj) {
         });
 });
 /* this binds the code to add a new term to the list */
-$('#more-terms').click(function() {
-    var term = $('#otherKey').val();
-    // check that term doesn't already exist
-    if ($('#'+term).length > 0) {
-        alert(term + " is already present");
-    }
-    else {
-        var newField = "<div class=\"form-group\"><label for='" + term +"'>" + term + "</label>" +
-            "<input type='text' class='form-control' id='" + term + "' name='" + term + "'/></div>";
-        $('#add-another').parent().append(newField);
-    }
+$(function() {
+    $("#more-terms").on("click", function() {
+        var term = $('#otherKey').val();
+        // check that term doesn't already exist
+        if ($('#'+term).length > 0) {
+            alert(term + " is already present");
+        }
+        else {
+            var newField = "<div class=\"form-group\"><label for='" + term +"'>" + term + "</label>" +
+                "<input type='text' class='form-control' id='" + term + "' name='" + term + "'/></div>";
+            $(this).closest(".form-group").after(newField);
+        }
+    });
 });
