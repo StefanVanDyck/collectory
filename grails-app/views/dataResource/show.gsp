@@ -17,6 +17,7 @@
                 src="https://maps.googleapis.com/maps/api/js?key=${grailsApplication.config.google?.apikey}"
                 type="text/javascript"></script>
         <asset:stylesheet src="application.css"/>
+        <asset:javascript src="application-pages.js"/>
     </head>
     <body onload="initializeLocationMap('${instance.canBeMapped()}',${instance.latitude},${instance.longitude});">
     <style>
