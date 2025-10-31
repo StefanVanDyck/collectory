@@ -17,7 +17,7 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
     static final SOURCE = "GBIF_REPATRIATION"
     GbifService gbifService
 
-    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated=true&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
+    static final String OCCURRENCE_REPAT_SEARCH = "occurrence/search?repatriated={0}&offset=0&limit=0&facet=datasetKey&facetLimit=10000"
 
     GbifRepatDataSourceAdapter(DataSourceConfiguration configuration) {
         super(configuration)
@@ -53,12 +53,20 @@ class GbifRepatDataSourceAdapter extends GbifDataSourceAdapter {
 
     String buildSearchUrl() {
         StringBuilder sb = new StringBuilder()
-        sb.append(MessageFormat.format(OCCURRENCE_REPAT_SEARCH, configuration.country))
+        String url
+        if(configuration.useRepatriated) {
+            url = MessageFormat.format(OCCURRENCE_REPAT_SEARCH, "true")
+        } else {
+            url = MessageFormat.format(OCCURRENCE_REPAT_SEARCH, "false")
+        }
+        sb.append(url)
         if (configuration.useGeometry && configuration.geometry) {
             sb.append("&geometry=" + URLEncoder.encode(configuration.geometry, "UTF-8"))
         } else {
-            if (configuration.region) {
+            if (configuration.useGadm1Code && configuration.region) {
                 sb.append("&gadmLevel1Gid=" + configuration.region)
+            } else {
+                sb.append("&country=" + configuration.country)
             }
         }
         if (configuration.dataProviderUid) {

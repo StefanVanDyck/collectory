@@ -215,12 +215,12 @@ class ExternalDataService {
 
             if (adaptor.isGeneratable()) {
                 resource.phase = TaskPhase.GENERATING
-                resource.occurrenceId = adaptor.generateData(resource.guid, resource.country)
+                resource.downloadId = submitDataDownload(load, adaptor, resource)
                 if (resource.phase.terminal) return // Cancelled externally
 
                 TaskPhase status = TaskPhase.GENERATING
                 while (!status.terminal && !resource.phase.terminal) {
-                    status = adaptor.generateStatus(resource.occurrenceId)
+                    status = adaptor.generateStatus(resource.downloadId)
                     if (!status.terminal) {
                         Thread.sleep(POLL_INTERVAL)
                     }
@@ -235,10 +235,10 @@ class ExternalDataService {
             if (adaptor.isDownloadable()) {
                 resource.phase = TaskPhase.DOWNLOADING
                 File uploadDir = new File(grailsApplication.config.uploadFilePath as String)
-                File uploadTmpDir = new File(new File(uploadDir, "tmp"), resource.occurrenceId);
+                File uploadTmpDir = new File(new File(uploadDir, "tmp"), resource.downloadId);
                 FileUtils.forceMkdir(uploadTmpDir)
-                File tmpFileName = new File(uploadTmpDir, resource.occurrenceId);
-                adaptor.downloadData(resource.occurrenceId, tmpFileName)
+                File tmpFileName = new File(uploadTmpDir, resource.downloadId);
+                adaptor.downloadData(resource.downloadId, tmpFileName)
                 if (resource.phase.terminal) return // Cancelled externally
 
                 resource.phase = TaskPhase.PROCESSING
@@ -263,6 +263,14 @@ class ExternalDataService {
         } catch (Exception ex) {
             log.error("Unable to process resource ${resource} ${ex.class}", ex)
             resource.addError("manage.note.note05", ex.message ?: ex.class.name)
+        }
+    }
+
+    private String submitDataDownload(DataSourceLoad load, DataSourceAdapter adaptor, ExternalResourceBean resource) {
+        if (load.configuration.getUseGadm1Code()) {
+            load.configuration.region ? adaptor.generateDataForRegion(resource.guid, load.configuration.region) : adaptor.generateData(resource.guid, resource.country)
+        } else {
+            adaptor.generateData(resource.guid, resource.country) // till we support fetching data by WKT polygon (Gbif API currently returns records for the whole country(-ies) where WKT polygon is located)
         }
     }
 

@@ -38,6 +38,8 @@ class DataSourceConfiguration {
     Integer minRecordCount
     boolean useGeometry
     String geometry
+    boolean useGadm1Code
+    boolean useRepatriated
 
     /**
      * Create an adaptor source from this configuration

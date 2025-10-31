@@ -139,7 +139,11 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
         def optionalProvider
         if (configuration.dataProviderUid) {
             optionalProvider = DataProvider.findByUid(configuration.dataProviderUid)
-        }   
+        }
+
+        if(optionalProvider && !optionalProvider.gbifRegistryKey){
+            throw new ExternalResourceException("The selected data provider \'${optionalProvider.name}\' does not have a GBIF registry key associated with it. Please add GBIF registry key to the data provider.", "manage.note.note13", optionalProvider.name)
+        }
         String url = optionalProvider == null ?
                 DATASET_SEARCH.format([configuration.country, offset.toString(), pageSizeToUse.toString()].toArray()) :
                 DATASET_SEARCH_PROV.format([configuration.country, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
@@ -331,6 +335,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
      * but claims that the content type is application/json
      *
      * @param guid The GBIF identifier for the resource
+     * @param country The country code
      * @return The downloadId used to monitor when the download has been completed
      */
     @Override
@@ -339,6 +344,17 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
     }
 
     /**
+     * Starts the GBIF download by calling the API.
+     * @param guid The GBIF identifier for the resource
+     * @param region The gadm.org code of the region (1st level)
+     * @return
+     * @throws ExternalResourceException
+     */
+    @Override
+    String generateDataForRegion(String guid, String region) throws ExternalResourceException {
+        GbifService.startGBIFDownloadForRegion(guid, region, configuration.endpoint, configuration.username, configuration.password)
+    }
+/**
      * Check to see how the download is coming along
      *
      * @param id The download id
@@ -364,7 +380,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
     @Override
     File processData(File downloaded, File workDir, ExternalResourceBean resource) throws ExternalResourceException {
         try {
-            File upload = new File(workDir, resource.occurrenceId + "-dwca.zip")
+            File upload = new File(workDir, resource.downloadId + "-dwca.zip")
             FileUtils.moveFile(downloaded, upload)
             return upload
         } catch (IOException ex) {
