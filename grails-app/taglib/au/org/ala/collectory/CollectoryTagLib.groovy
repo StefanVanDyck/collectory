@@ -1654,7 +1654,7 @@ class CollectoryTagLib {
     }
 
     def viewPublicLink = { attrs, body ->
-        out << link(class:"preview", controller:"public", action:'show', id:attrs.uid) { "<img class='ala' alt='ala' src='${resource(dir:"images", file:"favicon.gif")}'/> View public page" }
+        out << link(class:"preview", controller:"public", action:'show', id:attrs.uid) { "<img class='ala' alt='ala' src='/favicon.ico' height='16' width='16'/> View public page" }
     }
 
     def jsonSummaryLink = { attrs, body ->
