@@ -171,7 +171,8 @@ class ManageController {
         if (params.guid) {
             gbifService.downloadGbifDataset(
                     params.guid,
-                    params.repatriationCountry)
+                    params.repatriationCountry,
+                    params.region)
             redirect(action: 'gbifDatasetLoadStatus', model: ['datasetKey': params.guid], params: ['datasetKey': params.guid])
         }
     }
@@ -196,7 +197,9 @@ class ManageController {
     def gbifDatasetDownload() {
         log.debug('Dataset id ' + params.id)
         def dr = DataResource.findByUid(params.id)
-        render(view: "gbifDatasetDownload", model: ['uid': dr.uid, 'guid' : dr.guid, 'dr' : dr])
+        def regionCode = dr.region
+        def regionName = dr.region ? gbifService.getRegionMap()[dr.region] : null
+        render(view: "gbifDatasetDownload", model: ['uid': dr.uid, 'guid' : dr.guid, 'dr' : dr, 'regionCode': regionCode, 'regionName': regionName])
     }
 
     /**

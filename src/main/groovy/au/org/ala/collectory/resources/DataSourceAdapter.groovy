@@ -198,5 +198,5 @@ abstract class DataSourceAdapter {
      *
      * @throws ExternalResourceException if unable to build the connection
      */
-    abstract Object buildConnection(File upload, Object connection, ExternalResourceBean resource) throws ExternalResourceException
+    abstract Object buildConnection(File upload, DataSourceConfiguration configuration, Object connection, ExternalResourceBean resource) throws ExternalResourceException
 }

@@ -210,7 +210,7 @@
               <div class="show-section well">
                 <g:if test="${instance.gbifDataset}">
                     <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
-                        <div class="pull-right hide"><span class="buttons">
+                        <div class="pull-right"><span class="buttons">
                             <g:link class="edit btn btn-default" controller="manage" action="gbifDatasetDownload" id="${instance.uid}">
                             <i class="glyphicon-refresh"> </i>
                             ${message(code: 'datasource.button.update', default: 'Reload from GBIF')}</g:link></span></div>

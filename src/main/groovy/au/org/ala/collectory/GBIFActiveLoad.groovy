@@ -29,6 +29,7 @@ class GBIFActiveLoad {
     String phase = "<NOT STARTED>"
     String dataResourceUid
     String repatriationCountry
+    String region
 
     private boolean completed = false
     public void setCompleted(){
