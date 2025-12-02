@@ -398,11 +398,14 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
      * @return A suitable update
      */
     @Override
-    Object buildConnection(File upload, Object connection, ExternalResourceBean resource) throws ExternalResourceException {
+    Object buildConnection(File upload, DataSourceConfiguration configuration, Object connection, ExternalResourceBean resource) throws ExternalResourceException {
         def update = [:]
         connection.url = "file:///${upload.absolutePath}"
         connection.protocol = "DwCA"
         connection.termsForUniqueKey = ["http://rs.gbif.org/terms/1.0/gbifID"]
+        if(configuration.region){
+            connection.region = configuration.region
+        }
         update.connectionParameters = (new JsonOutput()).toJson(connection)
         return update
     }

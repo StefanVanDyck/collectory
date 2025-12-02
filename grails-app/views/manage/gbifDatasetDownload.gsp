@@ -19,6 +19,12 @@
         <label for="repatriationCountry"><g:message code="manage.gbifdldataset.label02" />:</label>
         <g:field type="text" class="form-control" name="repatriationCountry" required="true" value="${dr.repatriationCountry}" readonly="true" />
         <br/>
+        <label for="region"><g:message code="manage.gbifdldataset.label03" />:</label>
+        <!-- Visible field (not submitted) -->
+        <g:field type="text" class="form-control" value="${regionName}" readonly="true" name="region_display" />
+        <!-- Hidden field (submitted as 'region') -->
+        <g:hiddenField name="region" value="${regionCode}" />
+        <br/>
         <input type="submit" name="performGBIFLoad" value="Reload" class="save btn btn-default">
     </div>
 

@@ -328,6 +328,10 @@ class GbifService {
       startGBIFDownload(resourceId, repatCountry, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
     }
 
+    def String startGBIFDownloadForRegion(String resourceId, String region){
+        startGBIFDownloadForRegion(resourceId, region, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
+    }
+
     /**
      * Starts the GBIF download by calling the API/
      *
@@ -483,10 +487,11 @@ class GbifService {
      * @param password      The gbif.org password
      * @return
      */
-    def downloadGbifDataset(String datasetKey, String repatriationCountry){
+    def downloadGbifDataset(String datasetKey, String repatriationCountry, String region){
         GBIFActiveLoad l = new GBIFActiveLoad()
         l.gbifResourceUid = datasetKey
         l.repatriationCountry = repatriationCountry
+        l.region = region
 
         def reloadExisting = true
         log.debug("Started Gbif Dataset")
@@ -531,7 +536,7 @@ class GbifService {
 
                                 log.info("Submitting " + l + " to be processed")
                                 //1) Start the download
-                                String downloadId = startGBIFDownload(l.gbifResourceUid, l.repatriationCountry)
+                                String downloadId = l.region ? startGBIFDownloadForRegion(l.gbifResourceUid, l.region) : startGBIFDownload(l.gbifResourceUid, l.repatriationCountry)
                                 if (downloadId) {
                                     l.downloadId = downloadId
                                     //2) Monitor the download

@@ -318,4 +318,10 @@ class DataResource implements ProviderGroup, Serializable {
     String shortProviderName() {
         return shortProviderName(30)
     }
+
+    String getRegion() {
+        def parsed = new JsonSlurper().parseText(connectionParameters)
+        return parsed instanceof Map ? parsed.region : null
+    }
+
 }
