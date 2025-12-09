@@ -251,7 +251,7 @@ class ExternalDataService {
 
             resource.phase = TaskPhase.CONNECITNG
             def connection = (new JsonSlurper()).parseText(dr.connectionParameters ?: '{}')
-            def update = convertToJSON(adaptor.buildConnection(uploadFileName, connection, resource))
+            def update = convertToJSON(adaptor.buildConnection(uploadFileName, load.configuration, connection, resource))
             DataResource.withTransaction {
                 crudService.updateDataResource(dr, update)
             }
