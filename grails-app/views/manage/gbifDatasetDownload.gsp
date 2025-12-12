@@ -20,10 +20,7 @@
         <g:field type="text" class="form-control" name="repatriationCountry" required="true" value="${dr.repatriationCountry}" readonly="true" />
         <br/>
         <label for="region"><g:message code="manage.gbifdldataset.label03" />:</label>
-        <!-- Visible field (not submitted) -->
-        <g:field type="text" class="form-control" value="${regionName}" readonly="true" name="region_display" />
-        <!-- Hidden field (submitted as 'region') -->
-        <g:hiddenField name="region" value="${regionCode}" />
+        <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" value="${regionCode}"/>
         <br/>
         <input type="submit" name="performGBIFLoad" value="Reload" class="save btn btn-default">
     </div>
