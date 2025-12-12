@@ -320,8 +320,17 @@ class DataResource implements ProviderGroup, Serializable {
     }
 
     String getRegion() {
-        def parsed = new JsonSlurper().parseText(connectionParameters)
-        return parsed instanceof Map ? parsed.region : null
+        if (!connectionParameters) {
+            return null
+        }
+
+        try {
+            def parsed = new JsonSlurper().parseText(connectionParameters)
+            return (parsed instanceof Map) ? parsed.region : null
+        } catch (Exception e) {
+            log.error("Error parsing connectionParameters JSON for DataResource ${uid}: ${e.message}", e)
+            return null
+        }
     }
 
 }

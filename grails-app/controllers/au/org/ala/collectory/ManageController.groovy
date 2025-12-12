@@ -198,8 +198,7 @@ class ManageController {
         log.debug('Dataset id ' + params.id)
         def dr = DataResource.findByUid(params.id)
         def regionCode = dr.region
-        def regionName = dr.region ? gbifService.getRegionMap()[dr.region] : null
-        render(view: "gbifDatasetDownload", model: ['uid': dr.uid, 'guid' : dr.guid, 'dr' : dr, 'regionCode': regionCode, 'regionName': regionName])
+        render(view: "gbifDatasetDownload", model: ['uid': dr.uid, 'guid' : dr.guid, 'dr' : dr, 'regionCode': regionCode, 'regionMap': gbifService.getRegionMap()])
     }
 
     /**
