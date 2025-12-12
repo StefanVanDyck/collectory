@@ -186,7 +186,7 @@ class ManageController {
     def gbifDatasetLoadStatus(){
         log.debug('key->' + params.datasetKey)
         def gbifSummary = gbifService.getDatasetKeyStatusInfoFor(params.datasetKey)
-        log.debug(gbifSummary)
+        log.debug(gbifSummary.toString())
         [gbifSummary:gbifSummary,'datasetKey':params.datasetKey]
     }
 
