@@ -149,7 +149,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
                 DATASET_SEARCH_PROV.format([configuration.country, offset.toString(), pageSizeToUse.toString(), optionalProvider.gbifRegistryKey].toArray())
         sb.append(url)
         if (configuration.name) {
-            sb.append("&q=title:*${configuration.name}*")
+            sb.append("&q=*${configuration.name}*")
         }
         sb.toString()
     }
