@@ -20,7 +20,7 @@
         <g:field type="text" class="form-control" name="repatriationCountry" required="true" value="${dr.repatriationCountry}" readonly="true" />
         <br/>
         <label for="region"><g:message code="manage.gbifdldataset.label03" />:</label>
-        <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" value="${regionCode}"/>
+        <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" value="${regionCode}" noSelection="['':'No region selected']"/>
         <br/>
         <input type="submit" name="performGBIFLoad" value="Reload" class="save btn btn-default">
     </div>
