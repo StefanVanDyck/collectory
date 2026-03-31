@@ -6,27 +6,14 @@ import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpEntity
-import org.apache.http.HttpException
 import org.apache.http.HttpHeaders
-import org.apache.http.HttpRequest
-import org.apache.http.HttpRequestInterceptor
 import org.apache.http.HttpResponse
-import org.apache.http.StatusLine
-import org.apache.http.auth.AuthScope
-import org.apache.http.auth.AuthState
-import org.apache.http.auth.Credentials
-import org.apache.http.auth.UsernamePasswordCredentials
-import org.apache.http.client.CredentialsProvider
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
-import org.apache.http.client.protocol.ClientContext
 import org.apache.http.entity.StringEntity
-import org.apache.http.impl.auth.BasicScheme
-import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.protocol.HttpContext
 import org.apache.tools.zip.ZipFile
 import org.grails.web.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -45,6 +32,7 @@ class GbifService {
 
     def grailsApplication
     def crudService
+    def dataResourceFetchService
 
     static final String CITATION_FILE = "citations.txt"
     static final String RIGHTS_FILE = "rights.txt"
@@ -113,7 +101,7 @@ class GbifService {
         json['gbifDataset'] = true
         json['resourceType'] = 'records'
         json['contentTypes'] = (['point occurrence data', 'gbif import'] as JSON).toString()
-        log.debug("The JSON to create the dr : " + json)
+        log.info("The JSON to create the dr : " + json)
 
         //3) Create or update the data resource
         def dr = DataResource.findByGuid(json.guid)
@@ -146,13 +134,13 @@ class GbifService {
      */
     def applyDwCA(File file, DataResource dr){
         try {
-            log.debug("Copying DwCA to staging and associated the file to the data resource")
+            log.info("Copying DwCA to staging and associated the file to the data resource")
             def fileId = System.currentTimeMillis()
             String targetFileName = grailsApplication.config.uploadFilePath + fileId  + File.separator + file.getName()
             File targetFile = new File(targetFileName)
             FileUtils.forceMkdir(targetFile.getParentFile())
             file.renameTo(targetFile)
-            log.debug("Finished moving the file for " + dr.getUid())
+            log.info("Finished moving the file for " + dr.getUid())
             //move the DwCA where it needs to be
             def connParams = (new JsonSlurper()).parseText(dr.connectionParameters?:'{}')
             connParams.url = 'file:///'+targetFileName
@@ -228,7 +216,7 @@ class GbifService {
     def getDownloadStatus(String downloadId, String userName, String password){
         def statusUrl = grailsApplication.config.gbifApiUrl + DOWNLOAD_STATUS + downloadId
         def json = getJSONWSWithAuth(statusUrl, userName, password)
-        log.debug("Download status for ${downloadId} : ${json?.status}")
+        log.info("Download status for ${downloadId} : ${json?.status}")
         return json && json?.status ? json.status : "UNKNOWN"
     }
 
@@ -261,7 +249,7 @@ class GbifService {
      */
     def getJSONWSWithAuth(String url, String username, String password) {
 
-        log.debug("Checking download status:" + url)
+        log.info("Checking download status:" + url)
         HttpClient httpClient = HttpClientBuilder.create()
                 .build();
 
@@ -274,7 +262,7 @@ class GbifService {
 
         HttpResponse response = httpClient.execute(httpGet)
 
-        log.debug("Response code " + response.getStatusLine().getStatusCode())
+        log.info("Response code " + response.getStatusLine().getStatusCode())
         if (response.getStatusLine().getStatusCode() == 200){
             ByteArrayOutputStream bos = new ByteArrayOutputStream()
             response.getEntity().writeTo(bos)
@@ -494,10 +482,10 @@ class GbifService {
         l.region = region
 
         def reloadExisting = true
-        log.debug("Started Gbif Dataset")
+        log.info("Started Gbif Dataset")
         //check to see if a load is already running. We can only have one at a time
         if (!loading){
-            log.debug("Loading resources from GBIF: ")
+            log.info("Loading resources from GBIF: ")
             loading = true
             loadMap[datasetKey] = l
 
@@ -509,7 +497,7 @@ class GbifService {
 
                         defer {
                             Boolean skipReload = false
-                            def existingDataResource = DataResource.findByGuid(l.gbifResourceUid)
+                            def existingDataResource = dataResourceFetchService.findByGuidSafe(l.gbifResourceUid)
                             if (!reloadExisting){
                                 log.info("Reload existing resources set to false. Checking for " + l.gbifResourceUid)
                                 if (existingDataResource){
@@ -547,7 +535,7 @@ class GbifService {
                                         Thread.sleep(3000)
                                         status = getDownloadStatus(l.downloadId)
                                     }
-                                    log.debug("Download status: " + status)
+                                    log.info("Download status: " + status)
                                     //3) if the status was "SUCCEEDED" then starts the download
                                     if (status == "SUCCEEDED") {
                                         l.phase = "Downloading..."
