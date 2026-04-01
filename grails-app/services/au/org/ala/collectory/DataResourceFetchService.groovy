@@ -7,4 +7,8 @@ class DataResourceFetchService {
     def findByGuidSafe(String guid) {
         DataResource.findByGuid(guid)
     }
+    @Transactional
+    def findByUidSafe(String uid) {
+        DataResource.findByUid(uid)
+    }
 }

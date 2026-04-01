@@ -97,14 +97,14 @@ class GbifService {
     def createOrUpdateGBIFResource(File uploadedFile){
         //1) Extract the ZIP file
         //2) Extract the JSON for the data resource to create
-        def json = extractDataResourceJSON(new ZipFile(uploadedFile), uploadedFile.getParentFile());
+        def json = extractDataResourceJSON(uploadedFile, uploadedFile.getParentFile());
         json['gbifDataset'] = true
         json['resourceType'] = 'records'
         json['contentTypes'] = (['point occurrence data', 'gbif import'] as JSON).toString()
         log.info("The JSON to create the dr : " + json)
 
         //3) Create or update the data resource
-        def dr = DataResource.findByGuid(json.guid)
+        def dr = dataResourceFetchService.findByGuidSafe(json.guid)
         if (!dr){
             dr = crudService.insertDataResource(json)
         } else {
@@ -112,17 +112,23 @@ class GbifService {
                 crudService.updateDataResource(dr, json)
             }
         }
-        dr.lastChecked = (new Date()).toTimestamp()
 
         log.info(dr.uid + "  " + dr.id + " " + dr.name)    //.toString() + " " + dr.hasErrors() + " " + dr.getErrors())
 
         //4) Create the DwCA for the resource using the GBIF default meta.xml and occurrences.txt
         String zipFileName = uploadedFile.getParentFile().getAbsolutePath() + File.separator + json.get("guid", "dwca") + ".zip"
         //add the occurrence.txt file
-        IOUtils.copy(new FileInputStream(uploadedFile), new FileOutputStream(zipFileName))
+        File outFile = new File(zipFileName)
+
+        uploadedFile.withInputStream { is ->
+            outFile.withOutputStream { os ->
+                IOUtils.copy(is, os)
+                os.flush()
+            }
+        }
         log.info("Created the zip file " + zipFileName)
         //5) Upload the DwCA for the resource to the created data resource
-        applyDwCA(new File(zipFileName), dr)
+        applyDwCA(outFile, dr.uid)
         return dr
     }
 
@@ -132,7 +138,7 @@ class GbifService {
      * @param dr  The data resource to apply the supplied archive to
      * @return
      */
-    def applyDwCA(File file, DataResource dr){
+    def applyDwCA(File file, String dataResourceUid){
         try {
             log.info("Copying DwCA to staging and associated the file to the data resource")
             def fileId = System.currentTimeMillis()
@@ -140,18 +146,20 @@ class GbifService {
             File targetFile = new File(targetFileName)
             FileUtils.forceMkdir(targetFile.getParentFile())
             file.renameTo(targetFile)
-            log.info("Finished moving the file for " + dr.getUid())
-            //move the DwCA where it needs to be
-            def connParams = (new JsonSlurper()).parseText(dr.connectionParameters?:'{}')
-            connParams.url = 'file:///'+targetFileName
-            connParams.protocol = "DwCA"
-            connParams.termsForUniqueKey = ["gbifID"]
-            //NQ we need a transaction so the this can be executed in a multi-threaded manner.
+            log.info("Finished moving the file for " + dataResourceUid + " to " + targetFileName)
             DataResource.withTransaction {
+                def dr = dataResourceFetchService.findByUidSafe(dataResourceUid)
+                //move the DwCA where it needs to be
+                def connParams = (new JsonSlurper()).parseText(dr.connectionParameters ?: '{}')
+                connParams.url = 'file:///' + targetFileName
+                connParams.protocol = "DwCA"
+                connParams.termsForUniqueKey = ["gbifID"]
+                //NQ we need a transaction so the this can be executed in a multi-threaded manner.
                 dr.connectionParameters = (new JsonOutput()).toJson(connParams)
-                log.debug("Finished creating the connection params for " + dr.getUid())
-                dr.save(flush:true)
-                log.debug("Finished saving the connection params for " + dr.getUid())
+                dr.lastChecked = (new Date()).toTimestamp()
+                log.info("Finished creating the connection params for " + dataResourceUid)
+                dr.save(flush: true)
+                log.info("Finished saving the connection params for " + dataResourceUid)
             }
         } catch (Exception e){
             log.error(e.getClass().toString() + " : " + e.getMessage(), e)
@@ -164,37 +172,61 @@ class GbifService {
      * @param directoryForArchive
      * @return
      */
-    def extractDataResourceJSON(ZipFile zipFile, File directoryForArchive){
-        String citation = ""
-        String rights = ""
-        Map map = [:]
-        zipFile.entries.each{ file ->
-            if (file.getName() == CITATION_FILE) {
-                map.get("citation",zipFile.getInputStream(file).text.replaceAll("\n", " "))
-            } else if (file.getName() == RIGHTS_FILE) {
-                map.rights = zipFile.getInputStream(file).text.replaceAll("\n"," ")
-            } else if (file.getName().startsWith(EML_DIRECTORY)){
+    def extractDataResourceJSON(File gbifArchiveFile, File directoryForArchive) {
+        Map result = [:]
 
-                //open the XML file that contains the EML details for the GBIF resource
-                def xml = new XmlSlurper().parseText(zipFile.getInputStream(file).getText("UTF-8"))
-                map.guid = xml.@packageId.toString()
-                map.pubDescription = xml.dataset?.abstract?.para
-                map.name = xml.dataset.title.toString()
-                def contact = xml.dataset.contact
-                map.phone = contact.phone.toString()
-                map.email = contact.electronicMailAddress.toString()
-                map.get("citation", xml.additionalMetadata.metadata.gbif.citation.toString())
-                map.get("rights", xml.additionalMetadata.metadata.gbif.rights.toString())
+        ZipFile zipFile = new ZipFile(gbifArchiveFile)
+        try {
+            zipFile.getEntries().each { entry ->
+                String name = entry.name
+                switch (true) {
+                    case name == CITATION_FILE:
+                        zipFile.getInputStream(entry).withCloseable { is ->
+                            result.citation = is.getText("UTF-8").replaceAll("\\n", " ")
+                        }
+                        break
+                    case name == RIGHTS_FILE:
+                        zipFile.getInputStream(entry).withCloseable { is ->
+                            result.rights = is.getText("UTF-8").replaceAll("\\n", " ")
+                        }
+                        break
+                    case name.startsWith(EML_DIRECTORY):
+                        zipFile.getInputStream(entry).withCloseable { is ->
+                            def xml = new XmlSlurper().parse(is)
 
-                log.debug(map)
+                            result.guid = xml.@packageId?.toString()
+                            result.pubDescription = xml.dataset?.abstract?.para?.toString()
+                            result.name = xml.dataset?.title?.toString()
 
-            } else if (file.getName() == OCCURRENCE_FILE){
-                //save the record to the "directoryForArchive"
-                IOUtils.copy(zipFile.getInputStream(file), new FileOutputStream(new File(directoryForArchive, OCCURRENCE_FILE)));
+                            def contact = xml.dataset?.contact
+                            result.phone = contact?.phone?.toString()
+                            result.email = contact?.electronicMailAddress?.toString()
+
+                            // Prefer explicit metadata if present
+                            def gbifMeta = xml.additionalMetadata?.metadata?.gbif
+                            if (gbifMeta) {
+                                result.citation = gbifMeta.citation?.toString() ?: result.citation
+                                result.rights = gbifMeta.rights?.toString() ?: result.rights
+                            }
+                        }
+                        break
+
+                    case name == OCCURRENCE_FILE:
+                        File outputFile = new File(directoryForArchive, OCCURRENCE_FILE)
+
+                        zipFile.getInputStream(entry).withCloseable { is ->
+                            outputFile.withOutputStream { os ->
+                                IOUtils.copy(is, os)
+                            }
+                        }
+                        break
+                }
             }
+        } finally {
+            zipFile.close()
         }
 
-        new JSONObject(map)
+        return new JSONObject(result)
     }
 
     /**
