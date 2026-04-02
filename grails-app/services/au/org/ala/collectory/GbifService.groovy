@@ -344,29 +344,30 @@ class GbifService {
      * @param password  The password for the GBIF user.
      * @return The downloadId used to monitor when the download has been completed
      */
-    def String startGBIFDownload(String resourceId, String repatCountry){
-      startGBIFDownload(resourceId, repatCountry, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
+    def String startGBIFDownload(String resourceId, String repatCountryPolygon){
+      startGBIFDownload(resourceId, repatCountryPolygon, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
     }
 
-    def String startGBIFDownloadForRegion(String resourceId, String region){
-        startGBIFDownloadForRegion(resourceId, region, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
+    def String startGBIFDownloadForRegion(String resourceId, String regionPolygon){
+        startGBIFDownloadForRegion(resourceId, regionPolygon, new URL(grailsApplication.config.gbifApiUrl), grailsApplication.config.gbifApiUser, grailsApplication.config.gbifApiPassword)
     }
 
     /**
      * Starts the GBIF download by calling the API/
      *
      * @param resourceId The GBIF identifier for the resource
+     * @param repatCountryPolygon The polygon of the country to repatriate for in WKT format. This will be used to limit the download to the specified country. If not supplied then the whole dataset will be downloaded.
      * @param username The username of a register GBIF user - a download will only be started when a valid user is supplied
      * @param email NOT USED as the email is automatically associated via the username
      * @param password  The password for the GBIF user.
      * @return The downloadId used to monitor when the download has been completed
      */
-    static String startGBIFDownload(String resourceId, String repatCountry, URL endpointUrl, String username, String password){
+    static String startGBIFDownload(String resourceId, String repatCountryPolygon, URL endpointUrl, String username, String password){
         try {
             LOGGER.debug("[startGBIFDownload] Initialising download..... ")
             def params = [:]
 
-            if (repatCountry){
+            if (repatCountryPolygon){
                 params = [
                         creator: username,
                         notification_address: [],
@@ -380,9 +381,8 @@ class GbifService {
                                     value: resourceId
                                 ],
                                 [
-                                    type : "equals",
-                                    key: "COUNTRY",
-                                    value: repatCountry
+                                    type : "within",
+                                    geometry: repatCountryPolygon
                                 ]
                             ]
                         ]
@@ -413,17 +413,17 @@ class GbifService {
      * Starts the GBIF download by calling the API/
      *
      * @param resourceId The GBIF identifier for the resource
-     * @param repatRegion The value of the gadmLevel1Gid key (A GADM geographic identifier at the first level, for example AGO.1_1)
+     * @param repatRegionPolygon The polygon of the region to repatriate for in WKT format. This will be used to limit the download to the specified region. If not supplied then the whole dataset will be downloaded.
      * @param username The username of a register GBIF user - a download will only be started when a valid user is supplied
      * @param password  The password for the GBIF user.
      * @return The downloadId used to monitor when the download has been completed
      */
-    static String startGBIFDownloadForRegion(String resourceId, String repatRegion, URL endpointUrl, String username, String password){
+    static String startGBIFDownloadForRegion(String resourceId, String repatRegionPolygon, URL endpointUrl, String username, String password){
         try {
             LOGGER.debug("[startGBIFDownload] Initialising download..... ")
             def params = [:]
 
-            if (repatRegion){
+            if (repatRegionPolygon){
                 params = [
                         creator: username,
                         notification_address: [],
@@ -437,9 +437,8 @@ class GbifService {
                                                 value: resourceId
                                         ],
                                         [
-                                                type : "equals",
-                                                key: "GADM_LEVEL_1_GID",
-                                                value: repatRegion
+                                                type : "within",
+                                                geometry: repatRegionPolygon
                                         ]
                                 ]
                         ]
@@ -556,7 +555,10 @@ class GbifService {
 
                                 log.info("Submitting " + l + " to be processed")
                                 //1) Start the download
-                                String downloadId = l.region ? startGBIFDownloadForRegion(l.gbifResourceUid, l.region) : startGBIFDownload(l.gbifResourceUid, l.repatriationCountry)
+                                def regionPolygonMap = getRegionPolygonMap()
+                                String countryPolygon = regionPolygonMap.get(l.repatriationCountry)
+                                String regionPolygon = regionPolygonMap.get(l.region)
+                                String downloadId = l.region ? startGBIFDownloadForRegion(l.gbifResourceUid, regionPolygon) : startGBIFDownload(l.gbifResourceUid, countryPolygon)
                                 if (downloadId) {
                                     l.downloadId = downloadId
                                     //2) Monitor the download
@@ -656,23 +658,38 @@ class GbifService {
 
     def getRegionMap() {
         def gadmMap = [:]
-        this.class.classLoader.getResourceAsStream("belgiumRegionCodes.csv").readLines().each{
-            def codeAndName = it.split("\t")
-            gadmMap.put(codeAndName[0], codeAndName[1])
+        def resource = this.class.classLoader.getResource("belgiumRegionCodes.csv")
+        if (!resource) {
+            throw new FileNotFoundException("Resource not found: belgiumRegionCodes.csv")
         }
 
+        resource.openStream().withReader { reader ->
+            reader.eachLine { line ->
+                def codeAndName = line.split("\t")
+                if (codeAndName.size() >= 2) {
+                    gadmMap[codeAndName[0]] = codeAndName[1]
+                }
+            }
+        }
 
         return gadmMap
     }
 
     def getRegionPolygonMap() {
         def polygonMap = [:]
-        this.class.classLoader.getResourceAsStream("belgiumRegionPolygonWKT.csv").readLines().each{
-            def codeAndPolygon = it.split("\t")
-            polygonMap.put(codeAndPolygon[0], codeAndPolygon[1])
+        def resource = this.class.classLoader.getResource("belgiumRegionPolygonWKT.csv")
+        if (!resource) {
+            throw new FileNotFoundException("Resource not found: belgiumRegionPolygonWKT.csv")
         }
 
-
+        resource.openStream().withReader { reader ->
+            reader.eachLine { line ->
+                def codeAndPolygon = line.split("\t")
+                if (codeAndPolygon.size() >= 2) {
+                    polygonMap[codeAndPolygon[0]] = codeAndPolygon[1]
+                }
+            }
+        }
         return polygonMap
     }
 
