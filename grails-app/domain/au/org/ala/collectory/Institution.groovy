@@ -11,7 +11,8 @@ class Institution implements ProviderGroup, Serializable {
 
     String childInstitutions    // space-separated list of UIDs of institutions that this institution administers
 
-    String gbifCountryToAttribute      // the 3 digit iso code of the country to attribute in GBIF
+    // GBIF uses 2 digit codes, however ALA has historically stored 3 digits ISO code to this field.
+    String gbifCountryToAttribute
 
     // an institution may have many collections
     static hasMany = [collections: Collection, externalIdentifiers: ExternalIdentifier]
@@ -108,7 +109,7 @@ class Institution implements ProviderGroup, Serializable {
         if (childInstitutions) {
             def list = childInstitutions.tokenize(' ')
             Institution.createCriteria().list(fetch: [collections: 'join']) {
-                in ('uid', list )
+                inList ('uid', list )
             }.each {
                 result.addAll it.listCollections()
             }

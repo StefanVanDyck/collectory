@@ -16,24 +16,24 @@
 <div class="row">
 
     <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="url"><g:message code="dataresource.gbifupload.label" /></label>
             <g:field type="url" class="form-control" name="url" value=""/>
         </div>
         <div>
-            <button class="btn btn-default" id="downloadArchiveBtn">
-                <asset:image class="spinner-progress hide" uri="/images/spinner.gif"></asset:image>
+            <button class="btn btn-outline-dark" id="downloadArchiveBtn">
+                <asset:image class="spinner-progress d-none" uri="/images/spinner.gif"></asset:image>
                 <g:message code="dataresource.gbifupload.btn"/>
             </button>
         </div>
-        <div id="download-result" class="hide well" style="margin-top:30px;">
+        <div id="download-result" class="d-none card card-body" style="margin-top:30px;">
             <g:message code="dataresource.gbifupload.success0"/>:<br/>
             <strong><span id="new-resource-name"></span></strong>.<br/>
             <a href="#" id="new-resource-link"><g:message code="dataresource.gbifupload.success1"/></a>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="well">
+        <div class="card card-body">
             <p>
                 <g:message code="dataresource.gbifupload.des01" />
                 <a href="https://www.gbif.org/"><g:message code="dataresource.gbifupload.link.gbifportal" /></a>.
@@ -60,14 +60,14 @@
 
     function downloadFile(){
 
-        $('#download-result').addClass("hide");
-        $('.spinner-progress').removeClass("hide")
+        $('#download-result').addClass("d-none");
+        $('.spinner-progress').removeClass("d-none")
 
         $('#downloadArchiveBtn').prop('disabled', true);
         $.ajax( "downloadGBIFFile?url=" +  $('#url').val() )
         .done(function(data) {
             //alert( "success - " + data.dataResourceUid );
-            $('#download-result').removeClass("hide");
+            $('#download-result').removeClass("d-none");
             $('#new-resource-name').html(data.dataResourceName );
             $('#new-resource-link').attr('href', dataResourceUrlBase + data.dataResourceUid );
         })
@@ -75,7 +75,7 @@
             alert( "error" );
         })
         .always(function() {
-            $('.spinner-progress').addClass("hide");
+            $('.spinner-progress').addClass("d-none");
             $('#downloadArchiveBtn').prop('disabled', false);
         });
     }

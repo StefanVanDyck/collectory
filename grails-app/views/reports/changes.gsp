@@ -2,19 +2,20 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <title><g:message code="reports.changes.title" /></title>
     </head>
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
             </ul>
         </div>
         <div class="body">
             <h1><g:message code="reports.changes.title01" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog">
               <p><g:message code="reports.changes.des01" />.</p>
@@ -25,9 +26,9 @@
                         <g:hiddenField name="offset" value="${offset}"/>
                         <label for="who"><g:message code="reports.changes.who" />: <g:textField name="who" value="${who}"/></label>
                         <label for="what"><g:message code="reports.changes.what" />: <g:textField name="what" value="${what}"/></label>
-                        <g:submitButton class="submit btn btn-default " name="filter" value="Search"/>
-                        <g:submitButton class="submit btn btn-default" name="reset" value="Reset"/>
-                        <g:submitButton name="next "  class="btn btn-default" value="Next 100»"/>
+                        <g:submitButton class="submit btn btn-outline-dark " name="filter" value="Search"/>
+                        <g:submitButton class="submit btn btn-outline-dark" name="reset" value="Reset"/>
+                        <g:submitButton name="next "  class="btn btn-outline-dark" value="Next 100»"/>
                     </fieldset>
                   </g:form>
               </div>

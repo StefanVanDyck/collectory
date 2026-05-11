@@ -6,3 +6,4 @@ build/*
 .grailspid
 /.gradle/
 /build/
+.DS_Store

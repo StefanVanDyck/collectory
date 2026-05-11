@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <g:set var="entityName" value="${entityType}" />
         <title>${message(code: 'dataProvider.gbif.import.longLabel')}</title>
         <style>
@@ -14,8 +15,8 @@
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
             </ul>
         </div>
         <div class="body">
@@ -25,7 +26,7 @@
             </g:if>
             <div class="list">
                 <div class="row">
-                    <div class="well pull-left col-md-6">
+                    <div class="card card-body float-start col-md-6">
                         <p>
                             ${message(code: 'dataProvider.gbif.import.desc1')}
                         </p>
@@ -38,9 +39,9 @@
                     </div>
                     <div class="col-md-6">
                         <g:form action="searchForOrganizations" controller="dataProvider">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="country">${message(code: 'dataProvider.gbif.import.country')}</label>
-                                <g:select name="country" class="form-control" from="${countryMap.entrySet()}" optionKey="key" optionValue="value" value="${country}"
+                                <g:select name="country" class="form-select" from="${countryMap.entrySet()}" optionKey="key" optionValue="value" value="${country}"
                                           onchange="submit()"
                                           noSelection="${['NO_VALUE':message(code:'dataProvider.gbif.import.country.noselection')]}"/>
                             </div>
@@ -50,7 +51,7 @@
                         <div class="col-md-6">
                             <g:form action="importAllFromOrganizations" controller="dataProvider">
                                 <g:hiddenField name="country" value="${country}"/>
-                                <g:submitButton name="importAll" value="${message(code: 'dataProvider.gbif.import.action.importAll')}" onclick="return confirm('${message(code: 'dataProvider.gbif.import.action.import.confirmation')}');" class="pull-right"/>
+                                <g:submitButton name="importAll" value="${message(code: 'dataProvider.gbif.import.action.importAll')}" onclick="return confirm('${message(code: 'dataProvider.gbif.import.action.import.confirmation')}');" class="float-end"/>
                             </g:form>
                         </div>
                     </g:if>

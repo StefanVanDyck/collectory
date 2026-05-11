@@ -1,5 +1,5 @@
 <!-- Attributions -->
-<div class="show-section   well">
+<div class="show-section   card card-body">
   <h2><g:message code="shared.a.title01" /></h2>
   <ul class="fancy">
     <g:each in="${instance.getAttributionList()}" var="att">

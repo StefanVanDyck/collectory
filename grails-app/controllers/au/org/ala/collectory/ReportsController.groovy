@@ -1,7 +1,9 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import grails.converters.JSON
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class ReportsController {
 
     def collectoryAuthService, activityLogService, collectionService, institutionService

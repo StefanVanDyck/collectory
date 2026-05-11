@@ -11,7 +11,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -165,10 +165,10 @@
                         </tr>
 
 <!-- publish-->         <tr class="prop">
-                          <td class="checkbox">
+                          <td class="form-check">
                             <label for="publish"><g:message code="contact.publish.label" default="Make public?" /></label>
                           </td>
-                          <td class="checkbox">
+                          <td class="form-check">
                               <label>
                                 <g:checkBox name="publish" value="true"/>
                                 <span class="hint"><g:message code="collection.contacts.span02" /></span>

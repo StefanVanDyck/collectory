@@ -31,7 +31,7 @@
 <body>
 <g:if test="${gbifSummary}">
     <h1>Reloading dataset - ${gbifSummary.gbifResourceUid}</h1>
-    <div class="well">
+    <div class="card card-body">
         <h3>Status: ${gbifSummary.phase}</h3>
         <g:if test="${gbifSummary.isComplete()}">
             <p>Please keep this window open. It will automatically refresh.</p>

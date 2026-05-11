@@ -1,5 +1,5 @@
 <!-- external identifiers -->
-<div class="show-section  well">
+<div class="show-section  card card-body">
   <h2><g:message code="shared.ext.title01" /></h2>
   <ul class='simple'>
     <g:each in="${instance.externalIdentifiers}" var="id">

@@ -94,66 +94,114 @@ class IptService {
      */
     @org.springframework.transaction.annotation.Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
     def merge(DataProvider provider, List updates, boolean create, boolean check, String username, boolean admin) {
-        def current = provider.resources.inject([:], { map, item -> map[item.websiteUrl] = item; map })
-        def merged = []
+        def currentResources = provider.resources.inject([:]) { map, resource ->
+            map[resource.websiteUrl] = resource
+            map
+        }
+        def mergedResources = []
+        updates.each { update ->
+            def existingResource = currentResources[update.resource.websiteUrl]
 
-        for (update in updates) {
-
-            DataResource old = current[update.resource.websiteUrl]
-
-            if (old)  {
-                if (!check || old.dataCurrency == null || update.resource.dataCurrency == null || update.resource.dataCurrency.after(old.dataCurrency)) {
-                    for (name in allFields()) {
-                        def val = update.resource.getProperty(name)
-                        if (val != null) {
-                            old.setProperty(name, val)
-                        }
+            if (existingResource) {
+                if (!check || existingResource.dataCurrency == null || update.resource.dataCurrency == null || update.resource.dataCurrency.after(existingResource.dataCurrency)) {
+                    DataResource.withTransaction {
+                        updateFields(existingResource, update, username)
+                        syncContacts(existingResource, update.contacts, update.primaryContacts, username, admin)
+                        activityLogService.log(username, admin, Action.EDIT_SAVE, "Updated IPT data resource ${existingResource.uid} from scan")
                     }
-                    old.userLastModified = username
-                    if (create) {
-                        DataResource.withTransaction {
-                            old.save(flush: true)
-                            if (old.hasErrors()) {
-                                old.errors.each {
-                                    log.debug it.toString()
-                                }
-                            }
-
-                            def emails = old.getContacts().collect { it.contact.email }
-
-                            //sync contacts
-                            update.contacts.each { contact ->
-                                if (!emails.contains(contact.email)) {
-                                    old.addToContacts(contact, null, false, true, collectoryAuthService.username())
-                                }
-                            }
-                        }
-
-                        activityLogService.log username, admin, Action.EDIT_SAVE, "Updated IPT data resource " + old.uid + " from scan"
-                    }
-
-                    merged << old
                 }
+                mergedResources << existingResource
             } else {
                 if (create) {
-                    update.resource.uid = idGeneratorService.getNextDataResourceId()
-                    update.resource.userLastModified = username
-                    try {
-                        DataResource.withTransaction {
-                            update.resource.save(flush: true, failOnError: true)
-                            update.contacts.each { contact ->
-                                update.resource.addToContacts(contact, null, false, true, collectoryAuthService.username())
-                            }
-                        }
-                        activityLogService.log username, admin, Action.CREATE, "Created new IPT data resource for provider " + provider.uid  + " with uid " + update.resource.uid + " for dataset " + update.resource.websiteUrl
-                    } catch (Exception e){
-                        log.error("Unable to persist resource " + update.resource, e)
-                    }
+                    createNewResource(provider, update, username, admin)
                 }
-                merged << update.resource
+                mergedResources << update.resource
             }
         }
-        merged
+
+        mergedResources
+    }
+
+    private void updateFields(DataResource existingResource, Map update, String username) {
+        def fieldsToUpdate = allFields() // Retrieves all fields that can be updated
+        log.info("Fields to update: ${fieldsToUpdate}")
+
+        fieldsToUpdate.each { fieldName ->
+            if (update.containsKey(fieldName)) {
+                def newValue = update[fieldName]
+                existingResource.setProperty(fieldName, newValue) // Update the field with the new value (even if it's null)
+            } else {
+                existingResource.setProperty(fieldName, null) // Clear the field if it doesn't exist in the update
+            }
+        }
+
+        existingResource.userLastModified = username
+        existingResource.lastChecked = new Timestamp(System.currentTimeMillis())
+
+        existingResource.save(flush: true)
+
+        if (existingResource.hasErrors()) {
+            existingResource.errors.each { error ->
+                log.debug(error.toString())
+            }
+        }
+    }
+
+    private void syncContacts(DataResource resource, List<Contact> newContacts, List<Contact> primaryContacts, String username, boolean admin) {
+        def existingContactForEntries = resource.getContacts()
+
+        // Index current contacts by ID for quick lookup
+        def existingContactsById = existingContactForEntries.collectEntries {
+            [(it.contact.id): it]
+        }
+
+        // Index new contacts by ID (ensuring they are already persisted)
+        def newContactsById = newContacts.findAll { it.id != null }.collectEntries {
+            [(it.id): it]
+        }
+
+        // Identify contacts to remove (those that are in existingContacts but not in newContacts)
+        def obsoleteContactsFor = existingContactForEntries.findAll { contactFor ->
+            !newContactsById.containsKey(contactFor.contact.id)
+        }
+
+        // Remove obsolete contact associations first
+        obsoleteContactsFor.each { contactFor ->
+            def contact = contactFor.contact
+            contactFor.delete(flush: true)
+
+            activityLogService.log(username, admin, Action.DELETE, "Removed obsolete contact ${contact.buildName()} from resource ${resource.uid}")
+
+            // Ensure no other resources use this contact before deleting it
+            if (ContactFor.countByContact(contact) == 0) {
+                contact.delete(flush: true)
+                activityLogService.log(username, admin, Action.DELETE, "Deleted orphaned contact ${contact.buildName()}")
+            }
+        }
+
+        // Identify contacts to add (only if they already exist in DB and are not already associated)
+        newContacts.each { newContact ->
+            def existingAssociation = ContactFor.findByContactAndEntityUid(newContact, resource.uid)
+            if (!existingAssociation) {
+                resource.addToContacts(newContact, null, false, primaryContacts.contains(newContact), username)
+            } else {
+                log.info("Skipping contact ${newContact.buildName()} for resource ${resource.uid} - already associated.")
+            }
+        }
+
+        activityLogService.log(username, admin, Action.EDIT_SAVE, "Synced contacts for resource ${resource.uid}")
+    }
+
+    private void createNewResource(DataProvider provider, Map update, String username, boolean admin) {
+        update.resource.uid = idGeneratorService.getNextDataResourceId()
+        update.resource.userLastModified = username
+        update.resource.dataProvider = provider
+
+        DataResource.withTransaction {
+            update.resource.save(flush: true, failOnError: true)
+            syncContacts(update.resource, update.contacts, update.primaryContacts, username, admin)
+        }
+        activityLogService.log(username, admin, Action.CREATE, "Created new IPT data resource for provider ${provider.uid} with uid ${update.resource.uid} for dataset ${update.resource.websiteUrl}")
     }
 
     /**
@@ -203,11 +251,14 @@ class IptService {
         resource.isShareableWithGBIF = isShareableWithGBIF
 
         def contacts = []
+        def primaryContacts = []
         if (eml != null && eml != "") {
-            contacts = retrieveEml(resource, eml)
+            def result = retrieveEml(resource, eml)
+            contacts = result.contacts
+            primaryContacts = result.primaryContacts
         }
 
-        [resource: resource, contacts: contacts]
+        [resource: resource, contacts: contacts, primaryContacts: primaryContacts]
     }
 
     /**

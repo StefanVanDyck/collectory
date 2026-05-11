@@ -8,7 +8,7 @@
 <body>
 %{--<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>--}%
 <div class="row">
-    <div class="col-md-3 well" id="status" role="complementary">
+    <div class="col-md-3 card card-body" id="status" role="complementary">
         <h3>Application status</h3>
         <ul>
             <li>App version: <g:meta name="app.version"/></li>

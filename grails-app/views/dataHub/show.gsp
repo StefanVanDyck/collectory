@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <g:set var="entityName" value="${instance.ENTITY_TYPE}" />
         <g:set var="entityNameLower" value="${cl.controller(type: instance.ENTITY_TYPE)}"/>
         <title><g:message code="default.show.label" args="[entityName]" /></title>
@@ -20,24 +21,24 @@
     </style>
     <div class="btn-toolbar">
         <ul class="btn-group">
-            <li class="btn btn-default"><cl:homeLink/></li>
-            <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-            <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+            <li class="btn btn-outline-dark"><cl:homeLink/></li>
+            <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+            <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
         </ul>
-        <ul class="btn-group pull-right">
-            <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-            <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-            <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
-            <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-default"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="glyphicon glyphicon-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
+        <ul class="btn-group ms-auto">
+            <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+            <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+            <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
+            <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-outline-dark"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="fa fa-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
         </ul>
     </div>
         <div class="body">
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog emulate-public">
               <!-- base attributes -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <!-- Name --><!-- Acronym -->
                 <h1>${fieldValue(bean: instance, field: "name")}<cl:valueOrOtherwise value="${instance.acronym}"> (${fieldValue(bean: instance, field: "acronym")})</cl:valueOrOtherwise></h1>
 
@@ -63,11 +64,11 @@
                 <!-- last edit -->
                 <p><span class="category"><g:message code="datahub.show.lastchange" />:</span> ${fieldValue(bean: instance, field: "userLastModified")} on ${fieldValue(bean: instance, field: "lastUpdated")}</p>
 
-                <div><span class="buttons"><g:link class="edit btn btn-default" action='edit' params="[page:'/shared/base']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
+                <div><span class="buttons"><g:link class="edit btn btn-outline-dark" action='edit' params="[page:'/shared/base']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
               </div>
 
               <!-- description -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2><g:message code="collection.show.title.description" /></h2>
 
                 <!-- Pub Desc -->
@@ -82,11 +83,11 @@
                 <span class="category"><g:message code="datahub.show.contribution" /></span><br/>
                 <cl:formattedText body="${instance.focus?:'Not provided'}"/>
 
-                <div><span class="buttons"><g:link class="edit btn btn-default" action='edit' params="[page:'description']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
+                <div><span class="buttons"><g:link class="edit btn btn-outline-dark" action='edit' params="[page:'description']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
               </div>
 
               <!-- members -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2><g:message code="datahub.show.title02" /></h2>
                 <g:if test="${instance.listMemberInstitutions()}">
                     <h3><g:message code="dataHub.memberInstitutions.label" /></h3>
@@ -113,7 +114,7 @@
                     </ul>
                 </g:if>
 
-                <div><span class="buttons"><g:link class="edit btn btn-default" action='edit' params="[page:'members']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
+                <div><span class="buttons"><g:link class="edit btn btn-outline-dark" action='edit' params="[page:'members']" id="${instance.id}">${message(code: 'default.button.edit.label', default: 'Edit')}</g:link></span></div>
             </div>
 
               <!-- images -->
@@ -133,17 +134,17 @@
               <g:render template="/shared/changes" model="[changes: changes, instance: instance]"/>
 
             </div>
-            <div class="btn-toolbar">
-                <g:form class="btn-group">
+            <div class="btn-toolbar mt-3">
+                <g:form class="d-inline">
                     <g:hiddenField name="id" value="${instance?.id}"/>
                     <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
                         <g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
                     </cl:ifGranted>
                 </g:form>
-                <ul class="btn-group pull-right">
-                    <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
+                <ul class="btn-group ms-auto">
+                    <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
                 </ul>
             </div>
         </div>

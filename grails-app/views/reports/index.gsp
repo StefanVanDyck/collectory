@@ -8,8 +8,8 @@
     <body>
     <div class="btn-toolbar">
         <ul class="btn-group">
-            <li class="btn btn-default"><cl:homeLink/></li>
-            <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+            <li class="btn btn-outline-dark"><cl:homeLink/></li>
+            <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
         </ul>
     </div>
       <div id="welcome">
@@ -31,7 +31,7 @@
     <div class="dashboard">
 
 
-    <div class="well pull-right">
+    <div class="card card-body float-end">
       <h2><g:message code="reports.index.title03" /></h2>
       <div class="lead">
         <span class="total">${Collection.count()}</span> <g:message code="reports.index.total01" /><br/>

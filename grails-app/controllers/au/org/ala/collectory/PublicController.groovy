@@ -623,6 +623,10 @@ class PublicController {
         render(view: 'map', model: [collections: partnerCollections])
     }
 
+    def warning() {
+        render view: '/warning'
+    }
+
     /**
      * Returns GEOJson for populating the map based on the selected filters.
      */
@@ -720,6 +724,7 @@ class PublicController {
 
         render( locations as JSON )
     }
+
 
     String contructHTML(entity, childEntities, baseUrl){
         def writer = new StringWriter()  // html is written here by markup builder

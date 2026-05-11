@@ -20,7 +20,7 @@
   </style>
   <h1><g:message code="shared.location.main.title01" />: ${fieldValue(bean: command, field: "name")}</h1>
   <g:if test="${message}">
-    <div class="message">${message}</div>
+    <div class="alert alert-info">${message}</div>
   </g:if>
   <g:hasErrors bean="${command}">
     <div class="errors">
@@ -34,7 +34,7 @@
     <div class="row">
       <div class="col-md-8">
         <!-- state -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="state"><g:message code="providerGroup.state.label" default="State/Territory/County"/>
             <cl:helpText code="${entityNameLower}.state"/><span class=hint>(where the ${entityNameLower} resides)</span>
           </label>
@@ -42,45 +42,45 @@
         </div>
 
         <!-- email -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="email"><g:message code="providerGroup.email.label" default="Email"/><cl:helpText code="collection.email"/></label>
           <g:field type="email" class="form-control" name="email" maxLength="256" value="${command?.email}"/>
         </div>
 
         <!-- phone -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="phone"><g:message code="providerGroup.phone.label" default="Phone"/><cl:helpText code="collection.phone"/></label>
           <g:field type="tel" class="form-control" name="phone" maxlength="45" value="${command?.phone}"/>
         </div>
 
         <!-- address -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.street"><g:message code="providerGroup.address.street.label" default="Street"/></label>
           <g:textField class="form-control" id="street" name="address.street" maxlength="128" value="${command?.address?.street}"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.city"><g:message code="providerGroup.address.city.label" default="City"/></label>
           <g:textField class="form-control" id="city" name="address.city" maxlength="128" value="${command?.address?.city}"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.state"><g:message code="providerGroup.address.state.label" default="State or territory"/></label>
           <g:textField class="form-control" id="state" name="address.state" maxlength="128" value="${command?.address?.state}"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.postcode"><g:message code="providerGroup.address.postcode.label" default="Postcode"/></label>
           <g:textField class="form-control" name="address.postcode" maxlength="128" value="${command?.address?.postcode}"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.country"><g:message code="providerGroup.address.country.label" default="Country"/></label>
           <g:textField class="form-control" id="country" name="address.country" maxlength="128" value="${command?.address?.country}"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <label for="address.postBox"><g:message code="providerGroup.address.postBox.label" default="Postal address"/></label>
           <g:textField class="form-control" name="address.postBox" maxlength="128" value="${command?.address?.postBox}"/>
         </div>
 
         <!-- latitude -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="latitude"><g:message code="providerGroup.latitude.label" default="Latitude"/><cl:helpText code="collection.latitude"/>
             <br/><span class=hint>(decimal degrees)</span>
           </label>
@@ -89,7 +89,7 @@
         </div>
 
         <!-- longitude -->
-        <div class="form-group">
+        <div class="mb-3">
           <label for="longitude">
             <g:message code="providerGroup.longitude.label" default="Longitude"/><cl:helpText code="collection.longitude"/>
             <br/><span class=hint>(decimal degrees)</span>
@@ -98,18 +98,18 @@
         </div>
 
         <!-- lookup lat/lng -->
-        <div class="form-group">
-          <input type="button" class="classicButton btn btn-default" onclick="return codeAddress();" value="Lookup"/> <g:message code="shared.location.lookup" />.<div style="width:100%;"></div>
+        <div class="mb-3">
+          <input type="button" class="classicButton btn btn-outline-dark" onclick="return codeAddress();" value="Lookup"/> <g:message code="shared.location.lookup" />.<div style="width:100%;"></div>
         </div>
 
         <g:if test="${command.ENTITY_TYPE == 'Collection'}">
           <g:if test="${(command.latitude == -1 || command.longitude == -1) && command.inheritedLatLng()}">
-            <div class="form-group">
+            <div class="mb-3">
               <input type="button" class="classicButton" onclick="return useInherited();" value="Use inherited"/> <g:message code="shared.location.button.useinherited" />.<div style="width:100%;"></div>
             </div>
           </g:if>
         </g:if>
-        <div class="form-group">
+        <div class="mb-3">
           <g:message code="shared.location.main.des01" /> ${entityNameLower}.<br/>
           <g:message code="shared.location.main.des02" />.
         </div>
@@ -121,7 +121,7 @@
     </div>
     <div class="buttons">
       <span class="button"><input type="submit" name="_action_updateLocation" value="${message(code:"shared.location.button.update")}" class="save btn btn-success"></span>
-      <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.location.button.cancel")}" class="cancel btn btn-default"></span>
+      <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.location.button.cancel")}" class="cancel btn btn-outline-dark"></span>
     </div>
   </g:form>
 

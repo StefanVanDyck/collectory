@@ -12,7 +12,7 @@
         </div>
         <div >
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -30,8 +30,8 @@
                  </label>
                 <g:textField class="form-control" name="range" value="${command.listTaxonomicRange() ? command.listTaxonomicRange().join(',') : ''}" />
 
-                <span class="button"><input type="submit" name="_action_updateTaxonomicRange" value="${message(code:"shared.button.update")}" class="save btn btn-default"></span>
-                <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.button.cancel")}" class="cancel btn btn-default"></span>
+                <span class="button"><input type="submit" name="_action_updateTaxonomicRange" value="${message(code:"shared.button.update")}" class="save btn btn-outline-dark"></span>
+                <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.button.cancel")}" class="cancel btn btn-outline-dark"></span>
             </g:form>
 
         </div>

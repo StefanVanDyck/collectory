@@ -1,0 +1,16 @@
+
+services:
+  mysql:
+    container_name: mysql-collectory
+    image: "mysql:8.1.0"
+    environment:
+      MYSQL_DATABASE: 'collectory'
+      MYSQL_USER:  'collectory_user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    expose:
+      - '3306'
+version: "2"

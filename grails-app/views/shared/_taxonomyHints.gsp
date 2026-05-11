@@ -1,6 +1,6 @@
 <%@ page import="au.org.ala.collectory.JSONHelper" %>
 <!-- taxonomy hints -->
-<div class="show-section  well">
+<div class="show-section  card card-body">
   <h2><g:message code="shared.th.title01" /></h2>
   <ul class='simple'>
     <g:each in="${JSONHelper.taxonomyHints(instance.taxonomyHints)}" var="hint">

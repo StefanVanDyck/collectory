@@ -3,6 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="${grailsApplication.config.skin.layout}"/>
+  <asset:stylesheet src="application.css"/>
   <g:set var="entityName" value="${command.ENTITY_TYPE}"/>
   <g:set var="entityNameLower" value="${command.ENTITY_TYPE.toLowerCase()}"/>
   <title><g:message code="default.show.label" args="[entityName]"/></title>
@@ -13,12 +14,12 @@
   </div>
   <div class="body">
     <g:if test="${flash.message}">
-      <div class="message">${flash.message}</div>
+      <div class="alert alert-info">${flash.message}</div>
     </g:if>
     <div class="dialog emulate-public">
       <h2><g:message code="shared.scontact.title01" /></h2>
       <g:each var="cf" in="${command.getContacts()}">
-        <div class="show-section well">
+        <div class="show-section card card-body">
           <!-- Name -->
           <div><span class="contactName">${cf.contact.buildName()}</span></div>
           <table class="shy">
@@ -34,7 +35,7 @@
             </td>
             <td style="padding-bottom:20px;">
               <span class="contactButton buttonRight">
-                <g:link class="edit-small btn btn-default" controller="contact" action='edit' id="${cf.contact.id}"
+                <g:link class="edit-small btn btn-outline-dark" controller="contact" action='edit' id="${cf.contact.id}"
                         params='[returnTo: "/${command.urlForm()}/edit/${command.id}?page=/shared/showContacts"]'>
                   ${message(code: 'default.button.editContact.label', default: "Edit the contact's details")}
                 </g:link>
@@ -53,7 +54,7 @@
             </td>
             <td>
               <span class="contactButton buttonRight">
-                <g:link class="edit-small btn btn-default" action='editRole' id="${cf.id}"
+                <g:link class="edit-small btn btn-outline-dark" action='editRole' id="${cf.id}"
                   params='[returnTo: "/${command.urlForm()}/edit/${command.id}?page=/shared/showContacts"]'>
                   <g:message code="shared.scontact.link.edit" /> ${entityNameLower}
                 </g:link>
@@ -81,7 +82,7 @@
             <tr><td>
               <g:select name="addContact" from="${Contact.listOrderByLastName()}" optionKey="id" noSelection="${['null':'Select one to add']}" />
             </td><td>
-              <input type="submit" onclick="return anySelected('addContact','You must select a contact to add.');" class="addAction btn btn-default" value="Add existing contact"/>
+              <input type="submit" onclick="return anySelected('addContact','You must select a contact to add.');" class="addAction btn btn-outline-dark" value="Add existing contact"/>
             </td></tr>
           </table>
         </g:form>
@@ -91,7 +92,7 @@
           <tr><td><g:message code="shared.scontact02.cell0101" /> ${entityNameLower}:</td>
           <td>
           <span class="button">
-            <g:link class="addAction btn btn-default" controller="contact" action='create' params='[returnTo:"/${command.urlForm()}/addNewContact/${command.id}"]' id="${command.id}">${message(code: 'default.button.addContact.label', default: 'Add new contact')}</g:link>
+            <g:link class="addAction btn btn-outline-dark" controller="contact" action='create' params='[returnTo:"/${command.urlForm()}/addNewContact/${command.id}"]' id="${command.id}">${message(code: 'default.button.addContact.label', default: 'Add new contact')}</g:link>
           </span>
           </td></tr>
         </table>

@@ -34,6 +34,10 @@ class IsoCodeService implements InitializingBean {
         return isoCountryCodeToCountryName(iso2CountryCode)
     }
 
+    def isIso2Code(String countryCode) {
+        return isoCodesMap.containsValue(countryCode.toUpperCase())
+    }
+
     private def isoCountryCodeToCountryName(String isoCountryCode) {
         def locale = new Locale("", isoCountryCode);
         return locale.getDisplayCountry()

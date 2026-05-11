@@ -1,5 +1,5 @@
 <!-- Contacts -->
- <section class="public-metadata show-section well">
+ <section class="public-metadata show-section card card-body">
  <h2><g:message code="shared.contacts.title01" /></h2>
  <ul class="fancy">
    <g:each in="${contacts}" var="c">

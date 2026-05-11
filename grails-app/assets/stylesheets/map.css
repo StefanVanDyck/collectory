@@ -123,9 +123,14 @@ div > div#map-container {
     box-shadow: 4px 4px 0px darkgrey;
 }
 
-/*ul.nav-tabs {*/
-/*    margin-bottom: 0;*/
-/*}*/
+/* BS5 migration: match nav-tabs border color to the dark tab-content border so the
+   active tab visually "opens into" the content area */
+.nav-tabs {
+    border-bottom-color: #999;
+}
+.nav-tabs .nav-link.active {
+    border-color: #999 #999 #fff;
+}
 
 /*.nav-tabs li a {*/
 /*    background-color: #f0f0e8;*/
@@ -217,10 +222,7 @@ ul.facets {
     padding: 0;
 }
 
-.public-metadata  {
-    marign-top: 1em;
-    margin-bottom: 1em;
-}
+/* .public-metadata spacing moved to main.css */
 
 .dataAccess a {
     text-align: left;
@@ -230,7 +232,7 @@ ul.facets {
 .category { font-weight:bold; min-width: 120px; }
 .category-large { font-weight:bold; min-width: 180px;  }
 
-.nav-stacked .icon-chevron-right {
+.flex-column .icon-chevron-right {
     float: right;
     margin-top: 2px;
     margin-right: -6px;

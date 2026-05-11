@@ -74,17 +74,19 @@ function changeProtocol() {
 }
 
 instrument();
+
+$(document).ready(function() {
 //$('[name="start_date"]').datepicker({dateFormat: 'yy-mm-dd'});
 /* this expands lists of urls into an array of text inputs */
 // create a delete element that removes the element before it and itself
-var $deleteLink = $('<span class="delete btn btn-mini btn-danger"><i class="glyphicon glyphicon-remove glyphicon-white"></i> </span>')
+var $deleteLink = $('<span class="delete btn btn-sm btn-danger"><i class="fa fa-times"></i> </span>')
     .click(function() {
         $(this).prev().remove();
         $(this).remove();
     });
 // handle all urls (including hidden ones)
 var urlInputs = $('input[name="url"]');
-$('input[name="url"]').addClass('input-xxlarge');
+$('input[name="url"]').addClass('w-100');
 $.each(urlInputs, function(i, obj) {
     var urls = $(obj).val().split(',');
     if (urls.length > 1) {
@@ -108,7 +110,7 @@ $.each(urlInputs, function(i, obj) {
 });
 /* this injects 'add another' functionality to urls */
 $.each(urlInputs, function(i, obj) {
-    $('<span class="pull-right btn btn-default">Add another</span>')
+    $('<span class="float-end btn btn-outline-dark">Add another</span>')
         .insertAfter($(obj).parent().children('input,span').last())
         .click(function() {
             // clone the original input
@@ -132,4 +134,5 @@ $(function() {
             $(this).closest(".form-group").after(newField);
         }
     });
+});
 });

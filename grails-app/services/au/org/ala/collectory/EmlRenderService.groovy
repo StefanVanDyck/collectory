@@ -14,6 +14,7 @@
  */
 package au.org.ala.collectory
 
+import groovy.json.JsonSlurper
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import java.text.SimpleDateFormat
@@ -255,13 +256,12 @@ class EmlRenderService {
 
             'eml:eml'(ids.ns) {
                 dataset() {
-
-                    /* alt identifier */
-                    alternateIdentifier ids.uuid
-
-                    alternateIdentifier "${grailsApplication.config.grails.serverURL}/public/show/" + ids.id
-                    if (ids.altId) {
-                        alternateIdentifier(ids.altId)
+                    /* External identifiers will be converted to alternative identifiers */
+                    pg.externalIdentifiers.each { ext ->
+                        alternateIdentifier {
+                            // Typical EML pattern: a value + an optional type attribute
+                            mkp.yield ext.identifier
+                        }
                     }
 
                     /* title, creator, metadataProvider, associatedParty, pubDate, language, abstract */
@@ -284,7 +284,6 @@ class EmlRenderService {
 
                     /* coverage */
                     coverage() {
-
                         /* geographic */
                         def hasBoundingBox = pg.eastCoordinate != ProviderGroup.NO_INFO_AVAILABLE &&
                             pg.westCoordinate != ProviderGroup.NO_INFO_AVAILABLE &&
@@ -415,11 +414,12 @@ class EmlRenderService {
             'eml:eml'(ids.ns) {
                 dataset() {
 
-                    /* alt identifier */
-                    alternateIdentifier ids.uuid
-                    alternateIdentifier ids.id
-                    if (ids.altId) {
-                        alternateIdentifier(ids.altId)
+                    /* External identifiers will be converted to alternative identifiers */
+                    pg.externalIdentifiers.each { ext ->
+                        alternateIdentifier {
+                            // Typical EML pattern: a value + an optional type attribute
+                            mkp.yield ext.identifier
+                        }
                     }
 
                     /* title, creator, metadataProvider, associatedParty, pubDate, language, abstract */
@@ -463,7 +463,12 @@ class EmlRenderService {
         def xml = new groovy.xml.MarkupBuilder(writer)
         xml.setDoubleQuotes(true)
         def dp = pg.dataProvider
-        def licence = Licence.where({ acronym == pg.licenseType && (pg.licenseVersion == null ) }).list()
+        def licence = Licence.where {
+            acronym == pg.licenseType
+            if (pg.licenseVersion != null) {
+                licenceVersion == pg.licenseVersion
+            }
+        }.list()
         def ids = identifiers(pg)
 //        def namespaces = [:]
 //        namespaces.putAll(ns)
@@ -471,18 +476,12 @@ class EmlRenderService {
 
         xml."eml:eml"(ids.ns) {
             dataset {
-                /* alt identifier */
-                alternateIdentifier ids.uuid
-                if (pg.gbifDoi){
-                    alternateIdentifier pg.gbifDoi
-                }
-                if (pg.gbifRegistryKey){
-                    alternateIdentifier pg.gbifRegistryKey
-                }
-
-                alternateIdentifier ids.id
-                if (ids.altId) {
-                    alternateIdentifier(ids.altId)
+                /* External identifiers will be converted to alternative identifiers */
+                pg.externalIdentifiers.each { ext ->
+                    alternateIdentifier {
+                        // Typical EML pattern: a value + an optional type attribute
+                        mkp.yield ext.identifier
+                    }
                 }
 
                 /* title, creator, metadataProvider, associatedParty, pubDate, language, abstract */
@@ -563,6 +562,10 @@ class EmlRenderService {
                                 }
                             }
                         }
+                    }
+
+                    if (pg.taxonomyHints) {
+                        mkp.yieldUnescaped getTaxonomicCoverage(pg.taxonomyHints)
                     }
                 }
 
@@ -728,6 +731,28 @@ class EmlRenderService {
         }
         else {
             return "specimens"  // default
+        }
+    }
+
+    def getTaxonomicCoverage(String hints) {
+        def json = new JsonSlurper().parseText(hints)
+        def builder = new StreamingMarkupBuilder()
+
+        return builder.bind {
+            taxonomicCoverage {
+                generalTaxonomicCoverage {
+                    // yield the joined string properly
+                    mkp.yield json.range.collect { it.replaceAll('"','').trim() }.join("; ")
+                }
+                json.coverage.each { entry ->
+                    entry.each { rank, value ->
+                        taxonomicClassification {
+                            taxonRankName(rank)
+                            taxonRankValue(value)
+                        }
+                    }
+                }
+            }
         }
     }
 }

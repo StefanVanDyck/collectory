@@ -12,7 +12,7 @@
 <body>
 <div class="body content">
     <h1>GBIF Sync - sync results</h1>
-    <div class="pull-right">
+    <div class="float-end">
         <g:link class="btn btn-primary" action="syncAllResources"
                 onclick="return confirm('${message(code: 'default.button.updateall.confirm.message', default: 'Are you sure you want to sync all ? This will take some time to complete.')}');">
             <i class="ui-icon-arrow-1-s"></i> Sync resources

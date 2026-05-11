@@ -11,7 +11,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${contact}">
             <div class="errors">
@@ -23,25 +23,25 @@
                 <g:hiddenField name="version" value="${contact.version}" />
                 <h2 style="padding-top:10px;"><g:message code="contact.sp.title02" /></h2>
 
-                <div class="form-group ${hasErrors(bean: contact, field: 'title', 'errors')}">
-                    <g:select name="title" class="form-control" from="${contact.constraints.title.inList}" value="${contact?.title}" valueMessagePrefix="contact.title" noSelection="['': '']" />
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'title', 'errors')}">
+                    <g:select name="title" class="form-select" from="${contact.constraints.title.inList}" value="${contact?.title}" valueMessagePrefix="contact.title" noSelection="['': '']" />
                 </div>
-                <div class="form-group ${hasErrors(bean: contact, field: 'firstName', 'errors')}">
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'firstName', 'errors')}">
                     <g:textField name="firstName" class="form-control" maxlength="45" value="${contact?.firstName}" />
                 </div>
-                <div class="form-group ${hasErrors(bean: contact, field: 'lastName', 'errors')}">
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'lastName', 'errors')}">
                     <g:textField name="lastName" class="form-control" maxlength="45" value="${contact?.lastName}" />
                 </div>
 
-                <div class="form-group ${hasErrors(bean: contact, field: 'phone', 'errors')}">
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'phone', 'errors')}">
                     <label form="phone"><g:message code="contact.sp.title03" /></label>
                     <g:field type="tel" name="phone" class="form-control" maxlength="45" value="${contact?.phone}" />
                 </div>
-                <div class="form-group ${hasErrors(bean: contact, field: 'mobile', 'errors')}">
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'mobile', 'errors')}">
                     <label for="mobile"><g:message code="contact.sp.title04" /></label>
                     <g:field type="tel" name="mobile" class="form-control" maxlength="45" value="${contact?.mobile}" />
                 </div>
-                <div class="form-group ${hasErrors(bean: contact, field: 'fax', 'errors')}">
+                <div class="mb-3 ${hasErrors(bean: contact, field: 'fax', 'errors')}">
                 <label for="fax"><g:message code="contact.sp.title05" /></label>
                 <g:field type="tel" name="fax" class="form-control" maxlength="45" value="${contact?.fax}" />
 
@@ -71,7 +71,7 @@
 
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateProfile" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-                    <span class="button"><input type="submit" name="_action_cancelProfile" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancelProfile" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:form>
         </div>

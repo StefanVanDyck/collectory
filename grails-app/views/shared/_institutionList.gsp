@@ -47,16 +47,16 @@
 
                   <td class="text-nowrap">
                       <g:if test="${fieldValue(bean: institutionInstance, field: "gbifRegistryKey")}">
-                          <g:link class="btn btn-default" controller="institution" action="updateGBIF" id="${institutionInstance.uid}"
+                          <g:link class="btn btn-outline-dark" controller="institution" action="updateGBIF" id="${institutionInstance.uid}"
                                   onclick="return confirm('${message(code: 'default.button.update.institution.confirm.message', default: 'Are you sure you want to update this institution?')}');">
                               ${message(code: 'institution.gbif.update', default: 'Update')}
                           </g:link> |
-                          <a href="https://gbif.org/publisher/${institutionInstance.gbifRegistryKey}">
+                          <a class="btn btn-outline-dark" href="https://gbif.org/publisher/${institutionInstance.gbifRegistryKey}">
                               ${message(code: 'institution.gbif.show', default: 'Show')}
                           </a>
                       </g:if>
                       <g:else>
-                          <g:link class="btn btn-default" controller="institution" action="registerGBIF"
+                          <g:link class="btn btn-outline-dark" controller="institution" action="registerGBIF"
                                   id="${institutionInstance.uid}"
                                   onclick="return confirm('${message(code: 'default.button.register.institution.confirm.message', default: 'Are you sure you want to register this institution?')}');">
                               ${message(code: 'institution.gbif.register', default: 'Register')}

@@ -1,9 +1,9 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 
-
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class ContactController {
-
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     /**
@@ -129,34 +129,30 @@ class ContactController {
     /**
      * MEW - modified to cascade delete all ContactFor links for the contact
      */
+    @PermissionRequired(roles=['ROLE_ADMIN'])
     def delete() {
-        if (collectoryAuthService?.userInRole(grailsApplication.config.ROLE_ADMIN)) {
-            def contactInstance = Contact.get(params.id)
-            if (contactInstance) {
-                try {
-                    activityLogService.log collectoryAuthService?.username(), collectoryAuthService?.userInRole(grailsApplication.config.ROLE_ADMIN), Action.DELETE, "contact ${contactInstance.buildName()}"
-                    // need to delete any ContactFor links first
-                    ContactFor.withTransaction {
-                        ContactFor.findAllByContact(contactInstance).each {
-                            it.delete(flush: true)
-                        }
+        def contactInstance = Contact.get(params.id)
+        if (contactInstance) {
+            try {
+                activityLogService.log collectoryAuthService?.username(), collectoryAuthService?.userInRole(grailsApplication.config.ROLE_ADMIN), Action.DELETE, "contact ${contactInstance.buildName()}"
+                // need to delete any ContactFor links first
+                ContactFor.withTransaction {
+                    ContactFor.findAllByContact(contactInstance).each {
+                        it.delete(flush: true)
                     }
-                    Contact.withTransaction {
-                        contactInstance.delete(flush: true)
-                    }
-                    flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
-                    redirect(action: "list")
-                } catch (org.springframework.dao.DataIntegrityViolationException e) {
-                    flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
-                    redirect(action: "show", id: params.id)
                 }
-            } else {
-                flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
+                Contact.withTransaction {
+                    contactInstance.delete(flush: true)
+                }
+                flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
                 redirect(action: "list")
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
+                redirect(action: "show", id: params.id)
             }
-        } else{
-            response.setHeader("Content-type", "text/plain; charset=UTF-8")
-            render(message(code: "provider.group.controller.04", default: "You are not authorised to access this page."))
+        } else {
+            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'contact.label', default: 'Contact'), params.id])}"
+            redirect(action: "list")
         }
     }
 
@@ -166,7 +162,7 @@ class ContactController {
      * @param userEmail - optional email, defaults to the logged in user
      */
     def showProfile() {
-        def user = params.userEmail ?: collectoryAuthService?.username()
+        def user = params.userEmail ?: collectoryAuthService?.userEmail()
         def contact = Contact.findByEmail(user)
         if (contact) {
             def crList = ContactFor.findAllByContact(contact).collect {
@@ -179,10 +175,11 @@ class ContactController {
         }
     }
 
+
     def updateProfile() {
         def contactInstance = Contact.get(params.id)
         // only the user or admin can update
-        if (contactInstance.email == collectoryAuthService?.username() || collectoryAuthService?.userInRole(grailsApplication.config.ROLE_ADMIN)) {
+        if (contactInstance.email == collectoryAuthService?.userEmail()|| collectoryAuthService?.userInRole(grailsApplication.config.ROLE_ADMIN)) {
             contactInstance.properties = params
             contactInstance.userLastModified = collectoryAuthService?.username()
             if (!contactInstance.hasErrors() && contactInstance.save(flush: true)) {

@@ -12,6 +12,10 @@ grails:
             - file:/data/collectory/config/collectory-config.groovy
     cors:
         enabled: true
+        mappings:
+            '/**':
+                allowedOrigins: [ '*' ]
+                allowedHeaders: [ 'Authorization', 'Content-Type' ]
     gorm:
         reactor:
             # Whether to translate GORM events into Reactor events
@@ -111,6 +115,7 @@ uploadFilePath: /data/collectory/upload
 uploadExternalUrlPath: http://localhost/upload
 gbifApiUrl: 'https://api.gbif.org/v1/'
 gbifUniqueKeyTerm: "http://rs.gbif.org/terms/1.0/gbifID"
+gbifWebsite: "https://www.gbif-uat.org/"
 
 # country 3 digit ISO code. Non-empty value required at startup
 gbifDefaultEntityCountry:
@@ -133,8 +138,8 @@ gbifExportUrlBase:
 gbifRegistrationDryRun: true
 gbifLicenceMappingUrl: file:///data/collectory/config/default-gbif-licence-mapping.json
 gbifOrphansPublisherID: XXXXXXXXXXXXXXXX
-gbifRegistrationRole: ROLE_ADMIN
 useGbifDoi: true
+gbifRegistrationRole: ROLE_ADMIN
 
 skin:
     layout: ala-main
@@ -146,10 +151,11 @@ skin:
     favicon: https://www.ala.org.au/app/uploads/2019/01/cropped-favicon-32x32.png
 
 headerAndFooter:
-    baseURL: https://www.ala.org.au/commonui-bs3-2019
+    baseURL: https://www.test.ala.org.au/commonui-bs5-2019
     version: 2
 
 security:
+    #deprecated after 6.1.0
     apikey:
         checkEnabled: true
         enabled: true
@@ -201,6 +207,9 @@ security:
         enabled: true
         discoveryUri: https://auth-test.ala.org.au/cas/oidc/.well-known
         fallbackToLegacyBehaviour: true
+        rolesFromAccessToken: true
+        userIdClaim: username
+        roleClaims: cognito:groups
 
 repository:
     location:
@@ -212,7 +221,7 @@ alertResourceName: 'Alerts'
 speciesListToolUrl: https://lists-test.ala.org.au/speciesListItem/list/
 disableAlertLinks: false
 disableLoggerLinks: false
-biocacheServicesUrl: https://biocache.ala.org.au/ws
+biocacheServicesUrl: https://biocache.test.ala.org.au/ws
 biocacheUiURL: https://biocache.ala.org.au
 #eventsUiURL: https://events.ala.org.au/?datasetKey=
 #eventsURL: https://api.ala.org.au/event/graphql
@@ -222,6 +231,7 @@ showExtraInfoInDataSetsView.relativeTime: false
 
 ROLE_ADMIN: 'ROLE_ADMIN'
 ROLE_EDITOR: 'ROLE_EDITOR'
+REQUIRED_SCOPES: 'ala/internal'
 
 rifcs:
     excludeBounds: true
@@ -234,6 +244,7 @@ citation.link.template: "For more information: @link@"
 citation.rights.template: ""
 
 siteDefaultLanguage: "en"
+showDataResourceWebsiteBelowH3: false
 
 networkTypes:
     - BCI
@@ -264,9 +275,12 @@ dataResource:
         - "Web Page"
         - "Other"
     contentTypesList:
+        - "acoustic recording"
         - "authoritative"
         - "behaviour"
+        - "biologging"
         - "citizen science"
+        - "camera trapping"
         - "commercial uses"
         - "common names"
         - "conservation management"
@@ -386,6 +400,7 @@ eml:
     postalCode: 2601
     country: Australia
 
+
 google:
     apikey: "TO-BE-ADDED"
 
@@ -405,10 +420,10 @@ environments:
                 sentry:
                     active: false
         dataSource:
-            dbCreate: none
+            dbCreate: update
             url: jdbc:mysql://localhost:3306/collectory?autoReconnect=true&connectTimeout=0&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Australia/Sydney
-            username: specieslist
-            password: "specieslist"
+            username: collectory_user
+            password: "password"
             logSql: false
         gbifDefaultEntityCountry: AUS
     test:

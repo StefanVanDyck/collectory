@@ -1,14 +1,15 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import grails.converters.JSON
-
 import java.text.SimpleDateFormat
 import au.org.ala.collectory.resources.PP
 import au.org.ala.collectory.resources.DarwinCoreFields
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class DataResourceController extends ProviderGroupController {
 
-    def metadataService, dataImportService, gbifRegistryService, authService
+    def metadataService, dataImportService, gbifRegistryService, authService, crudService
 
     DataResourceController() {
         entityName = "DataResource"
@@ -18,6 +19,7 @@ class DataResourceController extends ProviderGroupController {
     def index = {
         redirect(action:"list")
     }
+
 
     def markAsVerified = {
         def instance = DataResource.findByUid(params.uid)
@@ -29,6 +31,7 @@ class DataResourceController extends ProviderGroupController {
         redirect(action: 'show', params: [id:params.uid])
     }
 
+
     def markAsUnverified = {
         def instance =  DataResource.findByUid(params.uid)
         if (instance){
@@ -38,6 +41,7 @@ class DataResourceController extends ProviderGroupController {
         }
         redirect(action: 'show', params: [id:params.uid])
     }
+
 
     // list all entities
     def list = {
@@ -71,7 +75,7 @@ class DataResourceController extends ProviderGroupController {
         }
     }
 
-    def editConsumers = {
+    def editConsumers(){
         def pg = get(params.id)
         if (!pg) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: "${entityNameLower}.label", default: entityNameLower), params.id])}"
@@ -90,7 +94,8 @@ class DataResourceController extends ProviderGroupController {
         [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
     }
 
-    def updateImageMetadata = {
+
+    def updateImageMetadata(){
 
         def ignores = ["action", "version", "id", "format", "controller"]
 
@@ -108,6 +113,7 @@ class DataResourceController extends ProviderGroupController {
         }
         redirect(action: 'show', params: [id:params.id])
     }
+
 
     def updateContribution = {
         def pg = get(params.id)
@@ -195,8 +201,30 @@ class DataResourceController extends ProviderGroupController {
     }
 
     def updateGBIFDetails = {
+        String gbifRegion = params['repatriationCountry']
+        boolean isSharableWithGBIF = params['isShareableWithGBIF'] == 'on'
+        boolean isGBIFData = params['gbifDataset'] == 'on'
+
         def pg = get(params.id)
-        genericUpdate pg, 'gbif'
+        pg.isShareableWithGBIF = isSharableWithGBIF
+        pg.gbifDataset = isGBIFData
+        pg.repatriationCountry = gbifRegion
+        pg.userLastModified = collectoryAuthService?.username()
+
+        /**
+         * GBIF publishing country is set on the institution, not the data resource
+         * @link GbifRegistryService.registerDataResource
+         */
+        if ( pg.institution ) {
+            pg.institution.gbifCountryToAttribute = gbifRegion
+        } else if ( pg.dataProvider ) {
+            pg.dataProvider.gbifCountryToAttribute = gbifRegion
+        }
+
+        DataResource.withTransaction {
+            pg.save(flush: true)
+        }
+        updateGBIF.call()
     }
 
     def registerGBIF = {
@@ -238,7 +266,7 @@ class DataResourceController extends ProviderGroupController {
         }
     }
 
-    def updateConsumers = {
+    def updateConsumers(){
         def pg = get(params.id)
         def newConsumers = params.consumers.tokenize(',')
         def oldConsumers = (pg.consumerCollections + pg.consumerInstitutions).collect { it.uid }

@@ -9,14 +9,14 @@
     <body>
       <div class="btn-toolbar">
         <ul class="btn-group">
-          <li class="btn btn-default"><cl:homeLink/></li>
-          <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+          <li class="btn btn-outline-dark"><cl:homeLink/></li>
+          <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
         </ul>
       </div>
         <div class="body">
             <h1><g:message code="reports.li.reports" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog">
               <table class="table table-striped table-bordered">

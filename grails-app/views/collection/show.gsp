@@ -38,16 +38,16 @@
 </style>
 <div class="btn-toolbar">
   <ul class="btn-group">
-    <li class="btn btn-default"><cl:homeLink/></li>
-    <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-    <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>
-    <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+    <li class="btn btn-outline-dark"><cl:homeLink/></li>
+    <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+    <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>
+    <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
   </ul>
-  <ul class="btn-group pull-right">
-    <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-    <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-    <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
-    <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-default"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="glyphicon glyphicon-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
+  <ul class="btn-group ms-auto">
+    <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+    <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+    <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
+    <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-outline-dark"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="fa fa-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
   </ul>
 </div>
 <div class="body">
@@ -56,7 +56,7 @@
   </g:if>
   <div class="dialog emulate-public">
     <!-- base attributes -->
-    <div class="show-section well titleBlock">
+    <div class="show-section card card-body titleBlock">
 
       <!-- Name --><!-- Acronym -->
       <h1>${fieldValue(bean: instance, field: "name")}<cl:valueOrOtherwise value="${instance.acronym}"> (${fieldValue(bean: instance, field: "acronym")})</cl:valueOrOtherwise></h1>
@@ -91,7 +91,7 @@
     </div>
 
     <!-- collection description -->
-    <div class="show-section well">
+    <div class="show-section card card-body">
       <!-- Pub Desc -->
       <h2><g:message code="collection.show.title.description" /></h2>
 
@@ -143,7 +143,7 @@
     <g:render template="/shared/location" model="[instance: instance]"/>
 
     <!-- collection scope -->
-    <div class="show-section well">
+    <div class="show-section card card-body">
       <h2><g:message code="collection.show.title.gr" /></h2>
       <table>
         <colgroup><col width="25%"/><col width="75%"/></colgroup>
@@ -186,7 +186,7 @@
         <!-- Kingdom cover-->
         <tr class="prop">
           <td valign="top" class="category"><g:message code="kingdomCoverage.label" default="Kingdom Coverage"/></td>
-          <td valign="top" class="checkbox"><cl:checkBoxList readonly="true" name="kingdomCoverage" from="${Collection.kingdoms}" value="${instance?.kingdomCoverage}" /></td>
+          <td valign="top" class="form-check"><cl:checkBoxList readonly="true" name="kingdomCoverage" from="${Collection.kingdoms}" value="${instance?.kingdomCoverage}" /></td>
         </tr>
 
         <!-- sci names -->
@@ -231,7 +231,7 @@
     <g:render template="/shared/contacts" model="[contacts: contacts, instance: instance]"/>
 
     <!-- Provider codes -->
-    <div class="show-section well">
+    <div class="show-section card card-body">
       <h2><g:message code="collection.show.title.providercodes" /></h2>
       <p><g:message code="collection.show.des14" />.</p>
       <p><g:message code="collection.show.des15" />: ${instance.getListOfInstitutionCodesForLookup().join(", ")}</p>
@@ -268,17 +268,17 @@
     <g:render template="/shared/changes" model="[changes: changes, instance: instance]"/>
 
   </div>
-  <div class="btn-toolbar">
-    <g:form>
+  <div class="btn-toolbar mt-3">
+    <g:form class="d-inline">
       <g:hiddenField name="id" value="${instance?.id}"/>
       <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
         <g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
       </cl:ifGranted>
     </g:form>
-    <ul class="btn-group pull-right">
-      <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-        <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-      <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
+    <ul class="btn-group ms-auto">
+      <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+        <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+      <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
     </ul>
   </div>
 

@@ -18,7 +18,7 @@
         <div id="header" class="collectory">
           <cl:pageOptionsPopup instance="${instance}"/>
           <div class="section full-width">
-            <g:if test="${flash.message}"><div class="message">${flash.message}</div></g:if>
+            <g:if test="${flash.message}"><div class="alert alert-info">${flash.message}</div></g:if>
             <div class="hrgroup col-8">
               <h1><span id="name">${instance.name}</span><img id="nameLink" class="changeLink" src="${resource(dir:'images/admin',file:'change.png')}"/></h1>
               <g:set var="inst" value="${instance.getInstitution()}"/>

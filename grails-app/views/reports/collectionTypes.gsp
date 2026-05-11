@@ -3,13 +3,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <title><g:message code="reports.title" /></title>
     </head>
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
             </ul>
         </div>
         <div class="body">
@@ -17,7 +18,7 @@
             <p>${Collection.count()} <g:message code="reports.ct.des01" /> <span style="color:#dd3102;"><g:message code="reports.ct.des02" /></span> <g:message code="reports.ct.des03" />.
             <g:message code="reports.ct.des04" />.</p>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog">
               <table class="table table-striped table-bordered">

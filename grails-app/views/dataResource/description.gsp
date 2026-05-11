@@ -15,7 +15,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -31,114 +31,114 @@
                         <tbody>
 
                         <!-- public short description -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="pubShortDescription"><g:message code="providerGroup.pubShortDescription.label" default="Public Short Description" /><cl:helpText code="providerGroup.pubShortDescription"/></label>
                             <g:textArea name="pubShortDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.pubShortDescription)}" value="${command.pubShortDescription}" />
                         </div>
 
                         <!-- public description -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="pubDescription"><g:message code="providerGroup.pubDescription.label" default="Public Description" /><cl:helpText code="providerGroup.pubDescription"/></label>
                             <g:textArea name="pubDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.pubDescription)}" value="${command.pubDescription}" />
                         </div>
 
                         <!-- tech description -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="techDescription"><g:message code="providerGroup.techDescription.label" default="Technical Description" /><cl:helpText code="providerGroup.techDescription"/></label>
                             <g:textArea name="techDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.techDescription)}" value="${command?.techDescription}" />
                         </div>
 
                         <!-- purpose -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="purpose"><g:message code="providerGroup.purpose.label" default="Purpose" /><cl:helpText code="providerGroup.purpose"/></label>
                             <g:textArea name="purpose" class="form-control"  rows="${cl.textAreaHeight(text:command.purpose)}" value="${command?.purpose}" />
                             <cl:helpTD/>
                         </div>
 
                         <!-- geographicDescription -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="geographicDescription"><g:message code="providerGroup.geographicDescription.label" default="Geographic Description" /><cl:helpText code="providerGroup.geographicDescription"/></label>
                             <g:textArea name="geographicDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.geographicDescription)}" value="${command?.geographicDescription}" />
                         </div>
 
                         <!-- bounding box -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label><g:message code="providerGroup.boundingBox.label" default="Bounding Box" /></label>
-                            <p class="help-block"><g:message code="providerGroup.boundingBox.help" default="Decimal degrees, WGS84"/></p>
+                            <p class="form-text text-muted"><g:message code="providerGroup.boundingBox.help" default="Decimal degrees, WGS84"/></p>
 
                             <div class="input-group">
-                                <label for="northBoundingCoordinate" class="input-group-addon"><g:message code="providerGroup.northBoundingCoordinate.label" default="North" /></label>
+                                <label for="northBoundingCoordinate" class="input-group-text"><g:message code="providerGroup.northBoundingCoordinate.label" default="North" /></label>
                                 <g:field type="number" name="northBoundingCoordinate" class="form-control" min="-90.0" max="90.0" step="any" value="${command?.northBoundingCoordinate}" />
 
-                                <label for="southBoundingCoordinate" class="input-group-addon"><g:message code="providerGroup.southBoundingCoordinate.label" default="South" /></label>
+                                <label for="southBoundingCoordinate" class="input-group-text"><g:message code="providerGroup.southBoundingCoordinate.label" default="South" /></label>
                                 <g:field type="number" name="southBoundingCoordinate" class="form-control" min="-90.0" max="90.0" step="any" value="${command?.southBoundingCoordinate}" />
 
-                                <label for="eastBoundingCoordinate" class="input-group-addon"><g:message code="providerGroup.eastBoundingCoordinate.label" default="East" /></label>
+                                <label for="eastBoundingCoordinate" class="input-group-text"><g:message code="providerGroup.eastBoundingCoordinate.label" default="East" /></label>
                                 <g:field type="number" name="eastBoundingCoordinate" class="form-control" min="-180.0" max="180.0" step="any" value="${command?.eastBoundingCoordinate}" />
 
-                                <label for="westBoundingCoordinate" class="input-group-addon"><g:message code="providerGroup.westBoundingCoordinate.label" default="West" /></label>
+                                <label for="westBoundingCoordinate" class="input-group-text"><g:message code="providerGroup.westBoundingCoordinate.label" default="West" /></label>
                                 <g:field type="number" name="westBoundingCoordinate" class="form-control" min="-180.0" max="180.0" step="any" value="${command?.westBoundingCoordinate}" />
                             </div>
 
                         </div>
 
                         <!-- temporal range -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label><g:message code="providerGroup.temporal.label" default="Temporal range" /></label>
-                            <p class="help-block"><g:message code="providerGroup.temporal.help" default="Date format yyyy-mm-dd"/></p>
+                            <p class="form-text text-muted"><g:message code="providerGroup.temporal.help" default="Date format yyyy-mm-dd"/></p>
                             <div class="input-group">
-                                <label for="beginDate" class="input-group-addon"><g:message code="providerGroup.beginDate.label" default="Start date" /></label>
+                                <label for="beginDate" class="input-group-text"><g:message code="providerGroup.beginDate.label" default="Start date" /></label>
                                 <g:textField name="beginDate" class="form-control" pattern="\\d\\d\\d\\d-\\d\\d-\\d\\d" value="${command?.beginDate}" />
-                                <label for="endDate" class="input-group-addon"><g:message code="providerGroup.endDate.label" default="End date" /></label>
+                                <label for="endDate" class="input-group-text"><g:message code="providerGroup.endDate.label" default="End date" /></label>
                                 <g:textField name="endDate" class="form-control" pattern="\\d\\d\\d\\d-\\d\\d-\\d\\d" value="${command?.endDate}" />
                             </div>
                             
                         </div>
 
                         <!-- qualityControlDescription -->
-                        <div class="form-group">
+                        <div class="mb-3">
                                 <label for="qualityControlDescription"><g:message code="providerGroup.qualityControlDescription.label" default="Data Quality Description" /><cl:helpText code="providerGroup.qualityControlDescription"/></label>
                                 <g:textArea name="qualityControlDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.qualityControlDescription)}" value="${command?.qualityControlDescription}" />
                         </div>
 
                         <!-- methodStepDescription -->
-                        <div class="form-group">
+                        <div class="mb-3">
                                 <label for="methodStepDescription"><g:message code="providerGroup.methodStepDescription.label" default="Methods" /><cl:helpText code="providerGroup.methodStepDescription"/></label>
                                 <g:textArea name="methodStepDescription" class="form-control"  rows="${cl.textAreaHeight(text:command.methodStepDescription)}" value="${command?.methodStepDescription}" />
                         </div>
 
                         <!-- focus -->
-                        <div class="form-group">
+                        <div class="mb-3">
                               <label for="focus"><g:message code="providerGroup.focus.label" default="Focus" /><cl:helpText code="providerGroup.focus"/><cl:helpText code="dataResource.focus"/></label>
                             <g:textArea name="focus" class="form-control"  rows="${cl.textAreaHeight(text:command.focus)}" value="${command?.focus}" />
                         </div>
 
                         <!-- data generalisations -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="dataGeneralizations"><g:message code="dataResource.dataGeneralizations.label" default="Data Generalisations" /><cl:helpText code="dataResource.dataGeneralizations"/></label>
                             <g:textArea name="dataGeneralizations" class="form-control" rows="${cl.textAreaHeight(text:command.dataGeneralizations)}" value="${command?.dataGeneralizations}" />
                         </div>
 
                         <!-- information withheld -->
-                        <div class="form-group">
+                        <div class="mb-3">
                               <label for="informationWithheld"><g:message code="dataResource.informationWithheld.label" default="Information withheld" /><cl:helpText code="dataResource.informationWithheld"/></label>
                             <g:textArea name="informationWithheld" class="form-control" rows="${cl.textAreaHeight(text:command.informationWithheld)}" value="${command?.informationWithheld}" />
                         </div>
 
                         <!-- data collection protocol name -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="dataCollectionProtocolName"><g:message code="dataResource.datacollectionprotocolname.label" default="Data collection protocol name" /></label>
                             <g:textField name="dataCollectionProtocolName" class="form-control" value="${command?.dataCollectionProtocolName}" />
                         </div>
 
                         <!-- data collection protocol documentation -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="dataCollectionProtocolDoc"><g:message code="dataResource.datacollectionprotocoldoc.label" default="Data collection protocol documentation" /></label>
                             <g:textField name="dataCollectionProtocolDoc" class="form-control" value="${command?.dataCollectionProtocolDoc}" />
                         </div>
 
                         <!-- suitable -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div><label for="suitableFor"><g:message code="dataResource.suitablefor.label" default="This data set is likely to be suitable for"/></label></div>
                             <select id="suitableFor" name="suitableFor">
                                 <option value=""><g:message code="dataResource.suitablefor.option.empty.label" default="-- Select a primary area this data collection could be used for --" /></option>
@@ -148,7 +148,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group" >
+                        <div class="mb-3" >
                             <g:textField name="suitableForOtherDetail" id="otherdetail" class="form-control" value="${command?.suitableForOtherDetail}" placeholder="${message(code:"dataresource.suitablefor.otherdetail.placeholder", default:'Type something…')}"/>
                         </div>
 
@@ -173,7 +173,7 @@
                                             </g:each>
                                         </ul>
                                     </div>
-                                    <div class="sink-box col-md-6 well well-small">
+                                    <div class="sink-box col-md-6 card card-body ">
                                         <h4><g:message code="dataresource.description.title02" /></h4>
                                         <ul>
                                             <li class="msg"><g:message code="dataresource.description.des02" />.</li>
@@ -188,7 +188,7 @@
 
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateDescription" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:form>
         </div>

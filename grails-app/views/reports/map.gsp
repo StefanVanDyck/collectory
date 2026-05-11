@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <!--meta name="viewport" content="initial-scale=1.0, user-scalable=no" /-->
         <title><g:message code="reports.title" /></title>
         <!--script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.3&sensor=false"></script-->
@@ -10,14 +11,14 @@
     <body onload="initialize()">
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
             </ul>
         </div>
         <div class="body">
             <h1>Collection locations</h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div id="map_canvas" style="width:732px; height:600px"></div>
         </div>

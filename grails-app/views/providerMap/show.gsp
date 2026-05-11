@@ -10,15 +10,15 @@
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create" params="[returnTo: returnTo]"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create" params="[returnTo: returnTo]"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
             </ul>
         </div>
         <div class="body">
             <h1><g:message code="default.show.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog">
                 <table class="table ">
@@ -102,12 +102,12 @@
                     </tbody>
                 </table>
             </div>
-            <div class="buttons">
-                <g:form>
+            <div class="btn-toolbar mt-3">
+                <g:form class="d-flex flex-grow-1">
                     <g:hiddenField name="id" value="${providerMapInstance?.id}" />
                     <g:hiddenField name="returnTo" value="${returnTo}" />
-                    <span class="button"><g:actionSubmit class="edit btn btn-default" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" /></span>
-                    <span class="button"><g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
+                    <g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                    <g:actionSubmit class="edit btn btn-outline-dark ms-auto" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" />
                 </g:form>
             </div>
         </div>

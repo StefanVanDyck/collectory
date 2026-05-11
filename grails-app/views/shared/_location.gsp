@@ -1,5 +1,5 @@
 <!-- location -->
-<div class="show-section well">
+<div class="show-section card card-body">
   <h2><g:message code="shared.location.title01" /></h2>
   <div class="row">
     <div class="col-lg-6">

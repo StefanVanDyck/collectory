@@ -14,11 +14,15 @@
  */
 package au.org.ala.collectory
 
+import grails.gorm.transactions.Transactional
+import grails.util.Holders
 import org.springframework.scheduling.annotation.Scheduled
 
 import java.text.SimpleDateFormat
 
 class SitemapService {
+
+    static lazyInit = !Holders.getConfig().getProperty("sitemap.enabled", Boolean.TYPE, false)
 
     def grailsApplication
 
@@ -40,6 +44,8 @@ class SitemapService {
     // run daily, initial delay 1hr
     @Scheduled(fixedDelay = 86400000L, initialDelay = 3600000L)
     def build() throws Exception {
+        fileCount = 0;
+
         initWriter()
         buildSitemap()
         closeWriter()
@@ -63,7 +69,7 @@ class SitemapService {
             new File(grailsApplication.config.sitemap.dir + "/sitemap" + i + ".xml.tmp").renameTo(newFile)
 
             // add an entry for this new file
-            fw.write("<sitemap><url>" + grailsApplication.config.grails.serverURL + "/sitemap" + i + ".xml" + "</url>")
+            fw.write("<sitemap><loc>" + grailsApplication.config.grails.serverURL + "/sitemap" + i + ".xml" + "</loc>")
             fw.write("<lastmod>" + simpleDateFormat.format(new Date()) + "</lastmod></sitemap>")
         }
 
@@ -106,22 +112,23 @@ class SitemapService {
         countUrls++
     }
 
+    @Transactional
     def buildSitemap() throws Exception {
 
         Collection.findAll().each {Collection it ->
-            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/co" + it.id)
+            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/" + it.uid)
         }
 
         Institution.findAll().each {Institution it ->
-            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/in" + it.id)
+            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/" + it.uid)
         }
 
         DataProvider.findAll().each {DataProvider it ->
-            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/dp" + it.id)
+            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/" + it.uid)
         }
 
         DataResource.findAllByIsPrivate(false).each {DataResource it ->
-            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/dr" + it.id)
+            writeUrl(it.lastUpdated, "weekly", grailsApplication.config.grails.serverURL + "/public/show/" + it.uid)
         }
     }
 }

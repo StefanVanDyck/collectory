@@ -27,7 +27,7 @@
         <div id="header">
         <div class="full-width">
           <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
           </g:if>
           <div>
             <h1><g:message code="public.datasets.header.title.param" args="${[grailsApplication.config.projectName]}" /></h1>
@@ -43,7 +43,7 @@
       </noscript>
 
       <div class="collectory-content row">
-          <div id="sidebarBox" class="col-md-3 facets well well-small">
+          <div id="sidebarBox" class="col-md-3 facets card card-body ">
             <div class="sidebar-header">
               <h3><g:message code="public.datasets.sidebar.header" /></h3>
             </div>
@@ -54,51 +54,42 @@
           </div>
 
           <div id="data-set-list" class="col-md-9">
-            <div class="well">
-                <div class="row">
-                    <form class="form-inline">
-                        <div class="col-md-12">
-                            <div>
-                                <span id="resultsReturned"><g:message code="public.datasets.resultsreturned.message01" /> <strong></strong>&nbsp;<g:message code="public.datasets.resultsreturned.message02" />.</span>
-                            </div>
-                            <div class="input-group col-lg-8">
-                                <input type="text" name="dr-search" id="dr-search" class="form-control" />
-                                <span class="input-group-btn">
-                                    <button href="javascript:void(0);" title="${message(code:"public.datasets.search.btn.title")}"
-                                            id="dr-search-link" class="btn btn-default">
-                                        <g:message code="public.datasets.drsearch.search" />
-                                    </button>
-                                </span>
-                            </div><!-- /input-group -->
-
-                            <div class="pull-right">
-                                <button href="javascript:reset()" title="${message(code:"datasets.remove.all.filters")}" class=" form-control btn btn-default">
-                                    <g:message code="public.datasets.drsearch.resetlist" />
-                                </button>
-                                <button href="#" id="downloadLink" class="btn btn-default"
-                                        title="Download metadata for datasets as a CSV file">
-                                    <span class="glyphicon glyphicon-download"></span>
-                                    <g:message code="public.datasets.downloadlink.label" />
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="card card-body">
+                <div>
+                    <span id="resultsReturned"><g:message code="public.datasets.resultsreturned.message01" /> <strong></strong>&nbsp;<g:message code="public.datasets.resultsreturned.message02" />.</span>
                 </div>
+                <form class="d-flex align-items-center gap-2 mt-2">
+                    <div class="input-group flex-grow-1">
+                        <input type="text" name="dr-search" id="dr-search" class="form-control" />
+                        <button href="javascript:void(0);" title="${message(code:"public.datasets.search.btn.title")}"
+                                id="dr-search-link" class="btn btn-outline-dark">
+                            <g:message code="public.datasets.drsearch.search" />
+                        </button>
+                    </div>
+                    <button href="#" id="resetLink" title="${message(code:"datasets.remove.all.filters")}" class="btn btn-outline-dark text-nowrap">
+                        <g:message code="public.datasets.drsearch.resetlist" />
+                    </button>
+                    <button href="#" id="downloadLink" class="btn btn-outline-dark text-nowrap"
+                            title="Download metadata for datasets as a CSV file">
+                        <span class="fa fa-download"></span>
+                        <g:message code="public.datasets.downloadlink.label" />
+                    </button>
+                </form>
             </div>
             <div>
                 <div id="searchControls">
                   <div id="sortWidgets" class="row">
-                      <div class="col-md-4 form-inline">
+                      <div class="col-md-4 d-flex align-items-center gap-2">
                           <label for="per-page"><g:message code="public.datasets.sortwidgets.rpp" /></label>
-                          <g:select class="form-control input-sm" id="per-page" name="per-page" from="${[10,20,50,100,500]}" value="${pageSize ?: 20}"/>
+                          <g:select class="form-select form-select-sm" id="per-page" name="per-page" from="${[10,20,50,100,500]}" value="${pageSize ?: 20}"/>
                       </div>
-                      <div class="col-md-4 form-inline">
+                      <div class="col-md-4 d-flex align-items-center gap-2">
                           <label for="sort"><g:message code="public.datasets.sortwidgets.sb" /></label>
-                          <g:select class="form-control  input-sm" id="sort" name="sort" valueMessagePrefix="datasets.sort" from="${['name','type','license']}"/>
+                          <g:select class="form-select form-select-sm" id="sort" name="sort" valueMessagePrefix="datasets.sort" from="${['name','type','license']}"/>
                       </div>
-                      <div class="col-md-4 form-inline">
+                      <div class="col-md-4 d-flex align-items-center gap-2">
                           <label for="dir"><g:message code="public.datasets.sortwidgets.so" /></label>
-                          <g:select class="form-control  input-sm" id="dir" name="dir" valueMessagePrefix="datasets.sort" from="${['ascending','descending']}"/>
+                          <g:select class="form-select form-select-sm" id="dir" name="dir" valueMessagePrefix="datasets.sort" from="${['ascending','descending']}"/>
                       </div>
                   </div>
                 </div><!--drop downs-->
@@ -122,6 +113,7 @@
           $('select#per-page').change(onPageSizeChange);
           $('select#sort').change(onSortChange);
           $('select#dir').change(onDirChange);
+          $('#resetLink').click(reset);
       });
   </asset:script>
   </body>

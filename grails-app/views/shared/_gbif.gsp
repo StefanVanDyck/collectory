@@ -1,15 +1,15 @@
 <!-- GBIF integration -->
-<div class="well">
+<div class="card card-body">
   <h2><g:message code="data provider.show.gbif.sync" default="GBIF synchronisation"/></h2>
   <cl:ifGranted role="${grailsApplication.config.gbifRegistrationRole}">
-    <p class="pull-right">
+    <p class="float-end">
       <g:if test="${!instance.gbifRegistryKey}">
-        <g:link controller="${controller}" action="registerGBIF" class="btn btn-default" id="${instance.id}" params="[syncDataResources:false, syncContacts:true]">Register with GBIF</g:link>
-        <g:link controller="${controller}" action="registerGBIF" class="btn btn-default" id="${instance.id}" params="[syncDataResources:true, syncContacts:true]">Register with GBIF & sync data resources</g:link>
+        <g:link controller="${controller}" action="registerGBIF" class="btn btn-outline-dark" id="${instance.id}" params="[syncDataResources:false, syncContacts:true]">Register with GBIF</g:link>
+        <g:link controller="${controller}" action="registerGBIF" class="btn btn-outline-dark" id="${instance.id}" params="[syncDataResources:true, syncContacts:true]">Register with GBIF & sync data resources</g:link>
       </g:if>
       <g:else>
-        <g:link controller="${controller}"  action="updateGBIF" class="btn btn-default" id="${instance.id}" params="[syncDataResources:false, syncContacts:true]">Update GBIF</g:link>
-        <g:link controller="${controller}"  action="updateGBIF" class="btn btn-default" id="${instance.id}" params="[syncDataResources:true, syncContacts:true]">Update GBIF & sync resources</g:link>
+        <g:link controller="${controller}"  action="updateGBIF" class="btn btn-outline-dark" id="${instance.id}" params="[syncDataResources:false, syncContacts:true]">Update GBIF</g:link>
+        <g:link controller="${controller}"  action="updateGBIF" class="btn btn-outline-dark" id="${instance.id}" params="[syncDataResources:true, syncContacts:true]">Update GBIF & sync resources</g:link>
       </g:else>
     </p>
   </cl:ifGranted>

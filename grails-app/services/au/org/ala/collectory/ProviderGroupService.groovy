@@ -3,9 +3,7 @@ package au.org.ala.collectory
 import grails.converters.JSON
 import grails.gorm.transactions.Transactional
 import grails.util.Holders
-import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONElement
-import org.springframework.web.context.request.RequestContextHolder
+
 
 @Transactional
 class ProviderGroupService {
@@ -396,7 +394,7 @@ class ProviderGroupService {
             if (isAuthorisedToEdit(pg.uid)) {
                 ContactFor cf = ContactFor.get(params.idToRemove)
                 if (cf) {
-                    cf.delete()
+                    cf.delete(flush: true)
                 }
                 [success: true, pg:pg, authorised:true]
             } else {

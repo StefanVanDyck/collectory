@@ -1,5 +1,5 @@
 <g:if test="${instance.getResources() && grailsApplication.config.loggerURL }">
-    <div class="well">
+    <div class="card card-body">
         <!-- Resources -->
         <h2>User download reports</h2>
         <ul class='fancy'>

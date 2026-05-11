@@ -11,15 +11,15 @@
 	<body>
 		<div class="btn-toolbar">
 			<ul class="btn-group">
-				<li class="btn btn-default"><cl:homeLink/></li>
-				<li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list" params="[max:10000]"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-				<li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+				<li class="btn btn-outline-dark"><cl:homeLink/></li>
+				<li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list" params="[max:10000]"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+				<li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
 			</ul>
 		</div>
 		<div id="list-providerCode" class="content scaffold-list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+			<div class="alert alert-info" role="status">${flash.message}</div>
 			</g:if>
 			<table class="table">
 				<thead>
@@ -38,7 +38,7 @@
 				</tbody>
 			</table>
 
-			<div class="nav">
+			<div>
 				<tb:paginate controller="providerCode" action="list" total="${providerCodeInstanceTotal}" />
 			</div>
 		</div>

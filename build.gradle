@@ -1,5 +1,5 @@
 buildscript {
-    version "5.2.0-SNAPSHOT"
+    version "6.2.3-SNAPSHOT"
     group "au.org.ala"
 }
 
@@ -13,9 +13,7 @@ plugins {
     id "com.bertramlabs.asset-pipeline"
     id "application"
     id "eclipse"
-
     id "com.gorylenko.gradle-git-properties" version "2.4.1"
-
     id "maven-publish"
 }
 
@@ -32,11 +30,16 @@ publishing {
         }
     }
     publications {
-        mavenJar(MavenPublication) {
+        mavenWar(MavenPublication) {
             artifact bootWar
+            artifact bootJar {
+                classifier = 'exec'
+            }
         }
     }
 }
+
+
 
 bootWar {
     launchScript()
@@ -47,9 +50,22 @@ war {
     dependsOn(compileGroovyPages)
 }
 
-java {
-    sourceCompatibility = JavaVersion.toVersion("11")
+bootJar {
+    enabled = true
+    archiveClassifier='exec'
+    launchScript() // Optional: For Linux service startup script
+    from('grails-app/views') {
+        into('views')
+    }
+    dependsOn(compileGroovyPages)
 }
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 
 repositories {
     mavenLocal()
@@ -106,14 +122,15 @@ dependencies {
     // See: https://github.com/AtlasOfLivingAustralia/collectory/issues/84#issuecomment-1070670979
     // before updating mysql-connector-java
     implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation "org.grails.plugins:ala-bootstrap3:4.4.0"
+    implementation "org.grails.plugins:ala-bootstrap5:1.0.0-SNAPSHOT"
     implementation "au.org.ala.plugins.grails:ala-charts-plugin:2.3.0"
+    implementation 'au.org.ala.grails:interceptor-annotation-matcher:1.0.0'
     implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:audit-logging:4.0.3"
     implementation 'dk.glasius:external-config:3.1.1'
-    implementation "org.grails.plugins:ala-admin-plugin:2.3.0"
+    implementation "org.grails.plugins:ala-admin-plugin:2.4.0-SNAPSHOT"
     implementation 'au.org.ala.plugins:openapi:1.3.0'
 
     console "org.grails:grails-console"
@@ -127,6 +144,8 @@ dependencies {
     testImplementation "org.grails:grails-gorm-testing-support"
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.grails:grails-web-testing-support"
+    testImplementation "org.grails:grails-testing-support"
+    testImplementation "org.spockframework:spock-core"
 //    testImplementation "org.grails.plugins:geb"
 //    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
 //    testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
@@ -175,6 +194,10 @@ assets {
 }
 
 test {
-    testLogging.showStandardStreams = true
+    useJUnitPlatform()
+    include '**/*Spec.*'
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+        showStandardStreams = true
+    }
 }
-

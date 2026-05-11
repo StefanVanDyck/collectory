@@ -2,7 +2,7 @@
 <%
   def providerGroupService = grailsApplication.classLoader.loadClass('au.org.ala.collectory.ProviderGroupService').newInstance()
 %>
-<div class="show-section  well">
+<div class="show-section  card card-body">
   <h2><g:message code="shared.consumers.title01" /></h2>
   <p><g:message code="shared.consumers.des01" args="[providerGroupService.textFormOfEntityType(instance.uid)]" />.
   <br/>
@@ -17,7 +17,7 @@
   </ul>
   <div style="clear:both;"></div>
   <div>
-      <span class="buttons long"><g:link class="edit btn btn-default" action='editConsumers' params="[source:'co']" id="${instance.uid}"><g:message code="shared.consumers.link01" />&nbsp;</g:link></span>
-      <span class="buttons long"><g:link class="edit btn btn-default" action='editConsumers' params="[source:'in']" id="${instance.uid}"><g:message code="shared.consumers.link02" /></g:link></span>
+      <span class="buttons long"><g:link class="edit btn btn-outline-dark" action='editConsumers' params="[source:'co']" id="${instance.uid}"><g:message code="shared.consumers.link01" />&nbsp;</g:link></span>
+      <span class="buttons long"><g:link class="edit btn btn-outline-dark" action='editConsumers' params="[source:'in']" id="${instance.uid}"><g:message code="shared.consumers.link02" /></g:link></span>
   </div>
 </div>
