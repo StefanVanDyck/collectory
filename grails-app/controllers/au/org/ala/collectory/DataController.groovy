@@ -403,7 +403,10 @@ class DataController {
     def fileDownload = {
         String[] requiredRoles = [grailsApplication.config.ROLE_ADMIN]
         String[] requiredScopes = [grailsApplication.config.REQUIRED_SCOPES]
-        authCheck =  collectoryAuthService.isAuthorised(requiredRoles,requiredScopes)
+        if (!collectoryAuthService.isAuthorised(requiredRoles,requiredScopes)) {
+          unauthorised()
+          return
+        }
 
         def dirpath = "/" + params.directory + "/"
         def idx = request.forwardURI.lastIndexOf(dirpath) + dirpath.length()
