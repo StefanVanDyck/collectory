@@ -20,15 +20,17 @@
       <div id="header">
         <div class="section full-width">
           <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-danger ">${flash.message}</div>
           </g:if>
+            <g:if test="${flash.errorMessage}">
+                <div class="alert alert-danger">${flash.errorMessage}</div>
+            </g:if>
           <div class="hrgroup">
             <h1><g:message code="public.map3.header.title" args="[raw(grailsApplication.config.regionName)]"/></h1>
             <p><g:message code="public.map3.header.des01" /> ${grailsApplication.config.projectNameShort} <g:message code="public.map3.header.des02" args="[raw(grailsApplication.config.regionName)]"/>.</p>
           </div><!--close hrgroup-->
         </div><!--close section-->
       </div><!--close header-->
-
       <div class="row"><!-- wrap map and list-->
         <div class="col-md-4">
           <div class="section">
@@ -71,12 +73,12 @@
         <div class="col-md-8" id="map-list-col">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="home-tabs">
-                    <li class="active"><a href="#map" data-toggle="tab"><g:message code="public.map3.maplistcol.map" /></a></li>
-                    <li><a href="#list" data-toggle="tab"><g:message code="public.map3.maplistcol.list" /></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#map" data-bs-toggle="tab"><g:message code="public.map3.maplistcol.map" /></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#list" data-bs-toggle="tab"><g:message code="public.map3.maplistcol.list" /></a></li>
                 </ul>
             </div>
             <div class="tab-content">
-              <div class="tab-pane active" id="map">
+              <div class="tab-pane show active" id="map">
               <div  class="map-column">
                 <div class="section">
                   <p style="width:100%;padding-bottom:8px;"><g:message code="public.map3.maplistcol.des01" />.</p>

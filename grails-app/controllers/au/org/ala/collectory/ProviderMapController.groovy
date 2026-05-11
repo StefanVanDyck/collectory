@@ -1,8 +1,9 @@
 package au.org.ala.collectory
 
-
+import au.org.ala.PermissionRequired
 import grails.gorm.transactions.Transactional
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class ProviderMapController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]

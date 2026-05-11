@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <meta name="breadcrumbParent"
               content="${createLink(action: 'list', controller: 'manage')},${message(code: 'manage.list.title01')}"
         />
@@ -25,16 +26,16 @@
     </style>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
             </ul>
-            <ul class="btn-group pull-right">
-                <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-                <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-                <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
-                <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-default"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="glyphicon glyphicon-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
+            <ul class="btn-group ms-auto">
+                <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+                <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+                <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
+                <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-outline-dark"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="fa fa-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
             </ul>
         </div>
         <div class="body">
@@ -43,7 +44,7 @@
             </g:if>
             <div class="dialog emulate-public">
               <!-- base attributes -->
-              <div class="show-section titleBlock well">
+              <div class="show-section titleBlock card card-body">
                 <!-- Name --><!-- Acronym -->
                 <g:if test="${instance.name.size() > 50}">
                   <h1 style="display:inline;font-size:1.7em;">${fieldValue(bean: instance, field: "name")}<cl:valueOrOtherwise value="${instance.acronym}"> (${fieldValue(bean: instance, field: "acronym")})</cl:valueOrOtherwise></h1>
@@ -87,7 +88,7 @@
               </div>
 
               <!-- description -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <!-- Pub Desc -->
                 <h2>Description</h2>
                 <div class="category"><g:message code="collection.show.span04" /></div><div style="clear:both;"></div>
@@ -112,7 +113,7 @@
                   </g:each>
                 </ul>
                 <p>
-                    <g:link controller="collection" action="create" class="btn btn-default" params='[institutionUid: "${instance.uid}"]'>create a new collection for this institution</g:link>
+                    <g:link controller="collection" action="create" class="btn btn-outline-dark" params='[institutionUid: "${instance.uid}"]'>create a new collection for this institution</g:link>
                 </p>
 
                 <cl:editButton uid="${instance.uid}" page="description"/>
@@ -144,17 +145,17 @@
               <g:render template="/shared/changes" model="[changes: changes, instance: instance]"/>
 
             </div>
-            <div class="btn-toolbar">
-                <g:form class="btn-group">
+            <div class="btn-toolbar mt-3">
+                <g:form class="d-inline">
                     <g:hiddenField name="id" value="${instance?.id}"/>
                     <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
                         <g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
                     </cl:ifGranted>
                 </g:form>
-                <ul class="btn-group pull-right">
-                    <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
+                <ul class="btn-group ms-auto">
+                    <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
                 </ul>
             </div>
         </div>

@@ -29,19 +29,19 @@
     </style>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-%{--                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>--}%
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+%{--                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="myList"> <g:message code="default.myList.label" args="[entityName]"/></g:link></li>--}%
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
             </ul>
-            <ul class="btn-group pull-right">
+            <ul class="btn-group ms-auto">
                 <g:if test="${!instance?.isPrivate}">
-                    <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
                 </g:if>
-                <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-                <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
-                <li class="btn btn-default"><cl:emlDataLink uid="${instance.uid}"/></li>
-                <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-default"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="glyphicon glyphicon-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
+                <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+                <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
+                <li class="btn btn-outline-dark"><cl:emlDataLink uid="${instance.uid}"/></li>
+                <g:if test="${instance.getPrimaryContact()?.contact?.email}"><li class="btn btn-outline-dark"><a href="mailto:${instance.getPrimaryContact()?.contact?.email}?subject=Request to review web pages presenting information about the ${instance.name}.&body=${contactEmailBody}"><span class="fa fa-envelope"></span><g:message code="default.query.label"/></a></li></g:if>
             </ul>
         </div>
         <div class="body">
@@ -51,13 +51,13 @@
 
             <div class="dialog emulate-public">
               <!-- base attributes -->
-              <div class="show-section well titleBlock">
+              <div class="show-section card card-body titleBlock">
                 <!-- Name --><!-- Acronym -->
                 <h1>${fieldValue(bean: instance, field: "name")}<cl:valueOrOtherwise value="${instance.acronym}"> (${fieldValue(bean: instance, field: "acronym")})</cl:valueOrOtherwise></h1>
 
                 <!-- Data Provider --><!-- ALA Partner -->
                 <g:if test="${instance.dataProvider}">
-                    <h2 style="display:inline"><g:link controller="dataProvider" action="show" id="${instance.dataProvider?.id}">${instance.dataProvider?.name}</g:link></h2>
+                    <h2 style="display:inline"><g:link controller="dataProvider" action="show" id="${instance.dataProvider?.uid}">${instance.dataProvider?.name}</g:link></h2>
                 </g:if>
 
                 <cl:partner test="${instance.dataProvider?.isALAPartner}"/><br/>
@@ -107,11 +107,11 @@
                     <span class="category"><g:message code="dataresource.show.verificationStatus" default="Verification status"/>: </span>
                     <g:if test="${instance.isVerified()}">
                         Currently this data resource is marked as verified <i class="fa fa-check-circle tooltips" style="color:green;"></i>
-                        <g:link class="btn btn-default btn-sm" controller="dataResource" action="markAsUnverified" params="[uid: instance.uid]">Mark as <strong>unverified</strong></g:link>
+                        <g:link class="btn btn-outline-dark btn-sm" controller="dataResource" action="markAsUnverified" params="[uid: instance.uid]">Mark as <strong>unverified</strong></g:link>
                     </g:if>
                     <g:else>
                         Currently this data resource is marked as unverified
-                            <g:link class="btn btn-default btn-sm" controller="dataResource" action="markAsVerified" params="[uid: instance.uid]">Mark as <strong>verified</strong></g:link>
+                            <g:link class="btn btn-outline-dark btn-sm" controller="dataResource" action="markAsVerified" params="[uid: instance.uid]">Mark as <strong>verified</strong></g:link>
                     </g:else>
                 </p>
 
@@ -119,7 +119,7 @@
               </div>
 
               <!-- description -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2><g:message code="collection.show.title.description" /></h2>
 
                 <!-- Pub Short Desc -->
@@ -189,7 +189,7 @@
               </div>
 
               <!-- image metadata -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2>Image metadata</h2>
                 <p>These values the default values displayed for any images loaded for this data resource.</p>
                 <cl:showImageMetadata imageMetadata="${instance.imageMetadata}"/>
@@ -197,7 +197,7 @@
               </div>
 
               <!-- taxonomic range -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2>Taxonomic range</h2>
 
                 <!-- range -->
@@ -207,12 +207,12 @@
               </div>
 
               <!-- mobilisation -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <g:if test="${instance.gbifDataset}">
                     <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
-                        <div class="pull-right"><span class="buttons">
-                            <g:link class="edit btn btn-default" controller="manage" action="gbifDatasetDownload" id="${instance.uid}">
-                            <i class="glyphicon-refresh"> </i>
+                        <div class="float-end"><span class="buttons">
+                            <g:link class="edit btn btn-outline-dark" controller="manage" action="gbifDatasetDownload" id="${instance.uid}">
+                            <i class="fa fa-refresh"> </i>
                             ${message(code: 'datasource.button.update', default: 'Reload from GBIF')}</g:link></span></div>
                     </cl:ifGranted>
                 </g:if>
@@ -255,7 +255,7 @@
 
                 <cl:showConnectionParameters connectionParameters="${instance.connectionParameters}"/></p>
 
-                <g:if test="${instance.resourceType == 'records'}">
+                <g:if test="${instance.resourceType == 'records'} || ${instance.resourceType == 'events'}">
                     <!-- darwin core defaults -->
                     <g:set var="dwc" value="${instance.defaultDarwinCoreValues ? JSON.parse(instance.defaultDarwinCoreValues) : [:]}"/>
                     <h3>Default values for DwC fields</h3>
@@ -271,13 +271,13 @@
                                notAuthorisedMessage="You are not authorised to edit this resource."/>
               </div>
 
-              <div class="well">
+              <div class="card card-body">
                   <h3><g:message code="dataresource.show.title03" /></h3>
-                  <g:link controller="dataResource" action="upload" class="btn btn-default" id="${instance.uid}"><i class="glyphicon glyphicon-upload"></i> <g:message code="dataresource.show.link.upload" /></g:link>
+                  <g:link controller="dataResource" action="upload" class="btn btn-outline-dark" id="${instance.uid}"><i class="fa fa-upload"></i> <g:message code="dataresource.show.link.upload" /></g:link>
               </div>
 
               <!-- rights -->
-              <div class="show-section well">
+              <div class="show-section card card-body">
                 <h2><g:message code="dataresource.show.title04" /></h2>
 
                 <!-- citation -->
@@ -325,7 +325,7 @@
               <g:render template="/shared/location" model="[instance: instance]"/>
 
               <!-- Record consumers -->
-              <g:if test="${instance.resourceType == 'records'}">
+              <g:if test="${instance.resourceType == 'records'} || ${instance.resourceType == 'events'}">
                   <g:render template="/shared/consumers" model="[instance: instance]"/>
               </g:if>
 
@@ -342,43 +342,43 @@
               <g:render template="/shared/externalIdentifiers" model="[instance: instance]"/>
 
               <g:if test="${grailsApplication.config.loggerURL}">
-              <div class="well">
+              <div class="card card-body">
                 <!-- Resources -->
                 <h2>User download reports</h2>
                 <p>
-                        <a class="btn btn-default" href="${grailsApplication.config.loggerURL}/admin/userReport/download?fileName=user-report-${instance.uid}.csv&entityUids=${instance.uid}&eventId=1002">
-                            <i class="glyphicon glyphicon-cloud-download"></i>  Download user report for this data resource
+                        <a class="btn btn-outline-dark" href="${grailsApplication.config.loggerURL}/admin/userReport/download?fileName=user-report-${instance.uid}.csv&entityUids=${instance.uid}&eventId=1002">
+                            <i class="fa fa-cloud-download"></i>  Download user report for this data resource
                         </a>
                  </p>
                  <p>
-                        <a class="btn  btn-default" href="${grailsApplication.config.loggerURL}/admin/userReport/downloadDetailed?fileName=user-report-detailed-${instance.uid}.csv&entityUids=${instance.uid}&eventId=1002">
-                            <i class="glyphicon glyphicon-cloud-download"></i> Download detailed user report for this data resource
+                        <a class="btn  btn-outline-dark" href="${grailsApplication.config.loggerURL}/admin/userReport/downloadDetailed?fileName=user-report-detailed-${instance.uid}.csv&entityUids=${instance.uid}&eventId=1002">
+                            <i class="fa fa-cloud-download"></i> Download detailed user report for this data resource
                         </a>
                  </p>
               </div>
               </g:if>
 
               <!-- GBIF integration -->
-              <div class="well">
+              <div class="card card-body">
                 <h2><g:message code="dataresource.show.gbif.sync" default="GBIF synchronisation" /></h2>
 
                 <g:set var="gbif" bean="gbifRegistryService"/>
                 <cl:ifGranted role="${grailsApplication.config.gbifRegistrationRole}">
                     <g:if test="${instance.isShareableWithGBIF && gbif.getGBIFCompatibleLicence(instance.licenseType)}">
-                        <div class="pull-right">
+                        <div class="float-end">
                             <g:if test="${!instance.gbifRegistryKey}">
-                                <g:link class="btn btn-default" controller="dataResource" action="registerGBIF" id="${instance.id}">
+                                <g:link class="btn btn-outline-dark" controller="dataResource" action="registerGBIF" id="${instance.id}">
                                     Register with GBIF
                                 </g:link>
 
 
                             </g:if>
                             <g:else>
-                                <g:link class="btn btn-default" controller="dataResource" action="updateGBIF" id="${instance.id}">
+                                <g:link class="btn btn-outline-dark" controller="dataResource" action="updateGBIF" id="${instance.id}">
                                     Update GBIF
                                 </g:link>
                                 <g:link
-                                        class="btn btn-default"
+                                        class="btn btn-outline-dark"
                                         controller="dataResource"
                                         action="deleteGBIF"
                                         id="${instance.id}"
@@ -412,11 +412,11 @@
                 <g:if test="${instance.gbifRegistryKey}">
                     <p>
                         <span class="category">GBIF Link:</span>
-                        <a href="${grailsApplication.config.gbifWebsite}/dataset/${instance.gbifRegistryKey}">View details on GBIF.org</a>
+                        <a href="${grailsApplication.config.gbifWebsite}dataset/${instance.gbifRegistryKey}">View details on GBIF.org</a>
                     </p>
                     <p>
                         <span class="category">GBIF webservices Link:</span>
-                        <a href="${grailsApplication.config.gbifApiUrl}/dataset/${instance.gbifRegistryKey}">View details on GBIF.org</a>
+                        <a href="${grailsApplication.config.gbifApiUrl}dataset/${instance.gbifRegistryKey}">View details on GBIF.org</a>
                     </p>
                 </g:if>
 
@@ -428,18 +428,18 @@
               <g:render template="/shared/changes" model="[changes: changes, instance: instance]"/>
 
             </div>
-            <div class="btn-toolbar">
-                <g:form class="btn-group">
+            <div class="btn-toolbar mt-3">
+                <g:form class="d-inline">
                     <g:hiddenField name="id" value="${instance?.id}"/>
                     <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
                         <g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
                     </cl:ifGranted>
                 </g:form>
-                <ul class="btn-group pull-right">
-                    <li class="btn btn-default"><cl:viewPublicLink uid="${instance?.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
-                    <li class="btn btn-default"><cl:jsonDataLink uid="${instance.uid}"/></li>
-                    <li class="btn btn-default"><cl:emlDataLink uid="${instance.uid}"/></li>
+                <ul class="btn-group ms-auto">
+                    <li class="btn btn-outline-dark"><cl:viewPublicLink uid="${instance?.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonSummaryLink uid="${instance.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:jsonDataLink uid="${instance.uid}"/></li>
+                    <li class="btn btn-outline-dark"><cl:emlDataLink uid="${instance.uid}"/></li>
                 </ul>
             </div>
         </div>

@@ -3,6 +3,7 @@
 <html>
 	<head>
 		<meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
 		<g:set var="entityName" value="${message(code: 'providerCode.label', default: 'ProviderCode')}" />
 		<title><g:message code="default.create.label" args="[entityName]" /></title>
 	</head>
@@ -10,14 +11,14 @@
 		<a href="#create-providerCode" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div class="btn-toolbar">
 			<ul class="btn-group">
-				<li class="btn btn-default"><cl:homeLink/></li>
-				<li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+				<li class="btn btn-outline-dark"><cl:homeLink/></li>
+				<li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
 			</ul>
 		</div>
 		<div id="create-providerCode" class="content scaffold-create" role="main">
 			<h1><g:message code="default.create.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+			<div class="alert alert-info" role="status">${flash.message}</div>
 			</g:if>
 			<g:hasErrors bean="${providerCodeInstance}">
 			<ul class="errors" role="alert">

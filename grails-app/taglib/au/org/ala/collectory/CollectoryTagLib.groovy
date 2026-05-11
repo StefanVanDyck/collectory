@@ -53,7 +53,7 @@ class CollectoryTagLib {
             link += '&baseUrlForWS=' + encodeWithinQuery(grailsApplication.config.biocacheServicesUrl, "UTF-8")
             link += '&baseUrlForUI=' + encodeWithinQuery(grailsApplication.config.biocacheUiURL, "UTF-8")
             link += '&resourceName=' + encodeWithinQuery(grailsApplication.config.alertResourceName, "UTF-8")
-            out << "<a href=\"" + link +"\" class='btn btn-default' alt='"+attrs.altText+"'><i class='glyphicon glyphicon-bell'></i> "+ attrs.linkText + "</a>"
+            out << "<a href=\"" + link +"\" class='btn btn-outline-dark' alt='"+attrs.altText+"'><i class='fa fa-bell'></i> "+ attrs.linkText + "</a>"
         }
     }
 
@@ -617,7 +617,7 @@ class CollectoryTagLib {
         if (helpText || helpTitle) {
             def mb = new MarkupBuilder(out)
             mb.span(class: 'helphover', 'data-original-title': helpTitle, 'data-content': helpText) {
-                span(class: 'glyphicon glyphicon-question-sign') {
+                span(class: 'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
             }
@@ -748,7 +748,7 @@ class CollectoryTagLib {
             } else {
                 checked = (it in attrs.value) ? "checked='checked'" : ""
             }
-            out << "<label class='checkbox-inline'><input name='${attrs.name}' type='checkbox' ${checked}' value='${it}'/>${it}</label>"
+            out << "<div class='form-check form-check-inline'><input class='form-check-input' name='${attrs.name}' type='checkbox' ${checked} value='${it}'/><label class='form-check-label'>${it}</label></div>"
         }
     }
 
@@ -1121,14 +1121,14 @@ class CollectoryTagLib {
     }
 
     def homeLink = {
-        out << '<span class="glyphicon glyphicon-home"></span> <a class="home" href="' + createLink(uri:"/admin") + '">Admin menu</a>'
+        out << '<span class="fa fa-home"></span> <a class="home" href="' + createLink(uri:"/admin") + '">Admin menu</a>'
     }
 
     def returnLink = { attrs ->
         if (attrs.uid) {
             def pg = providerGroupService._get(attrs.uid)
             if (pg) {
-                out << link(class: 'return', controller: controllerFromUid(uid: attrs.uid), action: 'show', id: pg.uid) { '<span class="glyphicon glyphicon-arrow-left"></span> Return to ' + pg.name}
+                out << link(class: 'return', controller: controllerFromUid(uid: attrs.uid), action: 'show', id: pg.uid) { '<span class="fa fa-arrow-left"></span> Return to ' + pg.name}
             }
         }
     }
@@ -1427,7 +1427,7 @@ class CollectoryTagLib {
                         link(controller:'public', action:'map') {"Collections"}
         }
         if (grailsApplication.config.skin.includeBaseUrl) {
-            out << "<a href='${grailsApplication.config.ala.baseURL}'>Home</a> <span class=\"glyphicon glyphicon-arrow-right\"></span> "
+            out << "<a href='${grailsApplication.config.ala.baseURL}'>Home</a> <span class=\"fa fa-arrow-right\"></span> "
         }
         out <<   hereLink
     }
@@ -1536,7 +1536,7 @@ class CollectoryTagLib {
         if (isAuthorisedToEdit(attrs.uid, authService.email)) {
             def paramsMap
             // anchor class
-            paramsMap = [class:'edit btn btn-default']
+            paramsMap = [class:'edit btn btn-outline-dark']
             // action
             paramsMap << [action: (attrs.containsKey('action')) ? attrs.remove('action').toString() : 'edit']
             // optional controller
@@ -1816,7 +1816,7 @@ class CollectoryTagLib {
         }
 
         // show the protocol selector
-        out << "<div class=\"form-group\"><label for=\"protocol\">Protocol"
+        out << "<div class=\"mb-3\"><label for=\"protocol\">Protocol"
         out << helpText(code: "dataResource.connectionParameters.protocol")
         out << "</label>"
         out <<  select(id:'protocolSelector',
@@ -1870,16 +1870,16 @@ class CollectoryTagLib {
                     }
                     if (pp.paramName == "termsForUniqueKey") {
                         // handle terms specially
-                        out << """<div class="form-group labile" id="connection_termsForUniqueKey" style="${hidden}">"""
+                        out << """<div class="mb-3 labile" id="connection_termsForUniqueKey" style="${hidden}">"""
                         out << """<div class='alert alert-danger'>Don't change the following terms unless you know what you are doing. Incorrect values can cause major devastation.</div>"""
                         out << "</div>"
-                        out << """<div class="form-group labile" style="${hidden}" id="connection_termsForUniqueKey">"""
+                        out << """<div class="mb-3 labile" style="${hidden}" id="connection_termsForUniqueKey">"""
                         out << """<label for="termsForUniqueKey">${pp.display}${helpText(code: 'dataResource.termsForUniqueKey')}</label>"""
                         out << textField(attributes)
                         out << "</div>"
                     } else if (pp.type == 'boolean') {
                         attributes.remove('class')
-                        out << """<div class="form-group labile" style="${hidden}" id="connection_${pp.paramName}">"""
+                        out << """<div class="mb-3 labile" style="${hidden}" id="connection_${pp.paramName}">"""
                         out << """<label for="${pp.paramName}">"""
                         out << checkBox(attributes)
                         out << " "
@@ -1893,7 +1893,7 @@ class CollectoryTagLib {
                             case 'textArea': widget = 'textArea'; break
                             default: widget = 'textField'; break
                         }
-                        out << """<div class="form-group labile" style="${hidden}" id="connection_${pp.paramName}">"""
+                        out << """<div class="mb-3 labile" style="${hidden}" id="connection_${pp.paramName}">"""
                         out << """<label for="${pp.paramName}">${pp.display}${helpText(code: 'dataResource.' + pp.paramName)}</label>"""
                         out << "${widget}"(attributes)
                         out << "</div>"
@@ -2102,7 +2102,7 @@ class CollectoryTagLib {
         def title = message(code: 'default.required.label', default: 'required')
         out << "<span class=\"required-field\" title=\"${title}\">"
         out << body()
-        out << '<span class="required-icon glyphicon glyphicon-star"></span>'
+        out << '<span class="required-icon fa fa-star"></span>'
         out << "<span class=\"required-message\">${title}</span>"
         out << '</span>'
     }

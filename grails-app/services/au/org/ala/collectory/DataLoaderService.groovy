@@ -429,7 +429,7 @@ class DataLoaderService {
                 if (pm.hasErrors()) {
                     pm.errors.each {log.info it}
                 } else {
-                    pm.save()
+                    pm.save(flush:true)
                 }
 
             } else {

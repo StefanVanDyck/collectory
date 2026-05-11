@@ -15,7 +15,7 @@
 <g:set var="org" value="${grailsApplication.config.skin.orgNameLong}"/>
 <div class="body content">
     <h1>GBIF Syncing Healthcheck</h1>
-    <div class="pull-right">
+    <div class="float-end">
         <g:link class="btn btn-primary" action="downloadCSV"><i class="ui-icon-arrow-1-s"></i> Download CSV</g:link>
 
         <cl:ifGranted role="${grailsApplication.config.gbifRegistrationRole}">

@@ -3,21 +3,22 @@
 <html>
 	<head>
 		<meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
 		<g:set var="entityName" value="${message(code: 'licence.label', default: 'Licence')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
 		<div class="btn-toolbar">
 			<ul class="btn-group">
-				<li class="btn btn-default"><cl:homeLink/></li>
-				<li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-				<li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+				<li class="btn btn-outline-dark"><cl:homeLink/></li>
+				<li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+				<li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
 			</ul>
 		</div>
 		<div id="show-licence" class="content scaffold-show" role="main">
 			<h1><g:fieldValue bean="${licenceInstance}" field="name"/></h1>
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+			<div class="alert alert-info" role="status">${flash.message}</div>
 			</g:if>
 			<div class="property-list licence">
 				<p>
@@ -49,14 +50,14 @@
 				</p>
 				<br/>
 			</div>
-			<div class="btn-toolbar">
-				<g:form class="btn-group">
+			<div class="btn-toolbar mt-3">
+				<g:form class="d-inline">
 					<g:hiddenField name="id" value="${licenceInstance?.id}"/>
-					<g:link class="edit btn btn-default" action="edit" id="${licenceInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
 						<g:actionSubmit class="delete btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
 					</cl:ifGranted>
 				</g:form>
+				<g:link class="edit btn btn-outline-dark ms-auto" action="edit" id="${licenceInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 			</div>
 		</div>
 	</body>

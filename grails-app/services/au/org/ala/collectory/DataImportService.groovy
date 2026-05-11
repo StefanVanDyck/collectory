@@ -10,7 +10,7 @@ class DataImportService {
     static final String EML_FILE = "eml.xml"
 
     def grailsApplication
-    def metadataService, collectoryAuthService, idGeneratorService, emlImportService
+    def metadataService, collectoryAuthService, idGeneratorService, emlImportService, iptService
 
     def serviceMethod() {}
 
@@ -142,6 +142,7 @@ class DataImportService {
         }
 
         def contacts = []
+        def primaryContacts = []
         //for DWC-A, extract metadata from EML
         if(params.protocol == 'DwCA'){
 
@@ -150,7 +151,9 @@ class DataImportService {
                 if (file.getName().startsWith(EML_FILE)) {
                     //open the XML file that contains the EML details for the GBIF resource
                     def xml = new XmlSlurper().parseText(zipFile.getInputStream(file).getText("UTF-8"))
-                    contacts = emlImportService.extractContactsFromEml(xml, dataResource)
+                    def result = emlImportService.extractContactsFromEml(xml, dataResource)
+                    contacts = result.contacts
+                    primaryContacts = result.primaryContacts
                 }
             }
         }
@@ -160,18 +163,10 @@ class DataImportService {
             dataResource.save(flush: true)
         }
 
-        //add contacts
-        if (contacts){
-            def existingContacts = dataResource.getContacts()
-            contacts.each { contact ->
-                def isNew = true
-                existingContacts.each {
-                    if (it.contact.email == contact.email) isNew = false
-                }
-                if (isNew) {
-                    dataResource.addToContacts(contact, null, false, true, collectoryAuthService.username())
-                }
-            }
+        // Sync contacts - add new, update existing, remove obsolete
+        // This ensures the database always reflects the current EML state
+        if (contacts != null){
+            iptService.syncContacts(dataResource, contacts, primaryContacts, collectoryAuthService.username(), true)
         }
     }
 

@@ -18,7 +18,7 @@
         <p><g:message code="manage.index.des01" />.</p>
 
         <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
         </g:if>
 
         <div style="width:400px;">
@@ -29,7 +29,7 @@
 
             <p><g:message code="manage.index.des02" /></p>
         </div>
-        <div class="well">
+        <div class="card card-body">
             <h3><g:message code="manage.index.title03" /></h3>
             <h4><g:message code="manage.index.title04" />?</h4>
             <p><g:message code="manage.index.des03" />:</p>

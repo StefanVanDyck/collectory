@@ -212,7 +212,6 @@ class UrlMappings {
         "/sitemap($idx)?.xml"(controller: "sitemap", action: "index")
 
         "/"(controller: 'public', action: 'map')
-
         "/error"(view: '/error')
         "401"(view: '/error')
         "403"(view: '/error')

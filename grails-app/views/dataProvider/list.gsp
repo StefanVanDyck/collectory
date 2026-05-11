@@ -13,10 +13,10 @@
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="searchForOrganizations"> ${message(code: 'dataProvider.gbif.import.label')}</g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="searchForOrganizations"> ${message(code: 'dataProvider.gbif.import.label')}</g:link></li>
             </ul>
         </div>
         <div class="body">
@@ -57,7 +57,7 @@
 
                             <td class="text-nowrap">
                                 <g:if test="${fieldValue(bean: instance, field: "gbifRegistryKey")}">
-                                    <g:link class="btn btn-default" controller="dataProvider" action="updateGBIF" id="${instance.uid}"
+                                    <g:link class="btn btn-outline-dark" controller="dataProvider" action="updateGBIF" id="${instance.uid}"
                                             onclick="return confirm('${message(code: 'default.button.update.provider.confirm.message', default: 'Are you sure you want to update this provider?')}');">
                                         ${message(code: 'dataProvider.gbif.update', default: 'Update')}
                                     </g:link> |
@@ -66,7 +66,7 @@
                                     </a>
                                 </g:if>
                                 <g:else>
-                                    <g:link class="btn btn-default" controller="dataProvider" action="registerGBIF" id="${instance.uid}"
+                                    <g:link class="btn btn-outline-dark" controller="dataProvider" action="registerGBIF" id="${instance.uid}"
                                             onclick="return confirm('${message(code: 'default.button.register.provider.confirm.message', default: 'Are you sure you want to register this provider?')}');">
                                         ${message(code: 'dataProvider.gbif.register', default: 'Register')}
                                     </g:link>
@@ -83,7 +83,7 @@
                 </table>
             </div>
 
-            <div class="nav">
+            <div>
                 <tb:paginate controller="dataProvider" action="list" total="${instanceTotal}" />
             </div>
         </div>

@@ -80,7 +80,7 @@
         <p>
           <span id="numBiocacheRecords"><g:message code="public.numbrs.des01" /></span> <g:message code="public.numbrs.des02" args="[orgNameLong]"/>.
           %{--<g:message code="public.sdh.co.des01" /> <span id="totalRecords"><g:message code="public.usage.des" />...</span> <g:message code="public.sdh.co.des03" />.--}%
-            <a href="${grailsApplication.config.biocacheUiURL}/occurrences/search?q=data_hub_uid:${instance.uid}" class="btn btn-default"><g:message code="public.sdh.co.allrecords" /></a>
+            <a href="${grailsApplication.config.biocacheUiURL}/occurrences/search?q=data_hub_uid:${instance.uid}" class="btn btn-outline-dark"><g:message code="public.sdh.co.allrecords" /></a>
             %{--&nbsp;&nbsp;&nbsp;<button type=button id="showTimings">Show timings</button>--}%
         </p>
         <div id="charts" class="section vertical-charts">

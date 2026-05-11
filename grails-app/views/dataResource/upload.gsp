@@ -28,12 +28,12 @@
                     <g:hiddenField name="id" value="${instance.uid}"/>
 
                     <!-- drag and drop file uploads -->
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="protocol"><g:message code="dataresource.upload.label.protocol" />:</label>
-                        <g:select id="protocol" name="protocol" class="form-control" from="${connectionProfiles}" value="protocol" optionValue="display" optionKey="name"/>
+                        <g:select id="protocol" name="protocol" class="form-select" from="${connectionProfiles}" value="protocol" optionValue="display" optionKey="name"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="fileToUpload"><g:message code="dataresource.upload.label.file" /></label>
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <span class="btn btn-primary btn-file">
@@ -41,7 +41,7 @@
                                 <span class="fileupload-exists"><g:message code="dataresource.upload.label.change" /></span>
                                 <g:field type="file" name="myFile" /></span>
                             <span class="fileupload-preview"></span>
-                            <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+                            <a href="#" class="close fileupload-exists" data-bs-dismiss="fileupload" style="float: none">×</a>
                         </div>
                     </div>
 
@@ -50,19 +50,19 @@
 
                     <div style="clear:both">
                         <input type="submit" id="fileToUpload" class="btn fileupload-exists btn-primary" value="Upload"/>
-                        <g:link action="show" controller="dataResource" id="${instance.id}" class="btn btn-default">
+                        <g:link action="show" controller="dataResource" id="${instance.id}" class="btn btn-outline-dark">
                             <g:message code="dataresource.upload.label.cancel" />
                         </g:link>
                     </div>
                 </g:uploadForm>
 
-                <div id="connectionTemplates" class="hide">
+                <div id="connectionTemplates" class="d-none">
                     <g:each in="${connectionProfiles}" var="profile">
                         <div id="profile-${profile.name}">
                             <g:each in="${profile.params.minus('LOCATION_URL')}" var="param">
                                 <!-- get param -->
                                 <g:set var="connectionParam" value="${connectionParams[param]}"/>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <g:if test="${connectionParam.type == 'boolean'}">
                                         <label class="checkbox ${profile.name}">
                                             <g:checkBox id="${connectionParam.paramName}" name="${connectionParam.paramName}"/>
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="well pull-right col-md-4">
+            <div class="card card-body float-end col-md-4">
                 <g:message code="dataresource.upload.des" />.
             </div>
         </div>

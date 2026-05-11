@@ -14,6 +14,9 @@ class Contact implements Serializable {
     String mobile
     String email
     String fax
+    String organizationName
+    String positionName
+    String userId
     String notes
     boolean publish = true    // controls whether the contact is listed on web site
 
@@ -31,6 +34,9 @@ class Contact implements Serializable {
         mobile(nullable: true, maxSize:45)
         email(nullable: true, maxSize:128, email: true)
         fax(nullable: true, maxSize:45)
+        organizationName(nullable: true, maxSize: 255)
+        positionName(nullable: true, maxSize: 255)
+        userId(nullable: true, maxSize: 255)
         notes(nullable: true, maxSize: 1024)
         publish()
         userLastModified(maxSize:256)
@@ -92,8 +98,14 @@ class Contact implements Serializable {
     String buildName() {
         if (lastName)
             return [(title ?: ''), (firstName ?: ''), lastName].join(" ").trim()
+        else if (organizationName)
+            return organizationName
+        else if (positionName)
+            return positionName
         else if (email)
             return email
+        else if (userId)
+            return userId
         else if (phone)
             return phone
         else if (mobile)
@@ -114,6 +126,6 @@ class Contact implements Serializable {
      * Note stupid name because Grails seems to object to isEmpty thinking there should be an empty property.
      */
     boolean hasContent() {
-        lastName || phone || mobile || email || fax
+        lastName || phone || mobile || email || fax || organizationName || positionName
     }
 }

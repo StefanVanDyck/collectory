@@ -140,7 +140,7 @@ function appendResource(value) {
     }
 
     // row A
-    $rowA.append('<img title="'+ jQuery.i18n.prop('datasets.js.appendresource01') + '" src="' + baseUrl + '/static/images/skin/ExpandArrow.png"/>');  // twisty
+    $rowA.append('<img src="' + baseUrl + '/static/images/skin/ExpandArrow.png"/>');  // twisty
     $rowA.append('<span class="result-name"><a title="' + jQuery.i18n.prop('datasets.js.appendresource02') + '" href="' + baseUrl + '/public/showDataResource/' + value.uid + '">' + value.name + '</a></span>'); // name
     // $rowA.find('img').tooltip($.extend({},tooltipOptions,{position:{my: 'center bottom', at: 'center top-10'}}));
 
@@ -148,14 +148,14 @@ function appendResource(value) {
     $rowB.append('<span><strong class="resultsLabelFirst">'+ jQuery.i18n.prop('datasets.js.appendresource06') +': </strong>' + jQuery.i18n.prop('dataset.result.'+ value.resourceType) + '</span>');  // resource type
     $rowB.append('<span><strong class="resultsLabel">'+ jQuery.i18n.prop('datasets.js.appendresource07') +': </strong>' + (value.licenseType == null ? '' : value.licenseType) + '</span>'); // license type
 
-    if (COLLECTORY_CONF.showExtraInfoInDataSetsView && value.resourceType == 'records') {
+    if (COLLECTORY_CONF.showExtraInfoInDataSetsView && (value.resourceType == 'records' || value.resourceType == 'events')) {
         $rowB.append('<span><strong class="lastUpdatedDrView">'+ jQuery.i18n.prop('datasets.js.lastUpdated') +': </strong>' + formatLastUpdated() + '</span>'); // last updated
         var numRecords = drCount(value.uid);
         if (numRecords >= 0) {
             $rowB.append('<span><strong class="drNumRecordsDrView">' + jQuery.i18n.prop('datasets.js.numRecords') + ': </strong><a title="' + jQuery.i18n.prop('datasets.js.appendresource03') + '" href="' + biocacheUrl + '/occurrences/search?q=data_resource_uid:' + value.uid + '">' + numRecords + '</a></span>'); // recors link with numbers
         }
     }
-    if (!COLLECTORY_CONF.showExtraInfoInDataSetsView && value.resourceType == 'records') {
+    if (!COLLECTORY_CONF.showExtraInfoInDataSetsView && (value.resourceType == 'records' || value.resourceType == 'events')) {
         $rowB.append('<span class="viewRecords"><a title="' + jQuery.i18n.prop('datasets.js.appendresource03') + '" href="' + biocacheUrl + '/occurrences/search?q=data_resource_uid:' + value.uid + '">'+ jQuery.i18n.prop('datasets.js.appendresource10') +'</a></span>'); // records link
 
     }
@@ -308,7 +308,8 @@ function filterBy(filter, uidList) {
             }
         }
         // filter by equality
-        else if (resource[filter.name] == filter.value || (filter.value == 'noValue' && resource[filter.name] == null)) {
+        else if (resource[filter.name] == filter.value ||
+            (filter.value == 'noValue' && (resource[filter.name] == null || resource[filter.name] === ''))) {
             newResourcesList.push(resource);
         }
     });
@@ -378,25 +379,25 @@ function showPaginator() {
     var $pago = $("<ul class='pagination'></ul>");
     // add prev
     if (offset > 0) {
-        $pago.append('<li class="pre"><a href="javascript:prevPage();">«</a></li>');
+        $pago.append('<li class="page-item"><a class="page-link" href="javascript:prevPage();">«</a></li>');
     }
     else {
-        $pago.append('<li class="prev disabled"><span>«</span></li>');
+        $pago.append('<li class="page-item disabled"><a class="page-link">«</a></li>');
     }
     for (var i = 1; i <= maxPage && i<20; i++) {
         if (i == currentPage) {
-            $pago.append('<li class="active"><span>' + i + '</span></li>');
+            $pago.append('<li class="page-item active"><a class="page-link">' + i + '</a></li>');
         }
         else {
-            $pago.append('<li><a href="javascript:gotoPage(' + i + ');">' + i + '</a></li>');
+            $pago.append('<li class="page-item"><a class="page-link" href="javascript:gotoPage(' + i + ');">' + i + '</a></li>');
         }
     }
     // add next
     if ((offset + pageSize()) < total) {
-        $pago.append('<li class="next"><a href="javascript:nextPage();">»</a><li>');
+        $pago.append('<li class="page-item"><a class="page-link" href="javascript:nextPage();">»</a></li>');
     }
     else {
-        $pago.append('<li class="next disabled">»</li>');
+        $pago.append('<li class="page-item disabled"><a class="page-link">»</a></li>');
     }
 
     $('div#navLinks').html($pago);
@@ -589,7 +590,7 @@ function displayFacet(facet, list) {
     return $div;
 }
 function moreLink() {
-    var $more = $('<li class="link"><span class="glyphicon glyphicon-hand-right"></span> '+ jQuery.i18n.prop('datasets.js.morelink')+'</li>');
+    var $more = $('<li class="link"><span class="fa fa-hand-o-right"></span> '+ jQuery.i18n.prop('datasets.js.morelink')+'</li>');
     $more.click(function() {
         // make following items visible and add a 'less' link
         $(this).parent().find('li').css('display','list-item');
@@ -601,7 +602,7 @@ function moreLink() {
     return $more
 }
 function lessLink() {
-    var $less = $('<li class="link"><span class="glyphicon glyphicon-hand-right"></span> ' + jQuery.i18n.prop('datasets.js.lesslink') + '</li>');
+    var $less = $('<li class="link"><span class="fa fa-hand-o-right"></span> ' + jQuery.i18n.prop('datasets.js.lesslink') + '</li>');
     $less.click(function() {
         // make items > 5 hidden and add a 'more' link
         $(this).parent().find('li:gt(4)').css('display','none');
@@ -763,8 +764,9 @@ function reset() {
     offset = 0;
     $('select#per-page').val(20);
     $('select#sort').val('name');
-    $('select#dir').val('asc');
+    $('select#dir').val('ascending');
     $.bbq.removeState();
+    resources.sort(comparator);
     updateTotal();
     calculateFacets();
     showFilters();

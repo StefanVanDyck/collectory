@@ -1,5 +1,6 @@
 <%@ page import="au.org.ala.collectory.CollectoryTagLib; java.text.DecimalFormat; java.text.SimpleDateFormat" %>
 <g:set var="orgNameLong" value="${grailsApplication.config.skin.orgNameLong}"/>
+<g:set var="showBelowH3" value="${grailsApplication.config.getProperty('showDataResourceWebsiteBelowH3', Boolean, false)}" />
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -22,7 +23,7 @@
     <asset:script>
         // define biocache server
         bieUrl = "${grailsApplication.config.bie.baseURL}";
-        loadLoggerStats = ${!grailsApplication.config.disableLoggerLinks.toBoolean()};
+        loadLoggerStats = ${!grailsApplication.config.getProperty('disableLoggerLinks', Boolean, false)};
     </asset:script>
     <asset:javascript src="application-pages.js"/>
 </head>
@@ -44,16 +45,16 @@
 
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="home-tabs">
-                    <li class="active"><a href="#basicMetadata" data-toggle="tab"><g:message code="show.tab.metadata" /></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#basicMetadata" data-bs-toggle="tab"><g:message code="show.tab.metadata" /></a></li>
                     <g:if test="${instance.resourceType=='records' || instance.resourceType=='events'}">
-                        <li><a href="#usage-stats" data-toggle="tab"><g:message code="show.tab.usage.stats" /></a></li>
-                        <li><a href="#metrics" data-toggle="tab"><g:message code="show.tab.metrics" /></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#usage-stats" data-bs-toggle="tab"><g:message code="show.tab.usage.stats" /></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#metrics" data-bs-toggle="tab"><g:message code="show.tab.metrics" /></a></li>
                     </g:if>
                 </ul>
             </div>
 
             <div class="tab-content">
-                <div id="basicMetadata" class="tab-pane active">
+                <div id="basicMetadata" class="tab-pane show active">
 
                     <h3 class="dataResourceProviderLink">Dataset type</h3>
                     <p>
@@ -63,29 +64,29 @@
                     <g:if test="${instance.pubDescription || instance.techDescription || instance.focus}">
                         <h3><g:message code="public.des" /></h3>
                     </g:if>
-                    <cl:formattedText>${fieldValue(bean: instance, field: "pubDescription")}</cl:formattedText>
-                    <cl:formattedText>${fieldValue(bean: instance, field: "techDescription")}</cl:formattedText>
+                    <cl:formattedText body="${instance.pubDescription?:''}"/>
+                    <cl:formattedText body="${instance.techDescription?:''}"/>
                     <cl:formattedText>${fieldValue(bean: instance, field: "focus")}</cl:formattedText>
                     <cl:dataResourceContribution resourceType="${instance.resourceType}" status="${instance.status}" tag="p"/>
 
                     <g:if test="${instance.geographicDescription}">
                         <h3><g:message code="public.geographicDescription" default="Purpose"/></h3>
-                        <cl:formattedText>${fieldValue(bean: instance, field: "geographicDescription")}</cl:formattedText>
+                        <cl:formattedText body="${instance.geographicDescription?:''}" />
                     </g:if>
 
                     <g:if test="${instance.purpose}">
                         <h3><g:message code="public.purpose" default="Purpose"/></h3>
-                        <cl:formattedText>${fieldValue(bean: instance, field: "purpose")}</cl:formattedText>
+                        <cl:formattedText body="${instance.purpose?:''}" />
                     </g:if>
 
                     <g:if test="${instance.qualityControlDescription}">
                         <h3><g:message code="public.qualityControlDescription" /></h3>
-                        <cl:formattedText>${fieldValue(bean: instance, field: "qualityControlDescription")}</cl:formattedText>
+                        <cl:formattedText body="${instance.qualityControlDescription?:''}" />
                     </g:if>
 
                     <g:if test="${instance.methodStepDescription}">
                         <h3><g:message code="public.methodStepDescription" /></h3>
-                        <cl:formattedText>${fieldValue(bean: instance, field: "methodStepDescription")}</cl:formattedText>
+                        <cl:formattedText body="${instance.methodStepDescription?:''}" />
                     </g:if>
 
                     <g:if test="${instance.contentTypes}">
@@ -164,7 +165,7 @@
                     <cl:lastUpdated date="${instance.lastUpdated}"/>
                 </div>
 
-                <g:if test="${!grailsApplication.config.disableLoggerLinks.toBoolean() && (instance.resourceType == 'website' || instance.resourceType == 'records'  || instance.resourceType=='events')}">
+                <g:if test="${!grailsApplication.config.getProperty('disableLoggerLinks', Boolean, false) && (instance.resourceType == 'website' || instance.resourceType == 'records'  || instance.resourceType=='events')}">
                     <div id="usage-stats" class="tab-pane">
                         <div id='usage'>
                             <p><g:message code="public.usage.des" />...</p>
@@ -180,8 +181,6 @@
                         <div id="charts"></div>
                     </div>
                 </g:if>
-
-
             </div>
         </div>
 
@@ -229,12 +228,16 @@
                 </section>
             </g:if>
 
+            <g:if test="${showBelowH3}">
+                <g:render template="showDataResourceWebsite" model="[instance: instance, showHeaders: false]" />
+            </g:if>
+
             <g:if test="${instance.gbifDoi}">
                 <section class="public-metadata">
                     <h4><g:message code="public.citations" default="Citations" /></h4>
                     <div class="btn-group-vertical dataAccess">
-                    <a class="btn btn-default" href="${citations.doiLink(gbifDoi: instance.gbifDoi)}">
-                        <span class="badge">DOI</span> <citations:doiLink gbifDoi="${instance.gbifDoi}"/>
+                    <a class="btn btn-outline-dark d-flex align-items-center gap-2" href="${citations.doiLink(gbifDoi: instance.gbifDoi)}">
+                        <span class="badge bg-secondary flex-shrink-0">DOI</span><span class="text-break"><citations:doiLink gbifDoi="${instance.gbifDoi}"/></span>
                     </a>
                     <g:if test="${instance.gbifRegistryKey}">
                         <citations:gbifLink gbifRegistryKey="${instance.gbifRegistryKey}"/>
@@ -301,34 +304,10 @@
             </g:else>
             <g:render template="contacts" bean="${contacts}"/>
 
-           <!-- web site -->
-            <g:if test="${instance.resourceType == 'species-list'}">
-                <section class="'public-metadata">
-                    <h4><g:message code="public.sdr.content.label12" /></h4>
-                    <div class="webSite">
-                        <a class='external_icon' target="_blank"
-                           href="${grailsApplication.config.speciesListToolUrl}${instance.uid}"><g:message code="public.sdr.content.link03" /></a>
-                    </div>
-                </section>
+            <!-- web site -->
+            <g:if test="${!showBelowH3}">
+                <g:render template="showDataResourceWebsite" model="[instance: instance, showHeaders: true]" />
             </g:if>
-            <g:elseif test="${instance.resourceType == 'publications'}">
-                <section class="public-metadata">
-                    <h4><g:message code="public.website" /></h4>
-                    <div class="webSite">
-                        <a class='external_icon' target="_blank"
-                           href="${instance.websiteUrl}"><g:message code="public.sdr.content.link05" /></a>
-                    </div>
-                </section>
-            </g:elseif>
-            <g:elseif test="${instance.websiteUrl}">
-                <section class="public-metadata">
-                    <h4><g:message code="public.website" /></h4>
-                    <div class="webSite">
-                        <a class='external_icon' target="_blank"
-                           href="${instance.websiteUrl}"><g:message code="public.sdr.content.link04" /></a>
-                    </div>
-                </section>
-            </g:elseif>
 
             <!-- network membership -->
             <g:if test="${instance.networkMembership}">
@@ -352,7 +331,7 @@
                         <p><g:message code="public.network.membership.des04" /></p>
                         <img src="${resource(absolute: "true", dir: "data/network/", file: "chacm.png")}"/>
                     </g:if>
-                </div>
+                </section>
             </g:if>
 
             <!-- attribution -->
@@ -376,7 +355,7 @@
                 if (loadLoggerStats){
                     if (${instance.resourceType == 'website'}) {
                       loadDownloadStats("${grailsApplication.config.loggerURL}", "${instance.uid}","${instance.name}", "2000");
-                  } else if (${instance.resourceType == 'records'}) {
+                  } else if (${instance.resourceType == 'records'} || ${instance.resourceType == 'events'}) {
                       loadDownloadStats("${grailsApplication.config.loggerURL}", "${instance.uid}","${instance.name}", "1002");
                   }
                 }

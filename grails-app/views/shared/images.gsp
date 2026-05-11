@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <g:set var="entityName" value="${command.ENTITY_TYPE}"/>
         <g:set var="entityNameLower" value="${command.urlForm()}"/>
         <title><g:message code="collection.base.label" default="Edit ${entityNameLower} image metadata" /></title>
@@ -13,7 +14,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -41,7 +42,7 @@
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateImages" value="${message(code:"shared.images.button.update")}" class="save btn btn-success"></span>
                     <span class="button"><input type="submit" name="_action_removeImage" value="${message(code:"shared.images.button.remove")}" class="cancel btn btn-danger"></span>
-                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.images.button.cancel")}" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"shared.images.button.cancel")}" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:uploadForm>
         </div>

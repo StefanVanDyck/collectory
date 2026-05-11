@@ -12,28 +12,28 @@
         <asset:stylesheet src="application.css"/>
     </head>
     <body>
-        <div class="pull-right">
-            <g:link class="mainLink btn btn-default" controller="public" action="map"><g:message code="manage.list.link01" /></g:link>
+        <div class="float-end">
+            <g:link class="mainLink btn btn-outline-dark" controller="public" action="map"><g:message code="manage.list.link01" /></g:link>
         </div>
 
         <h1><g:message code="manage.list.title01" /></h1>
 
         <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
         </g:if>
 
         <div class="row">
             <div class="col-md-2">
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="javascript:showSection('adminTools');"><i class="glyphicon glyphicon-chevron-right">&nbsp;</i> <g:message code="manage.list.li01" /></a></li>
-                    <li><a href="javascript:showSection('yourMetadata');"><i class="glyphicon glyphicon-chevron-right">&nbsp;</i> <g:message code="manage.list.li02" /></a></li>
-                    <li><a href="javascript:showSection('addCollection');"><i class="glyphicon glyphicon-chevron-right">&nbsp;</i> <g:message code="manage.list.li03" /></a></li>
+                <ul class="nav nav-pills flex-column">
+                    <li><a href="javascript:showSection('adminTools');"><i class="fa fa-chevron-right">&nbsp;</i> <g:message code="manage.list.li01" /></a></li>
+                    <li><a href="javascript:showSection('yourMetadata');"><i class="fa fa-chevron-right">&nbsp;</i> <g:message code="manage.list.li02" /></a></li>
+                    <li><a href="javascript:showSection('addCollection');"><i class="fa fa-chevron-right">&nbsp;</i> <g:message code="manage.list.li03" /></a></li>
                 </ul>
             </div>
 
             <div class="col-md-10">
 
-                <div id="yourMetadata" class="infoSection hidden">
+                <div id="yourMetadata" class="infoSection d-none">
                     <g:if test="${show == 'user'}">
                         <div>
                             <h2><g:message code="manage.list.title02" /></h2>
@@ -64,10 +64,10 @@
                             <g:each in="${entities}" var="ent">
                                 <tr>
                                     <td style="text-align: center;"><g:link controller="public" action="show" id="${ent.uid}">
-                                        <i class="glyphicon glyphicon-eye-open"></i></g:link>
+                                        <i class="fa fa-eye"></i></g:link>
                                     </td>
                                     <td style="text-align: center;">
-                                        <i class="glyphicon glyphicon-edit"></i>
+                                        <i class="fa fa-pencil"></i>
                                     </td>
                                     <g:set var="name" value="${ent.uid[0..1] == 'in' ? ent.name + ' (Institution)' : ent.name}"/>
                                     <td style="padding-left: 5px;">${name}</td>
@@ -142,7 +142,7 @@
                     </div>
                 </div>
 
-                <div id="addCollection" class="hidden infoSection">
+                <div id="addCollection" class="d-none infoSection">
                     <cl:ifGranted role="ROLE_EDITOR">
 
                         <h2><g:message code="manage.list.addcollection.title01" /></h2>
@@ -152,7 +152,7 @@
                             <li><g:message code="manage.list.addcollection.li02" />.</li>
                         </ul>
 
-                        <g:link controller="dataResource" action="create" class="btn btn-default"><g:message code="manage.list.addcollection.link01" /></g:link>
+                        <g:link controller="dataResource" action="create" class="btn btn-outline-dark"><g:message code="manage.list.addcollection.link01" /></g:link>
 
                         <h2><g:message code="manage.list.addcollection.title02" /></h2>
                         <p><g:message code="manage.list.addcollection.des02" />:</p>
@@ -165,7 +165,7 @@
                             <li><g:message code="manage.list.addcollection.li08" />.</li>
                         </ul>
 
-                        <g:link controller="collection" action="create" class="btn btn-default"><g:message code="manage.list.addcollection.link02" /></g:link>
+                        <g:link controller="collection" action="create" class="btn btn-outline-dark"><g:message code="manage.list.addcollection.link02" /></g:link>
                     </cl:ifGranted>
                 </div>
 
@@ -173,104 +173,104 @@
                 <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
                   <h4>Admin tools</h4>
                   <div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="collection" action="list"><g:message code="manage.list.addtools.vac" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des02" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des02" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="institution" action="list"><g:message code="manage.list.addtools.vai" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des05" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des05" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="dataProvider" action="list"><g:message code="manage.list.addtools.vadp" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des06" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des06" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="dataResource" action="list"><g:message code="manage.list.addtools.vadr" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des07" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des07" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="dataHub" action="list"><g:message code="manage.list.addtools.vadh" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des08" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des08" />.</p>
                     </div>
 
                   </div>
                   <div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="licence" action="list"><g:message code="admin.index.licence"  default="View all licences" /></g:link>
-                        <p class="mainText hide"><g:message code="admin.index.licence.desc" default="View all licences, and add new licences" />.</p>
+                        <p class="mainText d-none"><g:message code="admin.index.licence.desc" default="View all licences, and add new licences" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="reports" action="list"><g:message code="manage.list.addtools.vr" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des09" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des09" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="contact" action="list"><g:message code="manage.list.addtools.mc" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des10" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des10" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="providerCode" action="list"><g:message code="manage.list.addtools.mpc" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des11" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des11" />.</p>
                     </div>
 
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="providerMap" action="list"><g:message code="manage.list.addtools.mpm" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des12" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des12" />.</p>
                     </div>
                   </div>
                   <div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="admin" action="export"><g:message code="manage.list.addtools.eadaj" /></g:link>
-                        <p class="mainText hide"><g:message code="manage.list.addtools.des13" />.</p>
+                        <p class="mainText d-none"><g:message code="manage.list.addtools.des13" />.</p>
                     </div>
 
-%{--                    <div class="homeCell btn btn-default">--}%
+%{--                    <div class="homeCell btn btn-outline-dark">--}%
 %{--                        <g:link class="mainLink" controller="auditLogEvent" action="list" params="[max:1000]"><g:message code="manage.list.addtools.vae" /></g:link>--}%
-%{--                        <p class="mainText hide"><g:message code="manage.list.addtools.des14" /></p>--}%
+%{--                        <p class="mainText d-none"><g:message code="manage.list.addtools.des14" /></p>--}%
 %{--                    </div>--}%
 
                   </div>
 
                 <div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="admin" action="buildSitemap"><g:message code="manage.list.addtools.buildsitemap" /></g:link>
                     </div>
 
-                    %{--                    <div class="homeCell btn btn-default">--}%
+                    %{--                    <div class="homeCell btn btn-outline-dark">--}%
                     %{--                        <g:link class="mainLink" controller="auditLogEvent" action="list" params="[max:1000]"><g:message code="manage.list.addtools.vae" /></g:link>--}%
-                    %{--                        <p class="mainText hide"><g:message code="manage.list.addtools.des14" /></p>--}%
+                    %{--                        <p class="mainText d-none"><g:message code="manage.list.addtools.des14" /></p>--}%
                     %{--                    </div>--}%
 
                 </div>
                   <div>
                       <h4>Data sync with GBIF</h4>
-                      <div class="homeCell btn btn-default">
+                      <div class="homeCell btn btn-outline-dark">
                           <g:link class="mainLink" controller="manage" action="repatriate"><g:message code="manage.list.addtools.repatriate" /></g:link>
-                          <p class="mainText hide"r><g:message code="manage.list.addtools.des17" /></p>
+                          <p class="mainText d-none"r><g:message code="manage.list.addtools.des17" /></p>
                       </div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="manage" action="loadExternalResources"><g:message code="manage.list.addtools.addexternal" /></g:link>
-                        <p class="mainText hide"r><g:message code="manage.list.addtools.des15" /></p>
+                        <p class="mainText d-none"r><g:message code="manage.list.addtools.des15" /></p>
                     </div>
-                    <div class="homeCell btn btn-default">
+                    <div class="homeCell btn btn-outline-dark">
                         <g:link class="mainLink" controller="dataResource" action="gbifUpload"><g:message code="manage.list.addtools.uploadgbif" /></g:link>
-                        <p class="mainText hide"r><g:message code="manage.list.addtools.des16" /></p>
+                        <p class="mainText d-none"r><g:message code="manage.list.addtools.des16" /></p>
                     </div>
-                      <div class="homeCell btn btn-default">
+                      <div class="homeCell btn btn-outline-dark">
                           <g:link class="mainLink" controller="gbif" action="healthCheck"><g:message code="manage.list.addtools.gbif.healthcheck" /></g:link>
-                          <p class="mainText hide"r><g:message code="manage.list.addtools.gbif.healthcheck.desc" default="GBIF Healthcheck" /></p>
+                          <p class="mainText d-none"r><g:message code="manage.list.addtools.gbif.healthcheck.desc" default="GBIF Healthcheck" /></p>
                       </div>
                   </div>
                 </cl:ifGranted>
                 <cl:ifNotGranted role="${grailsApplication.config.ROLE_ADMIN}">
-                    <div class="well">
+                    <div class="card card-body">
                     You do not have access to admin tools. ${grailsApplication.config.ROLE_ADMIN} is required.
                     </div>
                 </cl:ifNotGranted>
@@ -282,8 +282,8 @@
         <script type="text/javascript">
 
             function showSection(sectionToShow){
-                $('.infoSection').addClass('hidden');
-                $('#'+sectionToShow).removeClass('hidden');
+                $('.infoSection').addClass('d-none');
+                $('#'+sectionToShow).removeClass('d-none');
             }
 
             function edit(uid) {

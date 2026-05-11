@@ -15,7 +15,7 @@
         <div class="body">
             <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <g:hasErrors bean="${providerGroupInstance}">
             <div class="errors">
@@ -316,10 +316,10 @@
                             </tr>
 
       <!-- is admin -->     <tr class="prop">
-                            <td class="checkbox">
+                            <td class="form-check">
                               <label for="isAdmin"><g:message code="contactFor.administrator.label" default="Administrator" /></label>
                             </td>
-                            <td class="checkbox">
+                            <td class="form-check">
                               <label>
                                 <g:checkBox name="isAdmin" value="true" />
                                 <span class="hint"><g:message code="institution.edit.des07" /></span>
@@ -415,10 +415,10 @@
                               </tr>
 
       <!-- publish-->         <tr class="prop">
-                                <td class="checkbox">
+                                <td class="form-check">
                                   <label for="publish"><g:message code="contact.publish.label" default="Make public?" /></label>
                                 </td>
-                                <td class="checkbox">
+                                <td class="form-check">
                                     <label>
                                       <g:checkBox name="publish" value="true"/>
                                       <span class="hint"><g:message code="institution.edit.des09" /></span>
@@ -436,10 +436,10 @@
                               </tr>
 
         <!-- is admin -->     <tr class="prop">
-                                <td class="checkbox">
+                                <td class="form-check">
                                   <label for="isAdmin2"><g:message code="contactFor.administrator.label" default="Administrator" /></label>
                                 </td>
-                                <td class="checkbox">
+                                <td class="form-check">
                                   <label>
                                     <g:checkBox name="isAdmin2" value="true" />
                                     <span class="hint"><g:message code="institution.edit.des10" /></span>

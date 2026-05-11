@@ -1,5 +1,5 @@
 <g:if test="${changes}">
-  <div class="show-section   well">
+  <div class="show-section   card card-body">
     <h2><g:message code="shared.changes.title01" /></h2>
     <p><g:message code="shared.changes.des01" />.</p>
     <ul class=simple>

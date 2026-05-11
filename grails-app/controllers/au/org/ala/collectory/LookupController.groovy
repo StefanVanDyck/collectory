@@ -23,7 +23,6 @@ import grails.web.http.HttpHeaders
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY
 
 class LookupController {
 

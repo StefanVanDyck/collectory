@@ -10,15 +10,15 @@
 <body>
 <div class="btn-toolbar">
     <ul class="btn-group">
-        <li class="btn btn-default"><cl:homeLink/></li>
-        <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-        <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+        <li class="btn btn-outline-dark"><cl:homeLink/></li>
+        <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+        <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
     </ul>
 </div>
 <div class="body">
     <h1><g:message code="default.list.label" args="[entityName]" /></h1>
     <g:if test="${flash.message}">
-        <div class="message">${flash.message}</div>
+        <div class="alert alert-info">${flash.message}</div>
     </g:if>
     <div class="list">
         <table class="table table-striped table-bordered">
@@ -45,7 +45,7 @@
         </table>
     </div>
 
-    <div class="nav">
+    <div>
         <tb:paginate controller="dataHub" action="list" total="${instanceTotal}" />
     </div>
 </div>

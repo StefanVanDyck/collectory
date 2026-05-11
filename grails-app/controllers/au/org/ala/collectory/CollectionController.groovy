@@ -1,11 +1,13 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import grails.converters.JSON
 import org.springframework.validation.annotation.Validated
 
 import java.text.NumberFormat
 import java.text.ParseException
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class CollectionController extends ProviderGroupController {
 
     CollectionController() {

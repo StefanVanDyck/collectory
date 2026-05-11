@@ -13,7 +13,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -25,18 +25,19 @@
                 <g:hiddenField name="version" value="${command.version}" />
 
                 <!-- GBIF registration key-->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="gbifRegistryKey"><g:message code="dataResource.gbif.registrationkey.label" default="GBIF registration key" /><cl:helpText code="dataResource.gbifregistrationkey"/></label>
                     <g:textField name="gbifRegistryKey" class="form-control" value="${command?.gbifRegistryKey}" />
                 </div>
 
-                <div class="form-group">
-                    <label for="repatriationCountry"><g:message code="dataResource.gbif.repatriationCountry.label" default="GBIF repatriation country" /><cl:helpText code="dataResource.repatriationCountry"/></label>
-                    <g:textField name="repatriationCountry" class="form-control" value="${command?.repatriationCountry}" />
+                <div class="mb-3">
+                    <label for="repatriationCountry"><g:message code="dataResource.gbif.repatriationCountry.label" default="GBIF repatriation country" /></label>
+                    <g:countrySelect id="repatriationCountry"  class="form-control" name="repatriationCountry" value="${command?.repatriationCountry}"
+                                     noSelection="['ZZZ':'-Use ZZZ for international organisations-']" required="true"/>
                 </div>
 
                 <!-- is shareable -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="isShareableWithGBIF">
                         <g:checkBox name="isShareableWithGBIF" value="${command?.isShareableWithGBIF}" />
                         <g:message code="dataResource.shareablewithgbif.label" default="Is shareable with GBIF" /><cl:helpText code="dataResource.isShareableWithGBIF"/>
@@ -44,7 +45,7 @@
                 </div>
 
                 <!-- is gbif supplied -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="gbifDataset">
                         <g:checkBox name="gbifDataset" value="${command?.gbifDataset}" />
                         <g:message code="dataResource.gbifDataset.label" default="Was supplied by GBIF (downloaded via GBIF webservices)?" /><cl:helpText code="dataResource.gbifDataset"/>
@@ -53,7 +54,7 @@
 
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateGBIFDetails" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"dataresource.gbifupload.btn.cancel")}" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"dataresource.gbifupload.btn.cancel")}" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:form>
         </div>

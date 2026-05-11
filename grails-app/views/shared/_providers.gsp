@@ -2,7 +2,7 @@
 <%
   def providerGroupService = grailsApplication.classLoader.loadClass('au.org.ala.collectory.ProviderGroupService').newInstance()
 %>
-<div class="show-section  well">
+<div class="show-section  card card-body">
   <h2><g:message code="shared.providers.title01" /></h2>
   <p><g:message code="shared.providers.des01" args="[providerGroupService.textFormOfEntityType(instance.uid)]" />.</p>
   <ul class="fancy">

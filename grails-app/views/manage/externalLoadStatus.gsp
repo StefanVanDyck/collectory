@@ -61,8 +61,8 @@
 <g:if test="${load}">
 <h1>${load.isComplete() ? 'Finished' : 'Automatically'} loading ${load.resources.size()} resources</h1>
 
-<div class="well">
-<h4 class="pull-right"><g:message code="manage.extloads.title.started" />: ${load.startTime}
+<div class="card card-body">
+<h4 class="float-end"><g:message code="manage.extloads.title.started" />: ${load.startTime}
     <g:if test="${load.finishTime}">
         <br/><g:message code="manage.extloads.title.finished" />: ${load.finishTime}
     </g:if>

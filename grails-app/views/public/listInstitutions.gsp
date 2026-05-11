@@ -11,7 +11,7 @@
   <head><title><g:message code="public.listinstitutions.title" /></title></head>
   <body>
     <g:if test="${flash.message}">
-      <div class="message">${flash.message}</div>
+      <div class="alert alert-info">${flash.message}</div>
     </g:if>
     <g:each var="i" in="${institutions}">
       <p>${i.name} (${i.acronym})</p>

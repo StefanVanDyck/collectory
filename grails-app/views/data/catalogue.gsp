@@ -15,7 +15,7 @@
       <div id="header">
         <div class="section full-width">
           <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
           </g:if>
           <div class="hrgroup">
             <img src="${resource(dir:"images/ala",file:"Portaal_logo_wit_voorl.png")}" style="float: right;padding-right:50px;"/>
@@ -244,7 +244,7 @@
 
           <p><g:message code="data.catalogue.ws0032.des03" />.
           <br/>
-          <a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_citation_text_for_a_list_of_UIDs" class="btn btn-default"><g:message code="data.catalogue.ws0032.link02" />.</a></p>
+          <a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_citation_text_for_a_list_of_UIDs" class="btn btn-outline-dark"><g:message code="data.catalogue.ws0032.link02" />.</a></p>
 
           <h2><g:message code="data.catalogue.ws0032.title02" /></h2>
           <p><g:message code="data.catalogue.ws0032.des04" />.</p>
@@ -260,7 +260,7 @@
               <td><a href="${grailsApplication.config.grails.serverURL}/lookup/inst/ANIC/coll/Insects.json">${grailsApplication.config.grails.serverURL}/lookup/inst/ANIC/coll/Insects</a></td>
             </tr>
             <tr>
-              <td colspan="2"><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_collection_from_institution_and_collection_codes" class="btn btn-default">More information.</a></td>
+              <td colspan="2"><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_collection_from_institution_and_collection_codes" class="btn btn-outline-dark">More information.</a></td>
             </tr>
           </table>
 
@@ -281,7 +281,7 @@
           <h3 id="WS0029"><g:message code="data.catalogue.ws0029.title" /></h3>
           <p><g:message code="data.catalogue.ws0029.des01" />: </p>
           <p><span class="code"><span class='entity'>GET</span> ${grailsApplication.config.grails.serverURL}/lookup/name/<strong>{uid}</strong></span></p>
-          <p><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_name_from_UID" class="btn btn-default"><g:message code="data.catalogue.ws0029.link01" />.</a></p>
+          <p><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Lookup_name_from_UID" class="btn btn-outline-dark"><g:message code="data.catalogue.ws0029.link01" />.</a></p>
 
           <h3 id="WS0030"><g:message code="data.catalogue.ws0030.title" /></h3>
           <p><g:message code="data.catalogue.ws0030.des01" />:</p>
@@ -304,7 +304,7 @@
           <h3><g:message code="data.catalogue.ws0030.title02" /></h3>
           <p><g:message code="data.catalogue.ws0030.des04" />:</p>
           <p><span class="code">GET ${grailsApplication.config.grails.serverURL}/lookup/generateDataResourceUid</span></p>
-          <p><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Generate_UID_for_a_new_entity" class="btn btn-default"><g:message code="data.catalogue.ws0030.link01" />.</a></p>
+          <p><a href="http://code.google.com/p/ala-collectory/wiki/CollectoryServices#Generate_UID_for_a_new_entity" class="btn btn-outline-dark"><g:message code="data.catalogue.ws0030.link01" />.</a></p>
 
           <h2 id="WS0031"><g:message code="data.catalogue.ws0031.title01" /></h2>
           <p><g:message code="data.catalogue.ws0031.des01" />:</p>
@@ -314,7 +314,7 @@
           <table class="clean no-left-pad">
             <colgroup><col width="55%"><col width="45%"></colgroup>
             <tr>
-              <td colspan="2"><span class="code"><span class='entity'>GET</span> ${grailsApplication.config.grails.serverURL}/ipt/scan?create=true&isShareableWithGBIF=false&uid=<strong>{uid}</strong>&apiKey=XXXXXX</span></td>
+              <td colspan="2"><span class="code"><span class='entity'>GET</span> ${grailsApplication.config.grails.serverURL}/ipt/scan?create=true&isShareableWithGBIF=false&uid=<strong>{uid}</strong></span></td>
             </tr>
           </table>
           <h4>GBIF</h4>
@@ -322,7 +322,7 @@
           <table class="clean no-left-pad">
             <colgroup><col width="55%"><col width="45%"></colgroup>
             <tr>
-              <td colspan="2"><span class="code"><span class='entity'>GET</span> ${grailsApplication.config.grails.serverURL}/gbif/scan?uid=<strong>{uid}</strong>&apiKey=XXXXXX</span></td>
+              <td colspan="2"><span class="code"><span class='entity'>GET</span> ${grailsApplication.config.grails.serverURL}/gbif/scan?uid=<strong>{uid}</strong></span></td>
             </tr>
           </table>
 

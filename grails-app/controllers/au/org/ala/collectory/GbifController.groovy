@@ -1,5 +1,6 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import au.org.ala.collectory.resources.gbif.GbifRepatDataSourceAdapter
 import au.org.ala.plugins.openapi.Path
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -8,35 +9,26 @@ import groovy.json.JsonSlurper
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.headers.Header
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-
 import javax.ws.rs.Produces
-
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY
 
 class GbifController {
-    static final API_KEY_COOKIE = "ALA-API-Key"
-
-    def collectoryAuthService
     def gbifRegistryService
     def asyncGbifRegistryService
     def gbifService
-    def authService
+    def collectoryAuthService
     def externalDataService
-    def dataLinkService
 
+    @PermissionRequired(roles = ['gbifRegistrationRole','ROLE_ADMIN'])
     def healthCheck() {
         gbifRegistryService.generateSyncBreakdown()
     }
 
+    @PermissionRequired(roles = ['gbifRegistrationRole','ROLE_ADMIN'])
     def healthCheckLinked() {
 
         log.info("Starting report.....")
@@ -123,6 +115,7 @@ class GbifController {
      *
      * @return
      */
+    @PermissionRequired(roles = ['gbifRegistrationRole','ROLE_ADMIN'])
     def downloadCSV() {
         response.setContentType("text/csv")
         response.setHeader("Content-disposition", "attachment;filename=gbif-healthcheck.csv")
@@ -134,7 +127,7 @@ class GbifController {
         def errorMessage = ""
 
         try {
-            if (authService.userInRole(grailsApplication.config.gbifRegistrationRole)){
+            if (collectoryAuthService.isAuthorised([grailsApplication.config.gbifRegistrationRol] as String[])) {
                 asyncGbifRegistryService.updateAllResources()
                         .onComplete {
                             log.info "Sync complete"
@@ -154,6 +147,7 @@ class GbifController {
         [errorMessage: errorMessage]
     }
 
+    @SecurityRequirement(name="JWT")
     @Operation(
             method = "GET",
             tags = "gbif",
@@ -191,6 +185,7 @@ class GbifController {
     )
     @Path("/ws/gbif/scan/{uid}")
     @Produces("application/json")
+    @PermissionRequired(roles = ['gbifRegistrationRole','ROLE_ADMIN'], scopes = ['REQUIRED_SCOPES'])
     def scan(){
         if (!params.uid || !params.uid.startsWith('dp')){
             response.sendError(400, "No valid UID supplied")

@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <g:set var="entityName" value="${command.ENTITY_TYPE}"/>
         <g:set var="entityNameLower" value="${command.urlForm()}"/>
         <title><g:message code="collection.base.label" args="[entityNameLower]" default="Edit ${entityNameLower}  metadata" /></title>
@@ -18,7 +19,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -29,37 +30,37 @@
                 <g:hiddenField name="id" value="${command?.id}" />
                 <g:hiddenField name="uid" value="${command?.uid}" />
                 <g:hiddenField name="version" value="${command.version}" />
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="guid"><g:message code="collection.guid.label" default="Guid"/><cl:helpText code="${entityNameLower}.guid"/></label>
                     <g:textField name="guid" class="form-control" maxlength="100" value="${command?.guid}" />
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="name"><cl:required><g:message code="collection.name.label" default="Name"/></cl:required><cl:helpText code="${entityNameLower}.name"/></label>
                     <g:textField name="name" class="form-control" value="${command?.name}"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="acronym"><g:message code="collection.acronym.label" default="Acronym"/><cl:helpText code="providerGroup.acronym"/></label>
                     <g:textField name="acronym"  class="form-control" maxlength="45" value="${command?.acronym}" />
 
                 </div>
                 <g:if test="${command.ENTITY_TYPE == 'DataResource'}">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="isPrivate"><g:message code="collection.isPrivate.label" default="isPrivate"/></label>
                         <g:checkBox name="isPrivate" value="${command?.isPrivate}"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="gbifDoi"><g:message code="collection.gbifDoi.label" default="DOI"/></label>
                         <g:textField name="gbifDoi" class="form-control" maxlength="45" value="${command?.gbifDoi}" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="resourceType"><g:message code="collection.resourceType.label" default="Resource type"/> <cl:helpText code="providerGroup.resourceType"/></label>
-                        <g:select name="resourceType" class="form-control"
+                        <g:select name="resourceType" class="form-select"
                                   from="${grailsApplication.config.dataResource.resourceTypeList}"
                                   value="${command.resourceType}" />
                     </div>
                 </g:if>
                 <g:if test="${command.ENTITY_TYPE == 'DataProvider' || command.ENTITY_TYPE == 'Institution'}">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="resourceType"><g:message code="dataprovider.gbif.country" default="GBIF Attribution" /> <cl:helpText code="dataprovider.gbifCountryToAttribute" default="Select the country to attribute within GBIF.org as the publishing country"/></label>
                         <g:countrySelect id="country"  class="form-control" name="gbifCountryToAttribute" value="${command?.gbifCountryToAttribute.toLowerCase()}"
                                          noSelection="['ZZZ':'-Use ZZZ for international organisations-']" required="true"/>
@@ -67,9 +68,9 @@
                 </g:if>
                 <g:if test="${command.ENTITY_TYPE == 'Collection'}">
                     <!-- institution -->
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="institution.id"><g:message code="collection.institution.label" default="Institution"/><cl:helpText code="collection.institution"/></label>
-                        <g:select name="institution.id" class="form-control"
+                        <g:select name="institution.id" class="form-select"
                                   from="${Institution.list([sort:'name'])}"
                                   optionKey="id"
                                   noSelection="${['null':'Select an institution']}"
@@ -78,18 +79,18 @@
                 </g:if>
                 <g:if test="${command.ENTITY_TYPE == 'DataResource'}">
                     <!-- data provider -->
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="dataProvider.id"><g:message code="dataResource.dataProvider.label" default="Data provider"/><cl:helpText code="dataResource.dataProvider"/></label>
-                        <g:select name="dataProvider.id" class="form-control"
+                        <g:select name="dataProvider.id" class="form-select"
                                   from="${DataProvider.list([sort:'name'])}"
                                   optionKey="id"
                                   noSelection="${['null':'Select a data provider']}"
                                   value="${command.dataProvider?.id}" />
                     </div>
                     <!-- institution -->
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="institution.id"><g:message code="institution.dataProvider.label" default="Institution"/><cl:helpText code="dataResource.institution"/></label>
-                        <g:select name="institution.id" class="form-control"
+                        <g:select name="institution.id" class="form-select"
                                   from="${Institution.list([sort:'name'])}"
                                   optionKey="id"
                                   noSelection="${['null':'Select an institution']}"
@@ -98,7 +99,7 @@
                 </g:if>
                 <!-- ALA partner -->
                 <cl:ifGranted role="${grailsApplication.config.ROLE_ADMIN}">
-                    <div class="checkbox">
+                    <div class="form-check">
                         <label for="isALAPartner">
                             <g:checkBox name="isALAPartner" value="${command?.isALAPartner}" />
                             <g:message code="providerGroup.isALAPartner.label" default="=Is Atlas Partner" />
@@ -106,23 +107,23 @@
                     </div>
                 </cl:ifGranted>
                 <!-- network membership -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="networkMembership"><g:message code="providerGroup.networkMembership.label" default="Belongs to" /><cl:helpText code="providerGroup.networkMembership"/></label>
                     <cl:checkboxSelect name="networkMembership" from="${grailsApplication.config.networkTypes}" value="${command?.networkMembership}" multiple="yes" valueMessagePrefix="providerGroup.networkMembership" noSelection="['': '']" />
                 </div>
                 <!-- web site url -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="websiteUrl"><g:message code="providerGroup.websiteUrl.label" default="Website Url" /><cl:helpText code="providerGroup.websiteUrl"/></label>
                     <g:textField name="websiteUrl"  class="form-control" value="${command?.websiteUrl}" />
                 </div>
                 <!-- notes -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="notes"><g:message code="providerGroup.notes.label" default="Notes" /><cl:helpText code="collection.notes"/></label>
                     <g:textArea name="notes" cols="40"  class="form-control" rows="${cl.textAreaHeight(text:command.notes)}" value="${command?.notes}" />
                 </div>
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateBase" value="Update" class="save btn btn-success"></span>
-                    <span class="button"><input type="submit" name="_action_cancel" value="Cancel" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancel" value="Cancel" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:form>
         </div>

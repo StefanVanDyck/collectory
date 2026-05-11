@@ -1,6 +1,11 @@
 language: groovy
+dist: focal
 jdk:
-  - openjdk11
+  - openjdk17
+
+before_install:
+  - java -version
+  - javac -version
 branches:
   only:
     - master

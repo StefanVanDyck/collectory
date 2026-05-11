@@ -1,5 +1,5 @@
 <%@ page import="au.org.ala.collectory.Collection; au.org.ala.collectory.DataHub; au.org.ala.collectory.DataResource; au.org.ala.collectory.DataProvider; au.org.ala.collectory.Institution" %>
-<div class="show-section  well">
+<div class="show-section  card card-body">
   <g:if test="${instance instanceof Collection}">
     <g:set var="dir" value="data/collection"/>
   </g:if>
@@ -20,13 +20,13 @@
 
   <g:if test="${fieldValue(bean: image, field: 'file')}">
 
-    <div class="media">
-      <a class="pull-left" href="#">
+    <div class="d-flex gap-3">
+      <a href="#">
         <img class="showImage img-thumbnail" alt="${fieldValue(bean: image, field: "file")}"
             src="${resource(absolute: "true", dir: dir, file: image.file)}"/>
       </a>
-      <div class="media-body">
-        <span class="category"><g:message code="shared.images.span01" />:</span> ${fieldValue(bean: image, field: "file")} </br/>
+      <div>
+        <span class="category"><g:message code="shared.images.span01" />:</span> ${fieldValue(bean: image, field: "file")} <br/>
         <span class="category"><g:message code="shared.images.span02" />:</span> ${fieldValue(bean: image, field: "caption")} <br/>
         <span class="category"><g:message code="shared.images.span03" />:</span> ${fieldValue(bean: image, field: "attribution")}<br/>
         <span class="category"><g:message code="shared.images.span04" />:</span> ${fieldValue(bean: image, field: "copyright")}<br/>

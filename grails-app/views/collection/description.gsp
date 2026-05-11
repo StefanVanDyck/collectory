@@ -29,7 +29,7 @@
                 <g:hiddenField name="uid" value="${command?.uid}" />
                 <g:hiddenField name="version" value="${command.version}"/>
                 <!-- public description -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="pubDescription"><g:message code="providerGroup.pubDescription.label"
                                                            default="Public Description"/><cl:helpText
                             code="collection.pubDescription"/></label>
@@ -39,7 +39,7 @@
                 </div>
 
                 <!-- tech description -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="techDescription"><g:message code="providerGroup.techDescription.label"
                                                             default="Technical Description"/><cl:helpText
                             code="collection.techDescription"/></label>
@@ -48,14 +48,14 @@
                                 value="${command?.techDescription}"/>
                 </div>
                 <!-- focus -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="focus"><g:message code="providerGroup.focus.label" default="Focus"/><cl:helpText
                             code="collection.focus"/></label>
                     <g:textArea name="focus" class="form-control" rows="${cl.textAreaHeight(text: command.focus)}"
                                 value="${command?.focus}"/>
                 </div>
                 <!-- type -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="collectionType"><g:message code="collection.collectionType.label"
                                                            default="Collection Type"/><cl:helpText
                             code="collection.collectionType"/></label>
@@ -65,7 +65,7 @@
                 </div>
 
                 <!-- growth status -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="active"><g:message code="providerGroup.sources.active.label"
                                                    default="Status"/><cl:helpText code="collection.active"/></label>
                     <g:select name="active" from="${grailsApplication.config.collection.developmentStatuses}"
@@ -74,7 +74,7 @@
                 </div>
 
                 <!-- start date -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="startDate"><g:message code="manage.show.temp.startdate"/><cl:helpText
                             code="collection.startDate"/></label>
                     <g:textField name="startDate" maxlength="45" value="${command?.startDate}"/>
@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- end date -->
-                <div class="form-group">
+                <div class="mb-3">
 
                     <label for="endDate"><g:message code="manage.show.temp.enddate"/><cl:helpText
                             code="collection.endDate"/></label>
@@ -90,14 +90,14 @@
                 </div>
 
                 <!-- keywords -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="keywords"><g:message code="collection.keywords.label" default="Keywords"/><cl:helpText
                             code="collection.keywords"/></label>
                     <g:textField name="keywords" class="form-control" value="${command?.listKeywords().join(',')}"/>
                 </div>
 
                 <!-- sub-collections -->
-                <div id="subcollections-editor" class="well">
+                <div id="subcollections-editor" class="card card-body">
                     <h2>
                         <g:message code="scope.subCollections.label" default="Sub-collections"/>
                         <cl:helpText code="scope.subCollections"/>
@@ -113,22 +113,22 @@
                                 <label for="description_${i}">Description</label>
                                 <g:textArea name="description_${i}" class="subcollection_description form-control" value="${sub.description.encodeAsHTML()}"/>
                                 <br/>
-                                <button class="btn btn-default deleteSubcollection">Delete</button>
+                                <button class="btn btn-outline-dark deleteSubcollection">Delete</button>
                                 <hr/>
                             </li>
                         </g:each>
                     </ul>
 
-                    <button id="addSubcollection" class="btn btn-default">Add new subcollection</button>
+                    <button id="addSubcollection" class="btn btn-outline-dark align-self-start">Add new subcollection</button>
 
                     <!-- template -->
-                    <li id="subcollection_template" class="hide">
+                    <li id="subcollection_template" class="d-none">
                         <label for="name_">Name</label>
                         <g:textField  name="name_" class="subcollection_name form-control" value=""/>
                         <label for="description_">Description</label>
                         <g:textArea name="description_" class="subcollection_description form-control" value=""/>
                         <br/>
-                        <button class="btn btn-default deleteSubcollection">Delete</button>
+                        <button class="btn btn-outline-dark deleteSubcollection">Delete</button>
                         <hr/>
                     </li>
 
@@ -138,7 +138,7 @@
                     <input type="submit" class="save btn btn-success"
                                                 name="_action_updateDescription"
                                                 value="${message(code: "collection.button.update")}">
-                    <input type="submit" class="cancel btn btn-default" name="_action_cancel"
+                    <input type="submit" class="cancel btn btn-outline-dark" name="_action_cancel"
                                                 value="${message(code: "collection.button.cancel")}">
                 </div>
             </g:form>

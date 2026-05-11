@@ -16,7 +16,7 @@
         <div class="body">
             <h1><g:message code="default.create.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <g:hasErrors bean="${contactInstance}">
             <div class="errors">
@@ -25,63 +25,63 @@
             </g:hasErrors>
             <g:form action="save" method="post" >
                 <g:hiddenField name="returnTo" value="${returnTo}"/>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="title"><g:message code="contact.title.label" default="Title" /></label>
-                    <g:select name="title" class="form-control"
+                    <g:select name="title" class="form-select"
                               from="${grailsApplication.config.contacts.titles}"
                               value="${contactInstance?.title}" valueMessagePrefix="contact.title"
                               noSelection="['': '']" />
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="firstName"><g:message code="contact.firstName.label" default="First Name" /></label>
                     <g:textField name="firstName" class="form-control" cols="40" rows="5" value="${contactInstance?.firstName}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="lastName"><g:message code="contact.lastName.label" default="Last Name" /></label>
                     <g:textField name="lastName" class="form-control" cols="40" rows="5" value="${contactInstance?.lastName}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="phone"><g:message code="contact.phone.label" default="Phone" /></label>
                     <g:field type="tel" name="phone" class="form-control" maxlength="45" value="${contactInstance?.phone}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="mobile"><g:message code="contact.mobile.label" default="Mobile" /></label>
                     <g:field type="tel" name="mobile" class="form-control" maxlength="45" value="${contactInstance?.mobile}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="email"><g:message code="contact.email.label" default="Email" /></label>
                     <g:field type="email" name="email" class="form-control" value="${contactInstance?.email}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="fax"><g:message code="contact.fax.label" default="Fax" /></label>
                     <g:field type="tel" name="fax" class="form-control" maxlength="45" value="${contactInstance?.fax}" />
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="notes"><g:message code="contact.notes.label" default="Notes" /></label>
                     <g:textArea name="notes" class="form-control" cols="40" rows="5" value="${contactInstance?.notes}" />
                 </div>
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="publish">
                         <g:checkBox name="publish" value="${contactInstance?.publish}" />
                         <g:message code="contact.publish.label" default="Publish" />
                     </label>
                 </div>
                 <div class="buttons">
-                    <span class="button"><g:submitButton name="create" class="save btn btn-default" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
+                    <span class="button"><g:submitButton name="create" class="save btn btn-outline-dark" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
         </div>

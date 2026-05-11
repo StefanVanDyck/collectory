@@ -11,7 +11,7 @@
 </div>
 <div id="baseForm" class="body">
     <g:if test="${message}">
-        <div class="message">${message}</div>
+        <div class="alert alert-info">${message}</div>
     </g:if>
     <g:hasErrors bean="${command}">
         <div class="errors">
@@ -22,26 +22,26 @@
         <g:hiddenField name="uid" value="${command?.uid}" />
         <g:hiddenField name="version" value="${command.version}" />
         <!-- institutions -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="memberInstitutions"><g:message code="dataHub.memberInstitutions.label" default="Institutions" /><cl:helpText code="providerGroup.memberInstitutions"/></label>
             <g:textArea name="memberInstitutions" class="form-control"  rows="${cl.textAreaHeight(text:command.memberInstitutions)}" value="${command.memberInstitutions}" />
         </div>
 
         <!-- collections -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="memberCollections"><g:message code="dataHub.memberCollections.label" default="Collections" /><cl:helpText code="providerGroup.memberCollections"/></label>
             <g:textArea name="memberCollections" class="form-control" rows="${cl.textAreaHeight(text:command.memberCollections)}" value="${command.memberCollections}" />
         </div>
 
         <!-- data resources -->
-        <div class="form-group">
+        <div class="mb-3">
             <label for="memberDataResources"><g:message code="dataHub.memberDataResources.label" default="Data resources" /><cl:helpText code="providerGroup.memberDataResources"/></label>
             <g:textArea name="memberDataResources" class="form-control" rows="${cl.textAreaHeight(text:command.memberDataResources)}" value="${command.memberDataResources}" />
         </div>
 
         <div class="buttons">
             <span class="button"><input type="submit" name="_action_updateDescription" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-            <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-default"></span>
+            <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-outline-dark"></span>
         </div>
     </g:form>
 </div>

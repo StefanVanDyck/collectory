@@ -14,7 +14,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -45,7 +45,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-6 well">
+                    <div class="col-md-6 card card-body">
                         <div id="selected" class="container">
                             <h1><g:message code="dataresource.consumers.selected.title01" />.</h1>
                             <g:if test="${!command.listConsumers().findAll{it[0..1] == source}}">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="buttons">
                             <span class="button"><input type="submit" name="_action_updateConsumers" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-                            <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-default"></span>
+                            <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"collection.button.cancel")}" class="cancel btn btn-outline-dark"></span>
                         </div>
                     </div>
                 </div>

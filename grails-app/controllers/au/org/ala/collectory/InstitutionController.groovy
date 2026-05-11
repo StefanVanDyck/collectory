@@ -1,8 +1,9 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import grails.gorm.transactions.Transactional
 
-
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class InstitutionController extends ProviderGroupController {
 
     def authService
@@ -21,28 +22,6 @@ class InstitutionController extends ProviderGroupController {
         params.sort = params.sort ?: "name"
         [institutionInstanceList: Institution.list(params),
                 institutionInstanceTotal: Institution.count()]
-    }
-
-    def myList = {
-        // do not paginate this list - unlikely to be large
-        // get user's contact id
-        def userContact = null
-        def user = username()
-        if (user) {
-            userContact = Contact.findByEmail(user)
-            def institutionList = []
-            if (userContact) {
-                ContactFor.findAllByContact(userContact).each {
-                    ProviderGroup pg = providerGroupService._get(it.entityUid)
-                    if (pg?.entityType() == Institution.ENTITY_TYPE) {
-                        institutionList << pg
-                    }
-                }
-            }
-            activityLogService.log username(), isAdmin(), Action.MYLIST
-            log.info ">>${user} listing my institutions"
-            render(view: 'myList', model: [institutions: institutionList])
-        }
     }
 
     def show = {
@@ -78,7 +57,7 @@ class InstitutionController extends ProviderGroupController {
                 }
                 // remove contact links (does not remove the contact)
                 ContactFor.findAllByEntityUid(providerGroupInstance.uid).each {
-                    it.delete()
+                    it.delete(flush: true)
                 }
                 // now delete
                 try {
@@ -115,7 +94,7 @@ class InstitutionController extends ProviderGroupController {
     /**
      * This will update the GBIF Registry with the metadata and contacts for the data provider.
      */
-    def updateGBIF = {
+    def updateGBIF(){
         def instance = get(params.id)
         if (instance) {
             try {
@@ -153,7 +132,7 @@ class InstitutionController extends ProviderGroupController {
 
                         gbifRegistryService.register(instance, syncContacts, syncDataResources)
                         flash.message = "${message(code: 'institution.gbif.register.success', default: 'Successfully registered in GBIF')}"
-                        instance.save()
+                        instance.save(flush:true)
                     } else {
                         log.info("REGISTERING FAILED for ${instance.uid}, triggered by user: ${collectoryAuthService.username()} - user not in role")
                         flash.message = "You don't have permission to do register this data partner."

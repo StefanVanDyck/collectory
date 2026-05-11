@@ -63,14 +63,14 @@
               </div>
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="overviewTabs">
-                        <li class="active"><a id="tab1" href="#basic-metadata" data-toggle="tab"><g:message code="public.show.overviewtabs.overview" /></a></li>
-                        <li><a href="#usage-stats" data-toggle="tab"><g:message code="show.tab.usage.stats" /></a></li>
-                        <li><a id="tab2" href="#metrics" data-toggle="tab"><g:message code="public.show.overviewtabs.records" /></a></li>
-                        <li id="imagesTabEl" style="display:none;"><a id="tab3" href="#imagesTab" data-toggle="tab"><g:message code="public.show.overviewtabs.images" /></a></li>
+                        <li class="nav-item"><a class="nav-link active" id="tab1" href="#basic-metadata" data-bs-toggle="tab"><g:message code="public.show.overviewtabs.overview" /></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#usage-stats" data-bs-toggle="tab"><g:message code="show.tab.usage.stats" /></a></li>
+                        <li class="nav-item"><a id="tab2" class="nav-link" href="#metrics" data-bs-toggle="tab"><g:message code="public.show.overviewtabs.records" /></a></li>
+                        <li id="imagesTabEl" style="display:none;" class="nav-item"><a id="tab3" class="nav-link" href="#imagesTab" data-bs-toggle="tab"><g:message code="public.show.overviewtabs.images" /></a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
-                    <div id="basic-metadata" class="tab-pane active">
+                    <div id="basic-metadata" class="tab-pane show active">
                         <div id="overview-content" >
                             <h2><g:message code="public.des" /></h2>
                             <cl:formattedText body="${instance.pubDescription}"/>
@@ -157,11 +157,14 @@
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <div id="progress" class="well">
-                                    <div class="progress">
-                                        <div id="progressBar" class="progress-bar progress-bar-success" style="width: 0%;"></div>
+                                <div id="progress" class="card card-body">
+                                    <div class="progress" id="progressBarItem">
+                                        <div id="progressBar" class="progress-bar bg-success" style="width: 0%;"></div>
                                     </div>
-                                    <p class="caption"><span id="speedoCaption"><g:message code="public.show.setprogress.02" args="${[grailsApplication.config.skin.orgNameShort]}" />.</span></p>
+                                    <p class="caption">
+                                        <span id="speedoCaption"><g:message code="public.show.setprogress.02" args="${[grailsApplication.config.skin.orgNameShort]}" />.</span>
+                                        <span id="speedoCaptionMissingMetadata" style="display: none;"><g:message code="public.show.setprogress.01" args="${[grailsApplication.config.skin.orgNameShort]}" />.</span>
+                                    </p>
                                 </div>
                             </div>
 

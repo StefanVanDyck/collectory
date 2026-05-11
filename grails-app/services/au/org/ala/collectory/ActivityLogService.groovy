@@ -1,8 +1,6 @@
 package au.org.ala.collectory
 
-import grails.gorm.transactions.Transactional
 
-@Transactional
 class ActivityLogService {
 
     def providerGroupService
@@ -10,7 +8,9 @@ class ActivityLogService {
     def log(params) {
         def al = new ActivityLog(params)
         al.timestamp = new Date()
-        al.save(flush:true)
+        ActivityLog.withTransaction {
+            al.save(flush: true)
+        }
     }
 
     /**
@@ -22,7 +22,9 @@ class ActivityLogService {
         //def a = Actions.valueOf(Actions.class, action)
         //def actionText = a ? a.toString() : action
         def al = new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin, action: action.toString())
-        al.save(flush:true)
+        ActivityLog.withTransaction {
+            al.save(flush: true)
+        }
     }
 
     /**
@@ -32,10 +34,12 @@ class ActivityLogService {
      * @param item
      */
     def log(String user, boolean isAdmin, Action action, String item) {
-        def al = new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin, action: action.toString() + " " + item)
-        al.validate()
+        def al = new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin, action: "${action.toString()+' '+ item}")
 
-        al.save(flush:true)
+        ActivityLog.withTransaction {
+            al.save(flush: true, failOnError: true)
+        }
+
     }
 
     /**
@@ -60,10 +64,11 @@ class ActivityLogService {
                 isEntityAdmin = cf.isAdministrator()
             }
         }
-
-        new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin,
-                entityUid: uid, contactForEntity:isContact,
-                administratorForEntity: isEntityAdmin, action: action.toString()).save(flush:true)
+        ActivityLog.withTransaction {
+            new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin,
+                    entityUid: uid, contactForEntity: isContact,
+                    administratorForEntity: isEntityAdmin, action: action.toString()).save(flush: true)
+        }
     }
 
     /**
@@ -73,7 +78,9 @@ class ActivityLogService {
      * @param action the action taken
      */
     def log(String user, boolean isAdmin, long id, Action action) {
-        new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin,
-                entityUid: id as String, action: action.toString()).save(flush:true)
+        ActivityLog.withTransaction {
+            new ActivityLog(timestamp: new Date(), user: user, admin: isAdmin,
+                    entityUid: id as String, action: action.toString()).save(flush: true)
+        }
     }
 }

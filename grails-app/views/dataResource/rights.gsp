@@ -14,7 +14,7 @@
         </div>
         <div id="baseForm" class="body">
             <g:if test="${message}">
-            <div class="message">${message}</div>
+            <div class="alert alert-info">${message}</div>
             </g:if>
             <g:hasErrors bean="${command}">
             <div class="errors">
@@ -25,19 +25,19 @@
                 <g:hiddenField name="id" value="${command?.id}" />
                 <g:hiddenField name="version" value="${command.version}" />
                 <!-- citation -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="citation"><g:message code="dataResource.citation.label" default="Citation" /><cl:helpText code="dataResource.citation"/></label>
                     <g:textArea class="form-control" name="citation" cols="40" rows="${cl.textAreaHeight(text:command.citation)}" value="${command.citation}" />
                 </div>
 
                 <!-- rights -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="rights"><g:message code="dataResource.rights.label" default="Rights" /><cl:helpText code="dataResource.rights"/></label>
                     <g:textArea class="form-control" name="rights" cols="40" rows="${cl.textAreaHeight(text:command.rights)}" value="${command?.rights}" />
                 </div>
 
                 <!-- license -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="licenceID"><g:message code="dataResource.licenseType.label" default="License type" /><cl:helpText code="dataResource.licenseType"/></label>
                     <g:select
                             name="licenceID"
@@ -45,30 +45,30 @@
                             optionKey="id"
                             optionValue=""
                             value="${Licence.findByAcronymAndLicenceVersion(command.licenseType, command.licenseVersion)?.id }"
-                            class="form-control"
+                            class="form-select"
                             noSelection="['':'--- Choose licence ---']"/>
                 </div>
 
                 <!-- permissions document -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="permissionsDocument"><g:message code="dataResource.permissionsDocument.label" default="Permissions document" /><cl:helpText code="dataResource.permissionsDocument"/></label>
                     <g:textField name="permissionsDocument" class="form-control" value="${command?.permissionsDocument}" />
                 </div>
 
                 <!-- permissions document type -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="permissionsDocumentType"><g:message code="dataResource.permissionsDocumentType.label" default="Permissions document type" /><cl:helpText code="dataResource.permissionsDocumentType"/></label>
-                    <g:select name="permissionsDocumentType" class="form-control" from="${grailsApplication.config.dataResource.permissionsDocumentTypes}" value="${command.permissionsDocumentType}"/>
+                    <g:select name="permissionsDocumentType" class="form-select" from="${grailsApplication.config.dataResource.permissionsDocumentTypes}" value="${command.permissionsDocumentType}"/>
                 </div>
 
                 <!-- permissions document type flags -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="riskAssessment">
                         <g:checkBox name="riskAssessment" value="${command?.riskAssessment}" />
                         <g:message code="dataResource.riskAssessment.label" default="Risk assessment completed" /><cl:helpText code="dataResource.riskAssessment"/>
                     </label>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
 
                     <label for="filed">
                         <g:checkBox name="filed" value="${command?.filed}" />
@@ -77,14 +77,14 @@
                 </div>
 
                 <!-- download limit -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="downloadLimit"><g:message code="dataResource.downloadLimit.label" default="Download limit" /><cl:helpText code="dataResource.downloadLimit"/></label>
                     <g:field type="number" name="downloadLimit" class="form-control" value="${fieldValue(bean:command,field:'downloadLimit')}" />
                 </div>
 
                 <div class="buttons">
                     <span class="button"><input type="submit" name="_action_updateRights" value="${message(code:"collection.button.update")}" class="save btn btn-success"></span>
-                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"dataresource.gbifupload.btn.cancel")}" class="cancel btn btn-default"></span>
+                    <span class="button"><input type="submit" name="_action_cancel" value="${message(code:"dataresource.gbifupload.btn.cancel")}" class="cancel btn btn-outline-dark"></span>
                 </div>
             </g:form>
         </div>

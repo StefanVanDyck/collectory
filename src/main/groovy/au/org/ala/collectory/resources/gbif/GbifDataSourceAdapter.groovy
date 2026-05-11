@@ -28,8 +28,10 @@ import java.text.SimpleDateFormat
 class GbifDataSourceAdapter extends DataSourceAdapter {
     static final LOGGER = LoggerFactory.getLogger(GbifDataSourceAdapter.class)
     static final SOURCE = "GBIF"
-    static final MessageFormat DATASET_SEARCH = new MessageFormat("dataset/search?publishingCountry={0}&offset={1}&limit={2}")
-    static final MessageFormat DATASET_SEARCH_PROV = new MessageFormat("dataset/search?publishingCountry={0}&offset={1}&limit={2}&publishingOrg={3}")
+    static final MessageFormat DATASET_SEARCH = new MessageFormat("dataset/search?publishingCountry={0}&type={1}&offset={2}&limit={3}")
+    static final MessageFormat DATASET_SEARCH_PROV = new MessageFormat("dataset/search?publishingCountry={0}&type={1}&offset={2}&limit={3}")
+    static final MessageFormat DATASET_SEARCH_PROV_WITH_ORG = new MessageFormat("dataset/search?publishingCountry={0}&type={1}&offset={2}&limit={3}&publishingOrg={4}")
+
     static final MessageFormat DATASET_GET = new MessageFormat("dataset/{0}")
     static final MessageFormat DATASET_RECORD_COUNT = new MessageFormat("occurrence/count?datasetKey={0}")
     static final MessageFormat DOWNLOAD_STATUS = new MessageFormat("occurrence/download/{0}")
@@ -248,7 +250,6 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
      * @return A JSON response
      */
     def getJSONWS(String path, boolean authRequired = true) throws ExternalResourceException {
-
         def url = new URL(configuration.endpoint, path)
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")

@@ -224,7 +224,7 @@ trait ProviderGroup implements Serializable {
      * Deletes the linkage between the contact and this group
      */
     void deleteFromContacts(Contact contact) {
-        ContactFor.findByEntityUidAndContact(uid, contact)?.delete()
+        ContactFor.findByEntityUidAndContact(uid, contact)?.delete(flush: true)
     }
 
     /**
@@ -233,7 +233,7 @@ trait ProviderGroup implements Serializable {
      * @param identifier
      */
     void deleteExternalIdentifier(ExternalIdentifier identifier) {
-        ExternalIdentifier.findByEntityUidAndIdentifierAndSource(uid, identifier.identifier, identifier.source)?.delete()
+        ExternalIdentifier.findByEntityUidAndIdentifierAndSource(uid, identifier.identifier, identifier.source)?.delete(flush: true)
     }
 
     /**
@@ -400,7 +400,7 @@ trait ProviderGroup implements Serializable {
         List<Attribution> list = []
         if (uids) {
             list = Attribution.createCriteria().list {
-                in('uid', uids)
+                inList('uid', uids)
             }
         }
 

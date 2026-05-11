@@ -145,11 +145,6 @@ function setLabels(data){
 
     // update display of number of features
     var selectedFilters = getSelectedFiltersAsString();
-    var selectedFrom = jQuery.i18n.prop('map.js.collectionstotal');
-    if (selectedFilters != 'all') {
-        selectedFrom = jQuery.i18n.prop(selectedFilters)+ " " + jQuery.i18n.prop('collections');
-    }
-    var innerFeatures = "";
 
     collectionsCount = 0;
 
@@ -159,12 +154,18 @@ function setLabels(data){
         }
     });
 
+    var selectedFrom = jQuery.i18n.prop('map.js.collectionstotalarg', collectionsCount);
+    if (selectedFilters != 'all') {
+        selectedFrom = jQuery.i18n.prop("map.js.totalcollectionsfiltered", collectionsCount, jQuery.i18n.prop(selectedFilters))
+    }
+    var innerFeatures = "";
+
     switch (collectionsCount) {
         //case 0: innerFeatures = "No collections are selected."; break;
         //case 1: innerFeatures = "One collection is selected."; break;
         case 0: innerFeatures = jQuery.i18n.prop('map.js.nocollectionsareselected'); break;
         case 1: innerFeatures = jQuery.i18n.prop('map.js.onecollectionisselected'); break;
-        default: innerFeatures = collectionsCount + " " + selectedFrom + "."; break;
+        default: innerFeatures = selectedFrom; break;
     }
     $('span#numFeatures').html(innerFeatures);
 

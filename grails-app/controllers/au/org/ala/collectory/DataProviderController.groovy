@@ -1,9 +1,11 @@
 package au.org.ala.collectory
 
+import au.org.ala.PermissionRequired
 import grails.converters.JSON
 import grails.converters.XML
 import grails.web.http.HttpHeaders
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class DataProviderController extends ProviderGroupController {
 
     def gbifRegistryService
@@ -190,6 +192,7 @@ class DataProviderController extends ProviderGroupController {
         redirect(action: "searchForOrganizations", params: [country: params.country])
     }
 
+
     def editConsumers = {
         def pg = get(params.id)
         if (!pg) {
@@ -262,7 +265,7 @@ class DataProviderController extends ProviderGroupController {
                     }
                     // remove contact links (does not remove the contact)
                     ContactFor.findAllByEntityUid(instance.uid).each {
-                        it.delete()
+                        it.delete(flush: true)
                     }
                     // now delete
                     try {

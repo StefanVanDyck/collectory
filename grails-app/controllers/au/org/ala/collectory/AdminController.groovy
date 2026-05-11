@@ -1,16 +1,17 @@
 package au.org.ala.collectory
 
-
+import au.org.ala.PermissionRequired
 import com.opencsv.CSVReader
 import grails.converters.JSON
 import grails.web.JSONBuilder
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
+@PermissionRequired(roles=['ROLE_EDITOR', 'ROLE_ADMIN'])
 class AdminController {
 
     def dataLoaderService, idGeneratorService, metadataService, sitemapService
 
-    def index = {
+    def index() {
         redirect(controller: 'manage')
     }
 

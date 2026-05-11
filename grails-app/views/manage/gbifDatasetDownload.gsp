@@ -22,10 +22,10 @@
         <label for="region"><g:message code="manage.gbifdldataset.label03" />:</label>
         <g:select name="region" class="form-control" from="${regionMap.entrySet()}" optionKey="key" optionValue="value" value="${regionCode}" noSelection="['':'No region selected']" disabled="${!dr?.repatriationCountry}"/>
         <br/>
-        <input type="submit" name="performGBIFLoad" value="Reload" class="save btn btn-default">
+        <input type="submit" name="performGBIFLoad" value="Reload" class="save btn btn-outline-dark">
     </div>
 
-    <div class="well pull-right col-md-5">
+    <div class="card card-body float-end col-md-5">
         <p>
             <g:message code="manage.gbifdldataset.des01" />.<br/>
             <g:message code="manage.gbifdldataset.des02" />.

@@ -271,7 +271,9 @@ class CrudService {
         updateExternalIdentifiers(dh, obj)
     }
 
-    /* data resource */
+    /** data resource
+    * @apikey - true or false, will remove the connection url from the response if false
+    * */
 
     def readDataResource(DataResource p, apiKey = null) {
         def builder = new JSONBuilder()

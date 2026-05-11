@@ -13,9 +13,9 @@
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-list"></span><g:link class="list" action="list" params="[max:10000]"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-plus"></span><g:link class="create" action="create" params="[returnTo: returnTo]"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-list"></span><g:link class="list" action="list" params="[max:10000]"> <g:message code="default.list.label" args="[entityName]"/></g:link></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-plus"></span><g:link class="create" action="create" params="[returnTo: returnTo]"> <g:message code="default.new.label" args="[entityName]"/></g:link></li>
                 <g:if test="${returnTo}"><span class="menuButton"><cl:returnLink uid="${returnTo}"/></span></g:if>
             </ul>
         </div>
@@ -68,7 +68,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="nav">
+            <div>
                 <tb:paginate controller="providerMap" action="list" total="${providerMapInstanceTotal}" />
             </div>
         </div>

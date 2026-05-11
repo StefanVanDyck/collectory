@@ -249,7 +249,7 @@ class TempDataResource {
      * Deletes the linkage between the contact and this group
      */
     void deleteFromContacts(Contact contact) {
-        ContactFor.findByEntityUidAndContact(uid, contact)?.delete()
+        ContactFor.findByEntityUidAndContact(uid, contact)?.delete(flush: true)
     }
 
     /**

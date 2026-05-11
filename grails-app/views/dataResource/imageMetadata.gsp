@@ -13,7 +13,7 @@
 </div>
 <div id="baseForm" class="body">
     <g:if test="${message}">
-        <div class="message">${message}</div>
+        <div class="alert alert-info">${message}</div>
     </g:if>
     <g:hasErrors bean="${command}">
         <div class="errors">
@@ -27,29 +27,29 @@
                 <g:hiddenField name="id" value="${command?.id}" />
                 <g:hiddenField name="version" value="${command.version}" />
                 <fieldset>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="creator">Creator</label>
                         <g:textField name="creator" class="form-control" placeholder="Type something…" value="${imageMetadata?.creator}"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="rights">Rights</label>
                         <g:textArea name="rights" rows="3" class="form-control" placeholder="Type something…" value="${imageMetadata?.rights}"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="rightsHolder">Rights holder</label>
                         <g:textArea name="rightsHolder" rows="3" class="form-control" placeholder="Type something…" value="${imageMetadata?.rightsHolder}"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="license">Licence</label>
-                        <g:select name="license" from="${au.org.ala.collectory.Licence.findAll().collect{it.name } }" id="license" class="form-control" value="${imageMetadata?.license}"/>
+                        <g:select name="license" from="${au.org.ala.collectory.Licence.findAll().collect{it.name } }" id="license" class="form-select" value="${imageMetadata?.license}"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <button type="submit" class="btn btn-success">Save</button>
                     </div>
                 </fieldset>
             </g:form>
         </div>
-        <div class="col-md-4 well">
+        <div class="col-md-4 card card-body">
             <p>
                 These values will be displayed on record pages where the images are displayed unless
                 values have been provided that are specific to the image.

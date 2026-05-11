@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="${grailsApplication.config.skin.layout}" />
+        <asset:stylesheet src="application.css"/>
         <title><g:message code="reports.title" /></title>
         <link rel="stylesheet" href="${resource(dir:'css/smoothness',file:'jquery-ui-1.12.1.min.css')}" type="text/css" media="screen"/>
         <r:require modules="jquery_ui_custom"></r:require>
@@ -10,14 +11,14 @@
     <body>
         <div class="btn-toolbar">
             <ul class="btn-group">
-                <li class="btn btn-default"><cl:homeLink/></li>
-                <li class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
+                <li class="btn btn-outline-dark"><cl:homeLink/></li>
+                <li class="btn btn-outline-dark"><span class="fa fa-th-list"></span><g:link class="list" action="list"> <g:message code="reports.li.reports"/></g:link></li>
             </ul>
         </div>
         <div class="body">
             <h1><g:message code="reports.harvesters.title01" /></h1>
             <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
+            <div class="alert alert-info">${flash.message}</div>
             </g:if>
             <div class="dialog">
               <p><g:message code="reports.harvesters.des01" />.</p>
@@ -37,10 +38,10 @@
                     <g:each var='r' in="${resources}">
                       <g:set var="pList" value="${r.connectionParameters ? JSON.parse(r.connectionParameters) : [:]}"/>
                       <g:if test="${r.harvestFrequency || r.lastChecked || r.dataCurrency || r.connectionParameters}">
-                          <g:set var="hide" value=""/>
+                          <g:set var="d-none" value=""/>
                       </g:if>
                       <g:else>
-                          <g:set var="hide" value="class='noValues'"/>
+                          <g:set var="d-none" value="class='noValues'"/>
                       </g:else>
 
                       <tr ${hide} class="ui-state-active">
