@@ -1,6 +1,10 @@
 package au.org.ala.collectory
 
 import groovy.json.JsonSlurper
+import org.apache.http.client.HttpClient
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.util.EntityUtils
 
 class CitationsTagLib {
 
@@ -8,16 +12,40 @@ class CitationsTagLib {
 
     def gbifLink = { attrs ->
         def gbifUrl = """${grailsApplication.config.gbif.citations.lookup}${attrs.gbifRegistryKey}"""
-        try {
-            if (grailsApplication.config.gbif.citations.enabled.toBoolean()) {
-                def js = new JsonSlurper()
-                def data = js.parse(new URL(gbifUrl))
-                if (data.count) {
-                    out << """<a class="btn btn-default" href="${grailsApplication.config.gbif.citations.search}${attrs.gbifRegistryKey}">&nbsp;<span class="glyphicon glyphicon-bullhorn"></span>&nbsp; ${data.count} ${g.message(code:"citations.available", default:"citations for these data")}</a>"""
+        if (grailsApplication.config.gbif.citations.enabled.toBoolean()) {
+
+            try {
+
+                HttpClient client = HttpClientBuilder.create().build()
+
+                HttpGet request = new HttpGet(gbifUrl)
+
+                request.setHeader("User-Agent", "Mozilla/5.0")
+                request.setHeader("Accept", "application/json")
+
+                def response = client.execute(request)
+
+                int statusCode = response.statusLine.statusCode
+
+                String responseBody = response.entity ? EntityUtils.toString(response.entity, "UTF-8") : null
+
+                if (statusCode >= 200 && statusCode < 300) {
+
+                    def js = new JsonSlurper()
+                    def data = js.parseText(responseBody)
+
+                    if (data.count) {
+                        out << """<a class="btn btn-default" href="${grailsApplication.config.gbif.citations.search}${attrs.gbifRegistryKey}">&nbsp;<span class="glyphicon glyphicon-bullhorn"></span>&nbsp; ${data.count} ${g.message(code:"citations.available", default:"citations for these data")}</a>"""
+                    }
+
+                } else {
+                    log.error("Retrieving citation count from GBIF: unexpected response code ${statusCode}")
+                    log.error("Retrieving citation count from GBIF: response body: ${responseBody}")
                 }
+
+            } catch (Exception e) {
+                log.error("Problem retrieving citation count from GBIF: ${e.message}", e)
             }
-        } catch (Exception e){
-            log.error("Problem retrieving citation count from GBIF" + e.getMessage(), e)
         }
     }
 
