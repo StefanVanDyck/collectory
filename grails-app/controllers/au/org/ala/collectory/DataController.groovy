@@ -406,6 +406,15 @@ class DataController {
 
     def fileDownload = {
         def dirpath = "/" + params.directory + "/"
+
+        // this auth check (JWT or API key) is a special case handling to support backwards compatibility(which used to check for API key).
+        String requiredRoles = grailsApplication.config.ROLE_ADMIN
+        def authCheck = collectoryAuthService.isAuthorisedWsRequest(getParams(), request, response, requiredRoles, null)
+        if (!authCheck) {
+            response.status = 403
+            return
+        }
+
         def idx = request.forwardURI.lastIndexOf(dirpath) + dirpath.length()
         def fullFileName = request.forwardURI.substring(idx)
         def file = new File(grailsApplication.config.uploadFilePath + File.separator + params.directory, fullFileName)

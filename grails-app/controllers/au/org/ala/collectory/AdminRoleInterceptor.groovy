@@ -28,7 +28,6 @@ class AdminRoleInterceptor {
         match(controller: 'gbif', actionName:'healthCheck')
         match(controller: 'gbif', actionName:'healthCheckLinked')
         match(controller: 'gbif', actionName:'downloadCSV')
-        match(controller: 'data', action: 'fileDownload')
     }
 
     boolean before() {
