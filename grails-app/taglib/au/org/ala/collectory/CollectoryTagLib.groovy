@@ -3,6 +3,8 @@ package au.org.ala.collectory
 import au.org.ala.collectory.resources.PP
 import com.opencsv.CSVReader
 import grails.converters.JSON
+import org.jsoup.Jsoup
+import org.jsoup.safety.Safelist
 import groovy.json.JsonSlurper
 import groovy.xml.MarkupBuilder
 import org.grails.web.converters.exceptions.ConverterException
@@ -17,6 +19,8 @@ class CollectoryTagLib {
     def collectoryAuthService, metadataService, providerGroupService, authService
 
     static namespace = 'cl'
+    static defaultEncodeAs = [taglib: 'none']
+    static encodeAsForTags = [formattedText: [body: 'none']]
 
     def getFacetForEntity(entity){
         if(entity.ENTITY_TYPE == 'DataResource')
@@ -791,7 +795,7 @@ class CollectoryTagLib {
      *  and urls are linked
      *  and bold (+xyz+)and italic (_xyz_) are rendered
      *  and lists are supported using wiki markup
-     *
+    *
      * @param attrs.noLink suppresses links
      * @param attrs.noList suppresses lists
      * @param body the text to format
@@ -801,10 +805,12 @@ class CollectoryTagLib {
     def formattedText = {attrs, body ->
         def text = attrs.body ?: body().toString()
         if (text) {
+            // unescape any HTML entities that may have been stored encoded in the database
+            text = org.jsoup.parser.Parser.unescapeEntities(text, true)
 
-            if (text.indexOf('<') >= 0 && text.indexOf('>') >= 0) {
-                // assume this is already marked up as html
-                out << text
+            if (!Jsoup.isValid(text, Safelist.none())) {
+                // text contains HTML tags - sanitize before output
+                out << raw(Jsoup.clean(text, Safelist.basic()))
             }
             else {
 
@@ -872,7 +878,7 @@ class CollectoryTagLib {
                     text = newText
                 }
 
-                out << text
+                out << raw(text)
             }
         }
     }

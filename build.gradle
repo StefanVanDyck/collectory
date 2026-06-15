@@ -97,6 +97,7 @@ dependencies {
     implementation "org.grails.plugins:gsp"
 
     implementation "com.opencsv:opencsv:3.7"
+    implementation "org.jsoup:jsoup:1.17.2"
     implementation "io.micronaut:micronaut-http-client"
     compileOnly "io.micronaut:micronaut-inject-groovy"
     implementation "io.reactivex.rxjava3:rxjava:3.1.6"
