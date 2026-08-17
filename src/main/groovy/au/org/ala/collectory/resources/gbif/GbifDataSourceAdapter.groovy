@@ -402,7 +402,7 @@ class GbifDataSourceAdapter extends DataSourceAdapter {
         def update = [:]
         connection.url = "file:///${upload.absolutePath}"
         connection.protocol = "DwCA"
-        connection.termsForUniqueKey = ["http://rs.gbif.org/terms/1.0/gbifID"]
+        connection.termsForUniqueKey = ["occurrenceID"]
         if(configuration.region){
             connection.region = configuration.region
         }

@@ -153,7 +153,7 @@ class GbifService {
                 def connParams = (new JsonSlurper()).parseText(dr.connectionParameters ?: '{}')
                 connParams.url = 'file:///' + targetFileName
                 connParams.protocol = "DwCA"
-                connParams.termsForUniqueKey = ["gbifID"]
+                connParams.termsForUniqueKey = ["occurrenceID"]
                 //NQ we need a transaction so the this can be executed in a multi-threaded manner.
                 dr.connectionParameters = (new JsonOutput()).toJson(connParams)
                 dr.lastChecked = (new Date()).toTimestamp()
