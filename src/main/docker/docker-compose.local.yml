@@ -1,0 +1,60 @@
+---
+# Local development/test setup: builds collectory from the source tree
+# instead of pulling atlasoflivingaustralia/collectory:latest.
+# Run from this directory:
+#   docker compose -f docker-compose.local.yml up --build -d
+# App:     http://localhost:9284
+# Mock OIDC: http://localhost:9999 (issuer 'default', auto-login, no credentials)
+# Stop:    docker compose -f docker-compose.local.yml down
+# Nuke DB: docker compose -f docker-compose.local.yml down -v
+
+services:
+  collectory:
+    container_name: living-atlas-collectory
+    image: living-atlas-collectory:local
+    build:
+      context: ../../..
+      dockerfile: src/main/docker/Dockerfile
+    # Rootless docker maps container root to the host uid that owns the
+    # mounted /data files; the Dockerfile's uid-1000 user cannot write them.
+    user: "0:0"
+    ports:
+      - 9284:8080
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    depends_on:
+      - collectory-mysql
+      - mock-oauth2-server
+
+  collectory-mysql:
+    container_name: living-atlas-collectory-mysql
+    image: mysql:8
+    # The app's schema was built for MySQL utf8 (3-byte): VARCHAR(4096)
+    # columns in data_hub blow past the 65535-byte row limit with utf8mb4.
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: collectory
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: collectory
+    volumes:
+      - collectory-mysql-data:/var/lib/mysql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    restart: unless-stopped
+
+  # Local OIDC provider, mirroring ../vlaams-biodiversiteitsportaal/docker.
+  # Issuer 'default' auto-logs-in (interactiveLogin: false), so browser
+  # redirects to /login complete instantly as user 'some-user-id'.
+  mock-oauth2-server:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.5
+    ports:
+      - "9999:9999"
+    environment:
+      SERVER_PORT: 9999
+      JSON_CONFIG_PATH: /config/config.json
+    volumes:
+      - ./config/mock-oauth2-server:/config:ro
+
+volumes:
+  collectory-mysql-data:

@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the Gradle build files and settings to the container
 COPY .git .
 COPY build.gradle .
+COPY settings.gradle .
 COPY gradle.properties .
 
 # Copy the source code of the Grails application to the container
@@ -43,7 +44,7 @@ RUN mkdir -p /data/$APP_ARTIFACT && \
 WORKDIR /opt/atlas/$APP_ARTIFACT
 
 # war
-COPY --from=builder $WAR_FILE_ENV /opt/atlas/$APP_ARTIFACT/app.jar
+COPY --from=builder $WAR_FILE_ENV /opt/atlas/$APP_ARTIFACT/app.war
 RUN chown -R $USER:$USER /opt/atlas/$APP_ARTIFACT
 
 USER $USER

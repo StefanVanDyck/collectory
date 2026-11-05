@@ -1,0 +1,2 @@
+//# sourceMappingURL=jquery-deparam.js.map
+var process=process||{env:{NODE_ENV:"development"}};(function(b){b.deparam=b.deparam||function(a){void 0===a&&(a=window.location.search);var c={};a.replace(/([^?=&]+)(=([^&#]*))?/g,function(f,d,g,e){c[d]=e});return c}})(jQuery);

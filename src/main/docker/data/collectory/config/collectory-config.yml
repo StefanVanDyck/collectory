@@ -1,0 +1,49 @@
+# Mounted into the collectory container at /data/collectory/config/
+# (declared as a config location in application.yml) so the built-in
+# defaults can be overridden for local runs.
+grails:
+    serverURL: http://localhost:9284
+
+# The Dockerfile bakes MYSQL_HOST=collectory-mysql into the dockerize
+# wait args, and the war defaults to jdbc:mysql://localhost:3306, so
+# point it at the compose service name instead.
+dataSource:
+    # 'update' lets Hibernate create tables before Liquibase, so the
+    # migration changelog then fails on existing tables. Production uses
+    # 'none' and Liquibase builds the whole schema.
+    dbCreate: none
+    url: jdbc:mysql://collectory-mysql:3306/collectory?autoReconnect=true&connectTimeout=0&useUnicode=true&characterEncoding=UTF-8
+    username: collectory
+    password: password
+
+# Packaged config ships this empty; a 3-digit ISO code is required at startup.
+gbifDefaultEntityCountry: BEL
+
+# The packaged application.yml ships OIDC placeholders ('change me') that
+# crash startup in AlaWsSecurityConfiguration.jwkSource (MalformedURLException).
+# Discovery points at the local mock-oauth2-server compose service (issuer
+# 'default'), mirroring ../vlaams-biodiversiteitsportaal/config/common/common.yml.
+# SsoInterceptor requires an SSOStrategy bean, created when CAS *or*
+# OIDC is enabled - so keep oidc enabled (cas stays off).
+security:
+    cas:
+        enabled: false
+    oidc:
+        enabled: true
+        discoveryUri: http://host.docker.internal:9999/default/.well-known/openid-configuration
+        clientId: local-test
+        secret: local-test
+    jwt:
+        enabled: true
+        discoveryUri: http://host.docker.internal:9999/default/.well-known/openid-configuration
+        clientId: local-test
+        secret: local-test
+        fallbackToLegacyBehaviour: true
+
+# JDK 11.0.16 in this base image NPEs in cgroupv2 metrics on hosts using
+# cgroup v2, and micrometer's ProcessorMetrics triggers it during boot.
+# Excluding the autoconfig removes the affected system-metrics beans
+# (processor/file-descriptor binders) without touching actuate setup.
+spring:
+    autoconfigure:
+        exclude: org.springframework.boot.actuate.autoconfigure.metrics.SystemMetricsAutoConfiguration
